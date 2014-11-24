@@ -1,0 +1,21 @@
+de:
+  pageflow:
+    linkmap_page:
+      page_type_name: "Verweisbereiche-Seite"
+      manage_sites: "Verweise verwalten"
+  editor:
+      inline_help:
+        site:
+          description: "Empfohlene Textlänge: bis zu 220 Zeichen"
+  activerecord:
+    attributes:
+      site:
+        url: "Ziel URL"
+        open_in_new_tab: "In neuem Tab öffnen"
+        title: "Titel"
+        description: "Beschreibung"
+        thumbnail: "Thumbnail"
+      page:
+        linked_linkmap_page_perma_ids: "Verlinkte Seiten"
+      "pageflow/page":
+        linked_linkmap_page_perma_ids: "Verlinkte Seiten"
