@@ -1,5 +1,5 @@
 .editor {
-.manage_external_sites {
+.manage_linkmap {
   a.add {
     @include plus-circled-icon;
     @include icon-button;
@@ -48,8 +48,8 @@
   }
 }
 
-.external_links_site_reference_input {
-  .add_reference {
+.linkmap_page_areas_input {
+  .add_area {
     @include plus-circled-icon;
     @include icon-button;
   }
@@ -74,7 +74,7 @@
     top: 4px;
   }
 
-  .external_links_site_reference {
+  .linkmap_page_site_reference {
     margin-bottom: 2px;
 
     > a:first-child {
@@ -94,4 +94,63 @@
     }
   }
 }
+}
+.linkmap_page_areas {
+  a.remove {
+    width: 10px;
+    height: 10px;
+    background-color: blue;
+    display: block;
+  }
+}
+
+.area_item {
+  width: 200px;
+  height: 200px;
+  pointer-events: all;
+  position: absolute;
+  cursor: move;
+
+  &:hover {
+    outline: 2px solid red;
+  }
+}
+
+.linkmap_areas.editable {
+  .area_item {
+    outline: solid 2px #000;
+
+    &:hover {
+      outline: 2px solid red;
+    }
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      width: 100%;
+      height: 100%;
+      border: solid 2px #fff;
+      @include animation(blink 3s linear infinite);
+    }
+
+    &:after {
+      pointer-events: none;
+      background-color: red;
+      @include animation(fade_out 1s ease forwards);
+      position: absolute;
+      content: "";
+      width: 100%;
+      height: 100%;
+    }
+
+    &:hover {
+      outline: 2px solid red;
+
+      &:before {
+        visibility: hidden;
+      }
+    }
+  }
 }

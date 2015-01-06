@@ -1,6 +1,6 @@
 module Pageflow
   module LinkmapPage
-    module SitesHelper
+    module ImageTagHelper
       def linkmap_page_site_css_class(site)
         ['link-item', site.title.blank? && site.description.blank? ? 'no_text' : ''].compact.join(' ')
       end
@@ -14,6 +14,13 @@ module Pageflow
         end
 
         classes.join(' ')
+      end
+
+      def linkmap_image_tag(image_id, options = {})
+        if image = ImageFile.find_by_id(image_id)
+          options = options.merge(:'data-printsrc' => image.attachment.url(:original))
+          image_tag(image.attachment.url(:original), options)
+        end
       end
     end
   end

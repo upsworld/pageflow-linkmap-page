@@ -28,23 +28,10 @@ Include javascripts and stylesheets:
     # app/assets/stylesheets/pageflow/editor.css.scss
     @import "pageflow/linkmap_page/editor";
 
-Mount the routes in `config/routes.rb`:
-
-    authenticated do
-      mount Pageflow::LinkmapPage::Engine, :at => '/linkmap_page'
-    end
 
 Install dependencies:
 
     bundle install
-
-Copy migrations of pageflow-linkmap-page into your project:
-
-    bundle exec rake pageflow_linkmap_page:install:migrations
-
-Migrate the database:
-
-    bundle exec rake db:migrate
 
 Restart the application server.
 

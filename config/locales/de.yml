@@ -17,5 +17,11 @@ de:
         thumbnail: "Thumbnail"
       page:
         linked_linkmap_page_perma_ids: "Verlinkte Seiten"
+        hover_image_id: "Hover Image"
+        visited_image_id: "Visited Image"
       "pageflow/page":
         linked_linkmap_page_perma_ids: "Verlinkte Seiten"
+        hover_image_id: "Hover Image"
+        visited_image_id: "Visited Image"
+        linkmap_areas: "Verweisbereiche"
+        panorama_initial_position: "Initiale Position"
