@@ -3,7 +3,10 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
 
   className: 'area_item',
 
-  ui: {
+  events: {
+    'click .edit': function() {
+      pageflow.editor.navigate(this.model.editPath(), {trigger: true});
+    }
   },
 
   modelEvents: {

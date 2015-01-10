@@ -19,3 +19,8 @@ pageflow.editor.pageTypes.register('linkmap_page', {
 });
 
 pageflow.editor.registerPageConfigurationMixin(pageflow.linkmapPage.pageConfigurationMixin);
+
+pageflow.editor.registerSideBarRouting({
+  router: pageflow.linkmapPage.SideBarRouter,
+  controller: pageflow.linkmapPage.SideBarController
+});
