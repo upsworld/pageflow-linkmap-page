@@ -6,9 +6,10 @@ pageflow.linkmapPage.pageConfigurationMixin = {
     return this._linkmapAreas;
 
     function create() {
-      var collection = new pageflow.linkmapPage.AreasCollection();
-
-      collection.add(configuration.get('linkmap_areas'));
+      var collection = new pageflow.linkmapPage.AreasCollection(
+        configuration.get('linkmap_areas'),
+        {page: configuration.page}
+      );
 
       configuration.listenTo(collection, 'add remove change', function() {
         configuration.set('linkmap_areas', collection.map(function(area) {

@@ -114,43 +114,58 @@
   &:hover {
     outline: 2px solid red;
   }
+
+  .edit {
+    @include icon-only-button(white);
+    @include pencil-icon;
+    position: absolute;
+    display: none;
+    z-index: 1;
+    top: 5px;
+    right: 5px;
+    background-color: #fff;
+    border: solid 1px #888;
+  }
 }
 
-.linkmap_areas.editable {
-  .area_item {
-    outline: solid 2px #000;
+.linkmap_areas.editable .area_item:hover .edit {
+  display: block;
+}
 
-    &:hover {
-      outline: 2px solid red;
-    }
+.linkmap_areas.editable .area_item,
+.linkmap_areas .area_item.editable {
+  outline: solid 2px #000;
+
+  &:hover {
+    outline: 2px solid red;
+  }
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 100%;
+    height: 100%;
+    border: solid 2px #fff;
+    @include animation(blink 3s linear infinite);
+  }
+
+  &:after {
+    pointer-events: none;
+    background-color: red;
+    @include animation(fade_out 1s ease forwards);
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+  }
+
+  &:hover {
+    outline: 2px solid red;
 
     &:before {
-      content: "";
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      width: 100%;
-      height: 100%;
-      border: solid 2px #fff;
-      @include animation(blink 3s linear infinite);
-    }
-
-    &:after {
-      pointer-events: none;
-      background-color: red;
-      @include animation(fade_out 1s ease forwards);
-      position: absolute;
-      content: "";
-      width: 100%;
-      height: 100%;
-    }
-
-    &:hover {
-      outline: 2px solid red;
-
-      &:before {
-        visibility: hidden;
-      }
+      visibility: hidden;
     }
   }
 }

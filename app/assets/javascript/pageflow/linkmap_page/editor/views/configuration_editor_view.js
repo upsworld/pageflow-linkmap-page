@@ -1,4 +1,4 @@
-pageflow.ConfigurationEditorView.register('linkmap_page', {
+pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.extend({
   configure: function() {
     this.tab('general', function() {
       this.group('general');
@@ -6,7 +6,12 @@ pageflow.ConfigurationEditorView.register('linkmap_page', {
     });
 
     this.tab('links', function() {
-      this.input('linkmap_areas', pageflow.linkmapPage.AreasInputView);
+      this.view(pageflow.linkmapPage.EditableAreasModeView, {
+        model: this.model.page
+      });
+      this.view(pageflow.PageLinksView, {
+        model: this.model.page
+      });
     });
 
     this.tab('files', function() {

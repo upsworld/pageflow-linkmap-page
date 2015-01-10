@@ -12,16 +12,16 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
 
   onRender: function() {
     var savePositionAndSize = function(element, model) {
-      element.css("left",parseInt(element.css("left")) / (element.parent().width() / 100)+"%");
-      element.css("top",parseInt(element.css("top")) / (element.parent().height() / 100)+"%");
-      element.css("width",parseInt(element.css("width")) / (element.parent().width() / 100)+"%");
-      element.css("height",parseInt(element.css("height")) / (element.parent().height() / 100)+"%");
+      element.css("left",parseInt(element.css("left"), 10) / (element.parent().width() / 100)+"%");
+      element.css("top",parseInt(element.css("top"), 10) / (element.parent().height() / 100)+"%");
+      element.css("width",parseInt(element.css("width"), 10) / (element.parent().width() / 100)+"%");
+      element.css("height",parseInt(element.css("height"), 10) / (element.parent().height() / 100)+"%");
 
       model.set({
-        'left': parseInt(element.css("left")) / (element.parent().width() / 100),
-        'top': parseInt(element.css("top")) / (element.parent().height() / 100),
-        'width': parseInt(element.css("width")) / (element.parent().width() / 100),
-        'height': parseInt(element.css("height")) / (element.parent().height() / 100)
+        'left': parseInt(element.css("left"), 10) / (element.parent().width() / 100),
+        'top': parseInt(element.css("top"), 10) / (element.parent().height() / 100),
+        'width': parseInt(element.css("width"), 10) / (element.parent().width() / 100),
+        'height': parseInt(element.css("height"), 10) / (element.parent().height() / 100)
       });
     },
 
@@ -43,6 +43,8 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
   },
 
   update: function() {
+    this.$el.toggleClass('editable', !!this.model.get('highlighted'));
+
     this.$el.css('left', this.model.get('left') + "%");
     this.$el.css('top', this.model.get('top') + "%");
     this.$el.css('width', this.model.get('width') + "%");

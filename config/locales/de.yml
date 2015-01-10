@@ -9,12 +9,9 @@ de:
           description: "Empfohlene Textlänge: bis zu 220 Zeichen"
   activerecord:
     attributes:
-      site:
-        url: "Ziel URL"
-        open_in_new_tab: "In neuem Tab öffnen"
-        title: "Titel"
-        description: "Beschreibung"
-        thumbnail: "Thumbnail"
+      "pageflow/linkmap_page/area":
+        target_page_id: "Ziel Seite"
+        name: "Bezeichnung"
       page:
         linked_linkmap_page_perma_ids: "Verlinkte Seiten"
         hover_image_id: "Hover Image"

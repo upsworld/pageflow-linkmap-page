@@ -95,19 +95,5 @@ pageflow.pageType.register('linkmap_page', _.extend({
     }
 
     this.lastPanoramaPosition = configuration.get('panorama_initial_position');
-  },
-
-  embeddedEditorViews: function() {
-    return {
-      '.panorama': {
-        view: pageflow.BackgroundImageEmbeddedView,
-        options: {propertyName: 'background_image_id', dataSizeAttributes : true}
-      },
-
-      '.linkmap_areas': {
-        view: pageflow.linkmapPage.AreasEmbeddedView,
-        options: {propertyName: 'linked_page_ids'}
-      }
-    };
   }
 }, pageflow.commonPageCssClasses));
