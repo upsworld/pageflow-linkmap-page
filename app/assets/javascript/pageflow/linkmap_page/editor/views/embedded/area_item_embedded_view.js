@@ -6,6 +6,17 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
   events: {
     'click .edit': function() {
       pageflow.editor.navigate(this.model.editPath(), {trigger: true});
+      return false;
+    },
+
+    'click': function() {
+      var targetPage = this.model.targetPage();
+
+      if (targetPage &&
+          !this.$el.parents('.linkmap_areas').hasClass('editable') &&
+          !this.$el.hasClass('editable')) {
+        pageflow.slides.goToByPermaId(targetPage.get('perma_id'));
+      }
     }
   },
 
