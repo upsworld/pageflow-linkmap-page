@@ -3,14 +3,15 @@
   <div class="backgroundArea">
     <div class="linkmap">
       <%= background_image_div_with_size(configuration, 'background_image', class: 'panorama', style_group: :original) %>
-      <div class="linkmap_areas">
+      <div class="linkmap_areas linkmap_page_link_areas">
         <% configuration.fetch('linkmap_areas', []).each do |area_attributes| %>
           <a href="#" class="hover_area" style="left: <%= area_attributes['left'] %>%; top: <%= area_attributes['top'] %>%; width: <%= area_attributes['width'] %>%; height: <%= area_attributes['height'] %>%;">
             <%= background_image_div_with_size(configuration, 'hover_image', style_group: :original) %>
           </a>
         <% end %>
       </div>
-
+      <div class="linkmap_areas linkmap_audio_file_areas">
+      </div>
     </div>
   </div>
 

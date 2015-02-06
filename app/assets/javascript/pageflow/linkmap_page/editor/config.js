@@ -7,18 +7,30 @@ pageflow.editor.pageTypes.register('linkmap_page', {
       options: {propertyName: 'background_image_id', dataSizeAttributes : true}
     },
 
-    '.linkmap_areas': {
+    '.linkmap_page_link_areas': {
       view: pageflow.linkmapPage.AreasEmbeddedView,
-      options: {propertyName: 'linked_page_ids'}
+      options: {
+        propertyName: 'linkmap_page_link_areas'
+      }
+    },
+
+    '.linkmap_audio_file_areas': {
+      view: pageflow.linkmapPage.AreasEmbeddedView,
+      options: {
+        propertyName: 'linkmap_audio_file_areas'
+      }
     }
   },
 
   pageLinks: function(configuration) {
-    return configuration.linkmapAreas();
+    return configuration.linkmapAreas('linkmap_page_link_areas');
   }
 });
 
 pageflow.editor.registerPageConfigurationMixin(pageflow.linkmapPage.pageConfigurationMixin);
+
+pageflow.editor.registerFileSelectionHandler('linkmapPage.area', pageflow.linkmapPage.AreaFileSelectionHandler);
+pageflow.editor.registerFileSelectionHandler('linkmapPage.newArea', pageflow.linkmapPage.NewAreaFileSelectionHandler);
 
 pageflow.editor.registerSideBarRouting({
   router: pageflow.linkmapPage.SideBarRouter,

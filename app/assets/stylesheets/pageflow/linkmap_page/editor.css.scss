@@ -48,53 +48,10 @@
   }
 }
 
-.linkmap_page_areas_input {
-  .add_area {
-    @include plus-circled-icon;
-    @include icon-button;
-  }
+@import "./editor/file_areas";
 
-  ul.sites {
-    margin-bottom: 10px;
-  }
-
-  a.remove {
-    @include icon-only-button(#aaa);
-    @include trash-icon;
-    position: absolute;
-    right: 4px;
-    top: 4px;
-  }
-
-  a.edit {
-    @include icon-only-button(#aaa);
-    @include pencil-icon;
-    position: absolute;
-    right: 40px;
-    top: 4px;
-  }
-
-  .linkmap_page_site_reference {
-    margin-bottom: 2px;
-
-    > a:first-child {
-      padding-left: 45px;
-      cursor: default;
-    }
-
-    .thumbnail {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 35px;
-      width: 35px;
-      cursor: move;
-      background-size: cover;
-      background-color: #444;
-    }
-  }
 }
-}
+
 .linkmap_page_areas {
   a.remove {
     width: 10px;
@@ -168,4 +125,8 @@
       visibility: hidden;
     }
   }
+}
+
+.linkmap_areas .area_item.editable {
+  outline: 2px solid blue;
 }

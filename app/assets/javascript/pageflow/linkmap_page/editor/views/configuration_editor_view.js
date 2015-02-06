@@ -5,15 +5,6 @@ pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.
       this.input('panorama_initial_position', pageflow.SliderInputView);
     });
 
-    this.tab('links', function() {
-      this.view(pageflow.linkmapPage.EditableAreasModeView, {
-        model: this.model.page
-      });
-      this.view(pageflow.PageLinksView, {
-        model: this.model.page
-      });
-    });
-
     this.tab('files', function() {
       this.input('background_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
       this.input('hover_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
@@ -21,6 +12,19 @@ pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.
       this.input('thumbnail_image_id', pageflow.FileInputView, {
         collection: pageflow.imageFiles,
         imagePositioning: false
+      });
+    });
+
+    this.tab('areas', function() {
+      this.view(pageflow.PageLinksView, {
+        model: this.model.page
+      });
+      this.view(pageflow.linkmapPage.EditableAreasModeView, {
+        model: this.model.page
+      });
+      this.view(pageflow.linkmapPage.FileAreasView, {
+        model: this.model,
+        propertyName: 'linkmap_audio_file_areas'
       });
     });
 

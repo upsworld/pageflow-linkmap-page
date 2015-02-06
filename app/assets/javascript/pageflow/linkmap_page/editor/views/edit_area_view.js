@@ -14,24 +14,24 @@ pageflow.linkmapPage.EditAreaView = Backbone.Marionette.Layout.extend({
   },
 
   onRender: function() {
+    var view = this;
     var configurationEditor = new pageflow.ConfigurationEditorView({
       model: this.model
     });
 
-    configurationEditor.tab('general', function() {
-      this.input('name', pageflow.TextInputView);
-      this.input('target_page_id', pageflow.PageLinkInputView);
-    });
+    this.configure(configurationEditor);
 
     this.formContainer.show(configurationEditor);
     this.model.set('highlighted', true);
   },
+
+  configure: function(configurationEditor) {},
 
   onClose: function() {
     this.model.unset('highlighted');
   },
 
   goBack: function() {
-    pageflow.editor.navigate('/pages/' + this.options.page.id + '/links', {trigger: true});
+    pageflow.editor.navigate('/pages/' + this.options.page.id + '/areas', {trigger: true});
   }
 });

@@ -3,22 +3,31 @@ de:
     linkmap_page:
       page_type_name: "Verweisbereiche-Seite"
       manage_sites: "Verweise verwalten"
-  editor:
-      inline_help:
-        site:
-          description: "Empfohlene Textlänge: bis zu 220 Zeichen"
+      editor:
+        templates:
+          file_areas:
+            label: "Audios"
+            add: "Hinzufügen"
+          file_area_item:
+            edit: "Bearbeiten"
+            remove: "Entfernen"
+        views:
+          file_area_item_view:
+            no_file: "(Keine Datei)"
+    ui:
+      configuration_editor:
+        tabs:
+          areas: "Bereiche"
+
   activerecord:
     attributes:
       "pageflow/linkmap_page/area":
         target_page_id: "Ziel Seite"
+        audio_file_id: "Audio Datei"
         name: "Bezeichnung"
-      page:
-        linked_linkmap_page_perma_ids: "Verlinkte Seiten"
-        hover_image_id: "Hover Image"
-        visited_image_id: "Visited Image"
       "pageflow/page":
         linked_linkmap_page_perma_ids: "Verlinkte Seiten"
         hover_image_id: "Hover Image"
         visited_image_id: "Visited Image"
         linkmap_areas: "Verweisbereiche"
-        panorama_initial_position: "Initiale Position"
+        audio_areas: "Bereiche mit Audio"
