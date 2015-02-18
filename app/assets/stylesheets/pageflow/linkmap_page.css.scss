@@ -48,7 +48,8 @@
     }
 
     &:hover,
-    &.hover {
+    &.hover,
+    &.playing{
       .background_image {
         opacity: 1;
         visibility: visible;

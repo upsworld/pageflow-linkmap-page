@@ -12,15 +12,37 @@ pageflow.pageType.register('linkmap_page', _.extend({
       baseImage: pageElement.find('.panorama')
     });
 
+    this.setupPageLinkAreas(pageElement);
+    this.setupAudioFileAreas(pageElement);
+  },
+
+  setupPageLinkAreas: function(pageElement) {
+    pageElement.on('click', '[data-page]', function(e) {
+      pageflow.slides.goToByPermaId($(this).data('page'));
+    });
+  },
+
+  setupAudioFileAreas: function(pageElement) {
     var player = this.poolPlayer = pageflow.audio.createPoolPlayer({fadeDuration: 1000});
 
     pageElement.on('click', '[data-audio-file]', function() {
       player.play($(this).data('audioFile'));
     });
 
-    pageElement.on('click', '[data-page]', function(e) {
-      pageflow.slides.goToByPermaId($(this).data('page'));
+    player.on('play', function(options) {
+      resetHighlights();
+      highlight(options.audioFileId);
     });
+
+    player.on('ended', resetHighlights);
+
+    function highlight(audioFileId) {
+      pageElement.find('[data-audio-file="' + audioFileId + '"]').addClass('playing');
+    }
+
+    function resetHighlights() {
+      pageElement.find('[data-audio-file]').removeClass('playing');
+    }
   },
 
   resize: function(pageElement, configuration) {
