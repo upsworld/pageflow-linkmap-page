@@ -10,15 +10,24 @@ pageflow.linkmapPage.AreasCollection = Backbone.Collection.extend({
   },
 
   addLink: function(targetPageId) {
-    var offset = 10;
-
-    this.add({
-      target_page_id: targetPageId,
-      left: offset + 2,
-      top: 2,
-      width: 5,
-      height: 5
+    this.addWithPosition({
+      target_page_id: targetPageId
     });
+  },
+
+  addAudioFile: function(audioFileId) {
+    this.addWithPosition({
+      audio_file_id: audioFileId
+    });
+  },
+
+  addWithPosition: function(attributes) {
+    this.add(_.extend({
+      left: 10,
+      top: 10,
+      width: 7,
+      height: 7
+    }, attributes));
   },
 
   updateLink: function(link, targetPageId) {
