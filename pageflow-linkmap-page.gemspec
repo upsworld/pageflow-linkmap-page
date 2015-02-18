@@ -24,4 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec-rails", "~> 2.0"
   spec.add_development_dependency 'factory_girl_rails'
   spec.add_development_dependency "sqlite3"
+
+  # Browser like integration testing
+  spec.add_development_dependency 'capybara'
 end
