@@ -2,16 +2,13 @@
 <div class="content_and_background linkmap_page">
   <div class="backgroundArea">
     <div class="linkmap">
-      <%= background_image_div_with_size(configuration, 'background_image', class: 'panorama', style_group: :original) %>
-      <div class="linkmap_areas linkmap_page_link_areas">
-        <% configuration.fetch('linkmap_areas', []).each do |area_attributes| %>
-          <a href="#" class="hover_area" style="left: <%= area_attributes['left'] %>%; top: <%= area_attributes['top'] %>%; width: <%= area_attributes['width'] %>%; height: <%= area_attributes['height'] %>%;">
-            <%= background_image_div_with_size(configuration, 'hover_image', style_group: :original) %>
-          </a>
-        <% end %>
-      </div>
-      <div class="linkmap_areas linkmap_audio_file_areas">
-      </div>
+      <%= background_image_div_with_size(configuration,
+                                         'background_image',
+                                         class: 'panorama',
+                                         style_group: :original) %>
+
+      <%= linkmap_areas_div(configuration, 'linkmap_page_link_areas') %>
+      <%= linkmap_areas_div(configuration, 'linkmap_audio_file_areas') %>
     </div>
   </div>
 
@@ -25,18 +22,13 @@
               <span class="title"><%= configuration['title'] %></span>
               <span class="subtitle"><%= configuration['subtitle'] %></span>
             </h2>
-            <%= background_image_tag(configuration['background_image_id'], {"class" => "print_image"}) %>
+
+            <%= background_image_tag(configuration['background_image_id'],
+                                     class: 'print_image') %>
           </div>
           <div class="contentText">
             <p><%= raw configuration['text'] %></p>
           </div>
-          <div class="ext-links" id="ext-links">
-            <div id="horizontal_scroller">
-              <%= render Pageflow::ExternalLinks::Site.from_perma_ids(@entry.try(:revision), configuration['linked_external_site_perma_ids']) %>
-            </div>
-          </div>
-          <a href="#" class="arrow-forward"><span class="hint">Vorwärts</span></a>
-          <a href="#" class="arrow-back"><span class="hint">Zurück</span></a>
         </div>
       </div>
     </div>

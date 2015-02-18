@@ -4,7 +4,7 @@ module Pageflow
       name 'linkmap_page'
 
       def view_helpers
-        [ImageTagHelper]
+        [ImageTagHelper, AreasHelper]
       end
     end
   end

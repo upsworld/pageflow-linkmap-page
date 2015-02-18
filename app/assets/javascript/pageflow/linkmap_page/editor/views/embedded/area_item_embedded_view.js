@@ -58,6 +58,8 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
   },
 
   update: function() {
+    this.$el.attr('data-audio-file-id', this.model.get('audio_file_id'));
+
     this.$el.toggleClass('editable', !!this.model.get('highlighted'));
 
     this.$el.css('left', this.model.get('left') + "%");

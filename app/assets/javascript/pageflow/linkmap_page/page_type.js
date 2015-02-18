@@ -1,13 +1,8 @@
-/*global IScroll*/
-
 pageflow.pageType.register('linkmap_page', _.extend({
   prepareNextPageTimeout: 0,
   lastPanoramaPosition: 0,
 
   enhance: function(pageElement, configuration) {
-    var scrollerElement = pageElement.find('.ext-links'),
-    that = this;
-
     this.panorama = pageElement.find('.linkmap');
     this.panorama.linkmapPanorama({initialPosition : configuration.panorama_initial_position});
     this.panorama.linkmapPanorama("goTo", configuration.panorama_initial_position);
@@ -18,23 +13,16 @@ pageflow.pageType.register('linkmap_page', _.extend({
       e.preventDefault();
     });
 
-    this.scroller = new IScroll(scrollerElement[0], {
-      mouseWheel: true,
-      bounce: false,
-      keyBindings: true,
-      scrollX: true,
-      scrollY: false,
-      probeType: 2,
-      eventPassthrough: true
-    });
+    var player = this.poolPlayer = pageflow.audio.createPoolPlayer({fadeDuration: 1000});
 
+    pageElement.on('click', '[data-audio-file-id]', function() {
+      player.play($(this).data('audioFileId'));
+    });
   },
 
   resize: function(pageElement, configuration) {
-
     this.panorama.linkmapPanorama('refresh');
     this.adjustOverlayingImages(pageElement, this.panorama.find('.panorama'));
-    this.scroller.refresh();
   },
 
   adjustOverlayingImages: function(pageElement, baseImage) {
@@ -70,7 +58,9 @@ pageflow.pageType.register('linkmap_page', _.extend({
   activated: function(pageElement, configuration) {
   },
 
-  deactivating: function(pageElement, configuration) {},
+  deactivating: function(pageElement, configuration) {
+    this.poolPlayer.pause();
+  },
 
   deactivated: function(pageElement, configuration) {},
 
@@ -87,8 +77,6 @@ pageflow.pageType.register('linkmap_page', _.extend({
     });
 
     this.panorama.linkmapPanorama('refresh');
-
-    console.log('compare', configuration.get('panorama_initial_position'), this.lastPanoramaPosition);
 
     if(configuration.get('panorama_initial_position') != this.lastPanoramaPosition) {
       this.panorama.linkmapPanorama('goTo', configuration.get('panorama_initial_position'));
