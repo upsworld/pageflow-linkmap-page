@@ -23,12 +23,14 @@ pageflow.linkmapPage.EditAreaView = Backbone.Marionette.Layout.extend({
 
     this.formContainer.show(configurationEditor);
     this.model.set('highlighted', true);
+    this.model.collection.page.set('areas_editable', true);
   },
 
   configure: function(configurationEditor) {},
 
   onClose: function() {
     this.model.unset('highlighted');
+    this.model.collection.page.unset('areas_editable');
   },
 
   goBack: function() {

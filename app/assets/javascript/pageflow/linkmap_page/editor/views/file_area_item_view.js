@@ -22,11 +22,11 @@ pageflow.linkmapPage.FileAreaItemView = Backbone.Marionette.ItemView.extend({
     },
 
     'mouseenter': function() {
-      this.model.highlight(true);
+      this.model.highlight();
     },
 
     'mouseleave': function() {
-      this.model.resetHighlight(false);
+      this.model.resetHighlight();
     }
   },
 
@@ -48,4 +48,8 @@ pageflow.linkmapPage.FileAreaItemView = Backbone.Marionette.ItemView.extend({
     this.ui.editButton.toggle(!!this.model.editPath());
     this.$el.toggleClass('dangling', !file);
   },
+
+  onClose: function() {
+    this.model.resetHighlight();
+  }
 });

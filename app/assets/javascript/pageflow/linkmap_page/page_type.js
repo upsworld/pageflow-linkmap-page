@@ -7,40 +7,25 @@ pageflow.pageType.register('linkmap_page', _.extend({
     this.panorama.linkmapPanorama({initialPosition : configuration.panorama_initial_position});
     this.panorama.linkmapPanorama("goTo", configuration.panorama_initial_position);
 
-    this.baseImage = pageElement.find('.linkmap_image');
-
-    pageElement.find('.hover_area').on('mousemove', function(e) {
-      e.preventDefault();
+    this.linkmapAreas = pageElement.find('.linkmap_areas');
+    this.linkmapAreas.linkmap({
+      baseImage: pageElement.find('.panorama')
     });
 
     var player = this.poolPlayer = pageflow.audio.createPoolPlayer({fadeDuration: 1000});
 
-    pageElement.on('click', '[data-audio-file-id]', function() {
-      player.play($(this).data('audioFileId'));
+    pageElement.on('click', '[data-audio-file]', function() {
+      player.play($(this).data('audioFile'));
+    });
+
+    pageElement.on('click', '[data-page]', function(e) {
+      pageflow.slides.goToByPermaId($(this).data('page'));
     });
   },
 
   resize: function(pageElement, configuration) {
     this.panorama.linkmapPanorama('refresh');
-    this.adjustOverlayingImages(pageElement, this.panorama.find('.panorama'));
-  },
-
-  adjustOverlayingImages: function(pageElement, baseImage) {
-    var hoverAreas = pageElement.find('.hover_area'),
-      hoverImages = pageElement.find('.hover_area div'),
-      linkmapContainer = pageElement.find('.linkmap_areas');
-
-    linkmapContainer.width(baseImage.width()).height(baseImage.height());
-    linkmapContainer.parent().width(baseImage.width()).height(baseImage.height());
-    hoverImages.width(baseImage.width()).height(baseImage.height());
-
-    function positionImage(image, index, array) {
-      image.css({"left": -image.parent().position().left + "px","top": -image.parent().position().top + "px"});
-    }
-
-    for(var i = 0; i < hoverImages.length; i++) {
-      positionImage($(hoverImages[i]));
-    }
+    this.linkmapAreas.linkmap('refresh');
   },
 
   prepare: function(pageElement, configuration) {
@@ -52,7 +37,6 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
   activating: function(pageElement, configuration) {
     this.resize(pageElement, configuration);
-
   },
 
   activated: function(pageElement, configuration) {
@@ -77,11 +61,18 @@ pageflow.pageType.register('linkmap_page', _.extend({
     });
 
     this.panorama.linkmapPanorama('refresh');
+    this.updateLinkmapAfterEmbeddedViewsHaveBeenUpdated();
 
     if(configuration.get('panorama_initial_position') != this.lastPanoramaPosition) {
       this.panorama.linkmapPanorama('goTo', configuration.get('panorama_initial_position'));
     }
 
     this.lastPanoramaPosition = configuration.get('panorama_initial_position');
+  },
+
+  updateLinkmapAfterEmbeddedViewsHaveBeenUpdated: function() {
+    setTimeout(_.bind(function() {
+      this.linkmapAreas.linkmap('refresh');
+    }, this), 1);
   }
 }, pageflow.commonPageCssClasses));

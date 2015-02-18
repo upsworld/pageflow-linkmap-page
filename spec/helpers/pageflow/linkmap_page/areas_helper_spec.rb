@@ -52,7 +52,15 @@ module Pageflow
 
           html = helper.linkmap_area(attributes)
 
-          expect(html).to have_selector('a[data-audio-file-id="25"]')
+          expect(html).to have_selector('a[data-audio-file="25"]')
+        end
+
+        it 'sets data attribute for audio file' do
+          attributes = {target_page_id: 10}
+
+          html = helper.linkmap_area(attributes)
+
+          expect(html).to have_selector('a[data-page="10"]')
         end
       end
     end

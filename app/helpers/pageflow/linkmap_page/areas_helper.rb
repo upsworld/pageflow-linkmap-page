@@ -27,7 +27,10 @@ module Pageflow
         private
 
         def data_attributes
-          attributes.slice(:audio_file_id)
+          {
+            audio_file: attributes[:audio_file_id],
+            page: attributes[:target_page_id]
+          }
         end
 
         def inline_styles

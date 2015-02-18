@@ -3,13 +3,14 @@ pageflow.linkmapPage.AreasEmbeddedView = Backbone.Marionette.View.extend({
     this.subview(new pageflow.CollectionView({
       el: this.$el,
       collection: this.model.linkmapAreas(this.options.propertyName),
-      itemViewConstructor: pageflow.linkmapPage.AreaItemEmbeddedView
+      itemViewConstructor: pageflow.linkmapPage.AreaItemEmbeddedView,
+      itemViewOptions: {
+        pageConfiguration: this.model
+      }
     }));
 
-    var view = this;
-
     this.listenTo(this.model.page, 'change:areas_editable', function() {
-      view.updateClassName();
+      this.updateClassName();
     });
 
     return this;
@@ -20,5 +21,4 @@ pageflow.linkmapPage.AreasEmbeddedView = Backbone.Marionette.View.extend({
 
     this.$el.toggleClass('editable', !!editable);
   }
-
 });
