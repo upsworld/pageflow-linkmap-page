@@ -23,7 +23,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   setupAudioFileAreas: function(pageElement) {
-    var player = this.poolPlayer = pageflow.audio.createPoolPlayer({fadeDuration: 1000});
+    var player = this.poolPlayer = pageflow.audio.createMultiPlayer({fadeDuration: 1000});
 
     pageElement.on('click', '[data-audio-file]', function() {
       player.play($(this).data('audioFile'));
