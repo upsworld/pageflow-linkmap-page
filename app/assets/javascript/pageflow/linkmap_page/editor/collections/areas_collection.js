@@ -31,6 +31,7 @@ pageflow.linkmapPage.AreasCollection = Backbone.Collection.extend({
   },
 
   updateLink: function(link, targetPageId) {
+    link.set({target_page_id: targetPageId});
   },
 
   removeLink: function(link) {
