@@ -2,6 +2,7 @@ de:
   pageflow:
     linkmap_page:
       page_type_name: "Verweisbereiche-Seite"
+      page_type_feature_name: "Verweisbereiche-Seitentyp"
       manage_sites: "Verweise verwalten"
       editor:
         templates:
