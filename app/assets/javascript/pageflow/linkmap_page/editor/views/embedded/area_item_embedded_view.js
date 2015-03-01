@@ -91,6 +91,7 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
   update: function() {
     this.$el.attr('data-audio-file', this.model.get('audio_file_id'));
     this.$el.attr('data-page', this.model.get('target_page_id'));
+    this.$el.attr('data-page-transition', this.model.get('page_transition'));
 
     this.$el.toggleClass('highlighted', !!this.model.get('highlighted'));
 

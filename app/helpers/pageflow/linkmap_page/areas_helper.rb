@@ -29,7 +29,8 @@ module Pageflow
         def data_attributes
           {
             audio_file: attributes[:audio_file_id],
-            page: attributes[:target_page_id]
+            page: attributes[:target_page_id],
+            page_transition: attributes[:page_transition]
           }
         end
 

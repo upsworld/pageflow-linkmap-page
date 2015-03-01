@@ -18,7 +18,10 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
   setupPageLinkAreas: function(pageElement) {
     pageElement.on('click', '[data-page]', function(e) {
-      pageflow.slides.goToByPermaId($(this).data('page'));
+      var area = $(this);
+      pageflow.slides.goToByPermaId(area.data('page'), {
+        transition: area.data('pageTransition')
+      });
     });
   },
 
