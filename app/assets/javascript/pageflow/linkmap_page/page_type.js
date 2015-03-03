@@ -2,10 +2,18 @@ pageflow.pageType.register('linkmap_page', _.extend({
   prepareNextPageTimeout: 0,
   lastPanoramaPosition: 0,
 
+  scrollerOptions: {
+    freeScroll: true,
+    scrollX: true
+  },
+
   enhance: function(pageElement, configuration) {
+    this.content = pageElement.find('.scroller');
     this.panorama = pageElement.find('.linkmap');
-    this.panorama.linkmapPanorama({initialPosition : configuration.panorama_initial_position});
-    this.panorama.linkmapPanorama("goTo", configuration.panorama_initial_position);
+    this.content.linkmapPanorama({
+      page: pageElement,
+      scroller: this.scroller
+    });
 
     this.linkmapAreas = pageElement.find('.linkmap_areas');
     this.linkmapAreas.linkmap({
@@ -49,8 +57,10 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   resize: function(pageElement, configuration) {
-    this.panorama.linkmapPanorama('refresh');
+    this.content.linkmapPanorama('refresh');
     this.linkmapAreas.linkmap('refresh');
+
+    this.scroller.refresh();
   },
 
   prepare: function(pageElement, configuration) {
@@ -62,6 +72,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
   activating: function(pageElement, configuration) {
     this.resize(pageElement, configuration);
+    this.scroller.refresh();
   },
 
   activated: function(pageElement, configuration) {
@@ -74,22 +85,13 @@ pageflow.pageType.register('linkmap_page', _.extend({
   deactivated: function(pageElement, configuration) {},
 
   update: function(pageElement, configuration) {
-    pageElement.find('h2 .tagline').text(configuration.get('tagline') || '');
-    pageElement.find('h2 .title').text(configuration.get('title') || '');
-    pageElement.find('h2 .subtitle').text(configuration.get('subtitle') || '');
-    pageElement.find('.contentText p').html(configuration.get('text') || '');
-
     this.updateCommonPageCssClasses(pageElement, configuration);
 
-    pageElement.find('.shadow').css({
-      opacity: configuration.get('gradient_opacity') / 100
-    });
-
-    this.panorama.linkmapPanorama('refresh');
+    this.content.linkmapPanorama("refresh");
     this.updateLinkmapAfterEmbeddedViewsHaveBeenUpdated();
 
     if(configuration.get('panorama_initial_position') != this.lastPanoramaPosition) {
-      this.panorama.linkmapPanorama('goTo', configuration.get('panorama_initial_position'));
+     // this.panorama.linkmapPanorama('goTo', configuration.get('panorama_initial_position'));
     }
 
     this.lastPanoramaPosition = configuration.get('panorama_initial_position');
@@ -98,6 +100,6 @@ pageflow.pageType.register('linkmap_page', _.extend({
   updateLinkmapAfterEmbeddedViewsHaveBeenUpdated: function() {
     setTimeout(_.bind(function() {
       this.linkmapAreas.linkmap('refresh');
-    }, this), 1);
+    }, this), 10);
   }
 }, pageflow.commonPageCssClasses));

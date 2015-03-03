@@ -1,18 +1,18 @@
 <div class="blackLayer"></div>
 <div class="content_and_background linkmap_page">
-  <div class="backgroundArea">
+  <div class="backgroundArea scroller">
     <div class="linkmap">
       <%= background_image_div_with_size(configuration,
-                                         'background_image',
-                                         class: 'panorama',
-                                         style_group: :original) %>
+                                           'background_image',
+                                           class: 'panorama panorama_image',
+                                           style_group: :original) %>
 
       <%= linkmap_areas_div(configuration, 'linkmap_page_link_areas') %>
       <%= linkmap_areas_div(configuration, 'linkmap_audio_file_areas') %>
     </div>
   </div>
 
-  <div class="content">
+<!--  <div class="content">
     <div class="scroller">
       <div>
         <div class="contentWrapper">
@@ -33,4 +33,5 @@
       </div>
     </div>
   </div>
+  //-->
 </div>

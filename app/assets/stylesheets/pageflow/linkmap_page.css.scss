@@ -1,8 +1,16 @@
 @include pageflow-page-type(linkmap_page);
 
+
+.js .page .scroller > div.linkmap {
+  padding: 0;
+  width: auto;
+  height: auto;
+
+}
+
 .linkmap_page {
   .content {
-    pointer-events: none;
+/*    pointer-events: none; */
   }
 
   .linkmap {
@@ -22,10 +30,16 @@
     position: absolute;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
   }
 
   .panorama {
-    pointer-events: all;
+    height: 120%;
+    width: auto;
+    vertical-align: middle;
+    display: block;
+    position: relative;
   }
 
   .hover_area {

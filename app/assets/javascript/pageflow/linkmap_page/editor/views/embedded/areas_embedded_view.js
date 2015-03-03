@@ -5,7 +5,8 @@ pageflow.linkmapPage.AreasEmbeddedView = Backbone.Marionette.View.extend({
       collection: this.model.linkmapAreas(this.options.propertyName),
       itemViewConstructor: pageflow.linkmapPage.AreaItemEmbeddedView,
       itemViewOptions: {
-        pageConfiguration: this.model
+        pageConfiguration: this.model,
+        container: this.options.container
       }
     }));
 
