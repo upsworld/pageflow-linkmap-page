@@ -1,8 +1,8 @@
 pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.extend({
   configure: function() {
     this.tab('general', function() {
-      this.group('general');
-      this.input('panorama_initial_position', pageflow.SliderInputView);
+      this.input('title', pageflow.TextInputView, {required: true});
+      this.input('invert', pageflow.CheckBoxInputView);
     });
 
     this.tab('files', function() {
@@ -11,7 +11,7 @@ pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.
       this.input('visited_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
       this.input('thumbnail_image_id', pageflow.FileInputView, {
         collection: pageflow.imageFiles,
-        imagePositioning: false
+        positioning: false
       });
     });
 

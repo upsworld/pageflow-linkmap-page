@@ -5,7 +5,7 @@
       var that = this,
         pageElement = this.options.page;
 
-      this.img = this.element.find('img');
+      this.img = this.element.find('.panorama');
 
       this.img.load(function() {
         that.content.scroller('refresh');
@@ -94,7 +94,16 @@
       }
     },
     refresh: function() {
-      this.img.height(this.options.page.height() * 1.2);
+      var portrait = this.img.attr('data-height') > this.img.attr('data-width'),
+      imageRatio = this.img.attr('data-width') / this.img.attr('data-height');
+
+      if (portrait) {
+
+      }
+      else {
+        this.img.height(this.options.page.height() * 1.2);
+        this.img.width(this.options.page.height() * 1.2 * imageRatio);
+      }
     }
   });
 }(jQuery));

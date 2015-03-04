@@ -5,7 +5,7 @@
     },
 
     refresh: function() {
-    /*  var hoverAreas = this.element.find('.hover_areas'),
+      var hoverAreas = this.element.find('.hover_areas'),
           hoverImages = this.element.find('.background_image'),
           baseImage = this.options.baseImage;
 
@@ -22,7 +22,7 @@
         .width(baseImage.width())
         .height(baseImage.height());
 
-      hoverImages.linkmapAreaImage();*/
+      hoverImages.linkmapAreaImage();
     },
   });
 

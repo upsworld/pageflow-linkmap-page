@@ -50,6 +50,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
   resize: function(pageElement, configuration) {
     this.content.linkmapPanorama("refresh");
+    this.linkmapAreas.linkmap('refresh');
   },
 
   prepare: function(pageElement, configuration) {
@@ -60,8 +61,10 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   activating: function(pageElement, configuration) {
-   // this.resize(pageElement, configuration);
-   this.content.scroller('refresh');
+    var that = this;
+
+    this.resize(pageElement, configuration);
+    this.content.scroller('refresh');
   },
 
   activated: function(pageElement, configuration) {
@@ -74,14 +77,8 @@ pageflow.pageType.register('linkmap_page', _.extend({
   deactivated: function(pageElement, configuration) {},
 
   update: function(pageElement, configuration) {
-    pageElement.find('h2 .tagline').text(configuration.get('tagline') || '');
-    pageElement.find('h2 .title').text(configuration.get('title') || '');
-    pageElement.find('h2 .subtitle').text(configuration.get('subtitle') || '');
-    pageElement.find('.contentText p').html(configuration.get('text') || '');
+    this.updateCommonPageCssClasses(pageElement, configuration);
 
-    pageElement.find('.shadow').css({
-      opacity: configuration.get('gradient_opacity') / 100
-    });
 
     if(pageElement.find('.panorama').length == 0) {
       pageElement.find('.linkmap').prepend('<img class="panorama" />');
@@ -89,15 +86,10 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
     this.updateCommonPageCssClasses(pageElement, configuration);
 
-    var panorama = pageElement.find('.panorama'),
-    panoramaImageRatio = panorama.attr('data-width') / panorama.attr('data-height');
-    console.log(panoramaImageRatio, pageElement.height() * 1.2);
 
-    panorama.height(pageElement.height() * 1.2);
-    panorama.width(panorama.height() * panoramaImageRatio);
+    this.content.linkmapPanorama("refresh");
 
-    //this.panorama.linkmapPanorama('refresh');
-    //this.updateLinkmapAfterEmbeddedViewsHaveBeenUpdated();
+    this.updateLinkmapAfterEmbeddedViewsHaveBeenUpdated();
 
     if(configuration.get('panorama_initial_position') != this.lastPanoramaPosition) {
      // this.panorama.linkmapPanorama('goTo', configuration.get('panorama_initial_position'));
@@ -109,6 +101,6 @@ pageflow.pageType.register('linkmap_page', _.extend({
   updateLinkmapAfterEmbeddedViewsHaveBeenUpdated: function() {
     setTimeout(_.bind(function() {
       this.linkmapAreas.linkmap('refresh');
-    }, this), 1000);
+    }, this), 10);
   }
 }, pageflow.commonPageCssClasses));

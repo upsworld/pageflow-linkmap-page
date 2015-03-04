@@ -2,9 +2,14 @@
 <div class="content_and_background linkmap_page">
   <div class="backgroundArea scroller">
     <div class="linkmap">
-      <%= linkmap_image_tag(configuration['background_image_id'], class: 'panorama') %>
+      <%= background_image_div_with_size(configuration,
+                                           'background_image',
+                                           class: 'panorama panorama_image',
+                                           style_group: :original) %>
+
       <%= linkmap_areas_div(configuration, 'linkmap_page_link_areas') %>
       <%= linkmap_areas_div(configuration, 'linkmap_audio_file_areas') %>
+    </div>
   </div>
 
 <!--  <div class="content">
