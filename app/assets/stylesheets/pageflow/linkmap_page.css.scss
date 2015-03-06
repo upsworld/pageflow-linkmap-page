@@ -40,6 +40,11 @@
     vertical-align: middle;
     display: block;
     position: relative;
+    display: none;
+
+    &.active {
+      display: block;
+    }
   }
 
   .hover_area {

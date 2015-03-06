@@ -7,16 +7,7 @@
     refresh: function() {
       var hoverAreas = this.element.find('.hover_areas'),
           hoverImages = this.element.find('.background_image'),
-          baseImage = this.options.baseImage;
-
-      this.element
-        .width(baseImage.width())
-        .height(baseImage.height());
-
-      this.element
-        .parent()
-        .width(baseImage.width())
-        .height(baseImage.height());
+          baseImage = this.options.baseImage();
 
       hoverImages
         .width(baseImage.width())

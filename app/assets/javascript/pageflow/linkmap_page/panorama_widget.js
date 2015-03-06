@@ -1,11 +1,11 @@
 (function($) {
   $.widget('pageflow.linkmapPanorama', {
+    environmentMargin: 0,
+
     _create: function() {
       var that = this,
           pageElement = this.options.page,
           scroller = this.options.scroller;
-
-      this.panorama = this.element.find('.panorama');
 
       this.refresh();
 
@@ -74,16 +74,18 @@
     },
 
     refresh: function() {
-      var portrait = this.panorama.attr('data-height') > this.panorama.attr('data-width');
-      var imageRatio = this.panorama.attr('data-width') / this.panorama.attr('data-height');
+      var pageElement = this.options.page;
+      var panorama = this.element.find('.panorama.active');
+      var windowRatio = pageElement.width() / pageElement.height();
+      var imageRatio = panorama.attr('data-width') / panorama.attr('data-height');
 
-      if (portrait) {
-        this.panorama.width(this.options.page.width() * 1.2);
-        this.panorama.height(this.options.page.width() * 1.2 / imageRatio);
+      if(imageRatio > windowRatio) {
+        panorama.height(pageElement.height() * (1 + this.environmentMargin));
+        panorama.width(pageElement.height() * (1 + this.environmentMargin) * imageRatio);
       }
       else {
-        this.panorama.height(this.options.page.height() * 1.2);
-        this.panorama.width(this.options.page.height() * 1.2 * imageRatio);
+        panorama.width(pageElement.width() * (1 + this.environmentMargin));
+        panorama.height(pageElement.width() * (1 + this.environmentMargin) / imageRatio);
       }
     }
   });

@@ -6,9 +6,35 @@ pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.
     });
 
     this.tab('files', function() {
-      this.input('background_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
-      this.input('hover_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
-      this.input('visited_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
+      this.input('background_type', pageflow.SelectInputView, {
+        values: ['image', 'video'],
+        ensureValueDefined: true
+      });
+
+      this.input('background_image_id', pageflow.FileInputView, {
+        collection: pageflow.imageFiles,
+        positioning: false,
+        visibleBinding: 'background_type',
+        visibleBindingValue: 'image'
+      });
+
+      this.input('background_video_id', pageflow.FileInputView, {
+        collection: pageflow.videoFiles,
+        positioning: false,
+        visibleBinding: 'background_type',
+        visibleBindingValue: 'video'
+      });
+
+      this.input('hover_image_id', pageflow.FileInputView, {
+        collection: pageflow.imageFiles,
+        positioning: false
+      });
+
+      this.input('visited_image_id', pageflow.FileInputView, {
+        collection: pageflow.imageFiles,
+        positioning: false
+      });
+
       this.input('thumbnail_image_id', pageflow.FileInputView, {
         collection: pageflow.imageFiles,
         positioning: false

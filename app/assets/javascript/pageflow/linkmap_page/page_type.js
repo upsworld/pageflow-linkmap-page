@@ -1,6 +1,5 @@
 pageflow.pageType.register('linkmap_page', _.extend({
   prepareNextPageTimeout: 0,
-  lastPanoramaPosition: 0,
 
   scrollerOptions: {
     freeScroll: true,
@@ -8,8 +7,10 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   enhance: function(pageElement, configuration) {
+    this.setupPanoramaBackground(pageElement, configuration);
+    this.setupVideoPlayer(pageElement);
+
     this.content = pageElement.find('.scroller');
-    this.panorama = pageElement.find('.linkmap');
     this.content.linkmapPanorama({
       page: pageElement,
       scroller: this.scroller
@@ -17,11 +18,37 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
     this.linkmapAreas = pageElement.find('.linkmap_areas');
     this.linkmapAreas.linkmap({
-      baseImage: pageElement.find('.panorama')
+      baseImage: function() {
+        return pageElement.find('.panorama.active');
+      }
     });
 
     this.setupPageLinkAreas(pageElement);
     this.setupAudioFileAreas(pageElement);
+  },
+
+  setupPanoramaBackground: function(pageElement, configuration) {
+    pageElement.find('.panorama_image')
+      .toggleClass('active', configuration.background_type === 'image');
+
+    pageElement.find('.panorama_video')
+      .toggleClass('active', configuration.background_type === 'video');
+  },
+
+  setupVideoPlayer: function(pageElement) {
+    var wrapper = pageElement.find('.panorama_video');
+    var template = wrapper.find('[data-template=video]');
+
+    wrapper
+      .attr('data-width', template.data('videoWidth'))
+      .attr('data-height', template.data('videoHeight'));
+
+    this.videoPlayer = new pageflow.VideoPlayer.Lazy(template, {
+      width: '100%',
+      height: '100%'
+    });
+
+    wrapper.data('videoPlayer', this.videoPlayer);
   },
 
   setupPageLinkAreas: function(pageElement) {
@@ -30,6 +57,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
       pageflow.slides.goToByPermaId(area.data('page'), {
         transition: area.data('pageTransition')
       });
+      return false;
     });
   },
 
@@ -38,6 +66,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
     pageElement.on('click', '[data-audio-file]', function() {
       player.play($(this).data('audioFile'));
+      return false;
     });
 
     player.on('play', function(options) {
@@ -71,8 +100,19 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   activating: function(pageElement, configuration) {
+    var that = this;
+
     this.resize(pageElement, configuration);
     this.scroller.refresh();
+
+    if (configuration.background_type === 'video') {
+      this.videoPlayer.ensureCreated();
+
+      this.prebufferingPromise = this.videoPlayer.prebuffer().then(function() {
+        that.videoPlayer.volume(0);
+        that.videoPlayer.play();
+      });
+    }
   },
 
   activated: function(pageElement, configuration) {
@@ -82,24 +122,23 @@ pageflow.pageType.register('linkmap_page', _.extend({
     this.poolPlayer.pause();
   },
 
-  deactivated: function(pageElement, configuration) {},
-
-  update: function(pageElement, configuration) {
-    this.updateCommonPageCssClasses(pageElement, configuration);
-
-    this.content.linkmapPanorama("refresh");
-    this.updateLinkmapAfterEmbeddedViewsHaveBeenUpdated();
-
-    if(configuration.get('panorama_initial_position') != this.lastPanoramaPosition) {
-     // this.panorama.linkmapPanorama('goTo', configuration.get('panorama_initial_position'));
-    }
-
-    this.lastPanoramaPosition = configuration.get('panorama_initial_position');
+  deactivated: function(pageElement, configuration) {
+    this.videoPlayer.pause();
+    this.videoPlayer.scheduleDispose();
   },
 
-  updateLinkmapAfterEmbeddedViewsHaveBeenUpdated: function() {
-    setTimeout(_.bind(function() {
+  update: function(pageElement, configuration) {
+    this.setupPanoramaBackground(pageElement, configuration.attributes);
+    this.updateCommonPageCssClasses(pageElement, configuration);
+
+    this.afterEmbeddedViewsUpdate(function() {
+      this.content.linkmapPanorama('refresh');
       this.linkmapAreas.linkmap('refresh');
-    }, this), 10);
-  }
+      this.scroller.refresh();
+    });
+  },
+
+  afterEmbeddedViewsUpdate: function(fn) {
+    setTimeout(_.bind(fn, this), 10);
+  },
 }, pageflow.commonPageCssClasses));

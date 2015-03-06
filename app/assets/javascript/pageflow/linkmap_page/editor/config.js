@@ -2,9 +2,20 @@ pageflow.editor.pageTypes.register('linkmap_page', {
   configurationEditorView: pageflow.linkmapPage.ConfigurationEditorView,
 
   embeddedViews: {
-    '.panorama': {
+    '.panorama_image': {
       view: pageflow.BackgroundImageEmbeddedView,
-      options: {propertyName: 'background_image_id', dataSizeAttributes : true}
+      options: {
+        propertyName: 'background_image_id',
+        dataSizeAttributes: true
+      }
+    },
+
+    '.panorama_video': {
+      view: pageflow.LazyVideoEmbeddedView,
+      options: {
+        propertyName: 'background_video_id',
+        dataSizeAttributes: true
+      }
     },
 
     '.linkmap_page_link_areas': {

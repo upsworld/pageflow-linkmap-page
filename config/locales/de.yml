@@ -30,8 +30,14 @@ de:
         name: "Bezeichnung"
         page_transition: "Seitenwechsel-Animation"
       "pageflow/page":
+        background_type: "Hintergrund-Typ"
         linked_linkmap_page_perma_ids: "Verlinkte Seiten"
         hover_image_id: "Hover Image"
         visited_image_id: "Visited Image"
         linkmap_areas: "Verweisbereiche"
         audio_areas: "Bereiche mit Audio"
+    values:
+      "pageflow/page":
+        background_type:
+          image: "Bild"
+          video: "Video"
