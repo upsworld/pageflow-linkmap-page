@@ -1,11 +1,16 @@
 <div class="blackLayer"></div>
 <div class="content_and_background linkmap_page">
-  <div class="backgroundArea scroller">
+  <div class="backgroundArea">
+    <%= background_image_div(configuration, 'background_image', class: 'fixed_background') %>
+  </div>
+  <div class="scroller">
     <div class="linkmap">
       <%= background_image_div_with_size(configuration,
-                                           'background_image',
+                                           'panorama_image',
                                            class: 'panorama panorama_image',
                                            style_group: :original) %>
+      <!-- <video src="http://localhost:5000/movie.mp4" class="panorama" controls="true" autoplay=true></video>//-->
+
 
       <%= linkmap_areas_div(configuration, 'linkmap_page_link_areas') %>
       <%= linkmap_areas_div(configuration, 'linkmap_audio_file_areas') %>

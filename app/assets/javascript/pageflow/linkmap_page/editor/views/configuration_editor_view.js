@@ -6,14 +6,16 @@ pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.
     });
 
     this.tab('files', function() {
-      this.input('background_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
+      this.input('panorama_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
       this.input('hover_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
       this.input('visited_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
       this.input('thumbnail_image_id', pageflow.FileInputView, {
         collection: pageflow.imageFiles,
         positioning: false
       });
+      this.input('background_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
     });
+
 
     this.tab('areas', function() {
       this.view(pageflow.PageLinksView, {

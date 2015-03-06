@@ -1,32 +1,56 @@
 (function($) {
   $.widget('pageflow.linkmapPanorama', {
     _create: function() {
-
       var that = this,
-        pageElement = this.options.page;
+          pageElement = this.options.page;
 
-      this.img = this.element.find('.panorama');
+      this.scroller = this.options.scroller;
 
-      this.img.load(function() {
-        that.content.scroller('refresh');
-      });
+      this.panorama = this.element.find('.panorama');
+
+      this.environment = 1;
+
+      var scrollTimer,
+          containerWidth = this.element.width(),
+          containerHeight = this.element.height(),
+          activeMargin = 0.2,
+          speedX = 0,
+          speedY = 0,
+          speedUp = 30,
+          drag = false,
+          safeArea = {
+            upperLeft: {
+              x: 0.04,
+              y: 0.33
+            },
+            lowerRight: {
+              x: 0.13,
+              y: 0.64
+            }
+          },
+          scrolling = false;
+
+
+      /*this.scrollX = true;
+      this.scrollY = false; */
+
+      window.myscroller = this.scroller;
+
+      console.log('start log für scroller:', this.scroller.iscroll.hasVerticalScroll, this.scroller.iscroll.hasHorizontalScroll);
+      var that = this;
+
+      this.safeArea = safeArea;
+
+      this.panorama.append('<div style=" position: absolute; left: ' +this.safeArea.upperLeft.x * 100 + '%; top: ' +this.safeArea.upperLeft.y * 100 + '%; width:  ' + (this.safeArea.lowerRight.x - this.safeArea.upperLeft.x) * 100 + '%; height: ' + (this.safeArea.lowerRight.y - this.safeArea.upperLeft.y) * 100 + '%"></div>');
+
+      this.center = {
+        x: (safeArea.upperLeft.x + safeArea.lowerRight.x) / 2,
+        y: (safeArea.upperLeft.y + safeArea.lowerRight.y) / 2
+      };
 
       this.refresh();
 
-      window.myscroller = this.element.scroller('returnScroller');
-
-      this.scroller = this.element.scroller('returnScroller');
-
-      var scrollTimer,
-        containerWidth = this.element.width(),
-        containerHeight = this.element.height(),
-        margin = 0.2,
-        speedX = 0,
-        speedY = 0,
-        speedUp = 30,
-        faktorX = 0,
-        faktorY = 0,
-        drag = false;
+      this.centerToPoint(this.center.x, this.center.y, 1000);
 
       this.element.on('mousedown touchstart', function () {
         drag = true;
@@ -48,63 +72,89 @@
         speedY = 0;
 
         clearInterval(scrollTimer);
+        scrollTimer = null;
       });
 
       this.element.on('mousemove', function(e) {
+        newTimer();
 
-        if(!scrollTimer) {newTimer();};
-        containerWidth = that.element.width(),
+        containerWidth = that.element.width();
         containerHeight = that.element.height();
 
         var percentagePositionX = (e.pageX - containerWidth/2) / (containerWidth/2),
           percentagePositionY = (e.pageY - containerHeight/2) / (containerHeight/2),
-          onOuterAreasX = (percentagePositionX > 1 - margin*2 || percentagePositionX < -1 + margin*2),
-          onOuterAreasY = (percentagePositionY > 1 - margin*2 || percentagePositionY < -1 + margin*2);
+          onOuterAreasX = (percentagePositionX > 1 - activeMargin*2 || percentagePositionX < -1 + activeMargin*2),
+          onOuterAreasY = (percentagePositionY > 1 - activeMargin*2 || percentagePositionY < -1 + activeMargin*2);
 
-        faktorX = percentagePositionX > 0 ? 1 : -1;
-        faktorY = percentagePositionY > 0 ? 1 : -1;
+        var faktorX = percentagePositionX > 0 ? 1 : -1;
+        var faktorY = percentagePositionY > 0 ? 1 : -1;
 
-        speedX = onOuterAreasX ? (percentagePositionX - ((1-margin*2)*(faktorX))) / (margin*2) : 0;
-        speedY = onOuterAreasY ? (percentagePositionY - ((1-margin*2)*(faktorY))) / (margin*2) : 0;
+        speedX = onOuterAreasX ? (percentagePositionX - ((1-activeMargin*2)*(faktorX))) / (activeMargin*2) : 0;
+        speedY = onOuterAreasY ? (percentagePositionY - ((1-activeMargin*2)*(faktorY))) / (activeMargin*2) : 0;
       });
 
       function newTimer() {
-        scrollTimer = setInterval(function() {
-          var scrollX = -speedX * speedUp;
-          var scrollY = -speedY * speedUp;
+        if (!scrollTimer) {
+          scrollTimer = setInterval(function() {
+            var scrollX = -speedX * speedUp;
+            var scrollY = -speedY * speedUp;
 
-          if(that.scroller.x + scrollX > 0) {
-            scrollX = -that.scroller.x;
-          }
-          if(that.scroller.x + scrollX < that.scroller.maxScrollX) {
-            scrollX = that.scroller.maxScrollX - that.scroller.x;
-          }
-          if(that.scroller.y + scrollY > 0) {
-            scrollY = -that.scroller.y;
-          }
-          if(that.scroller.y + scrollY < that.scroller.maxScrollY) {
-            scrollY = that.scroller.maxScrollY - that.scroller.y;
-          }
-
-          if(!drag) {
-            that.scroller.scrollBy(scrollX, scrollY);
-          }
-
-        },25);
+            if(!drag && scrolling) {
+              that.scroller.scrollBy(scrollX, scrollY);
+            }
+          }, 25);
+        }
       }
     },
     refresh: function() {
-      var portrait = this.img.attr('data-height') > this.img.attr('data-width'),
-      imageRatio = this.img.attr('data-width') / this.img.attr('data-height');
+      var windowRatio = $(window).width() / $(window).height();
+      var safeAreaX = (this.safeArea.lowerRight.x - this.safeArea.upperLeft.x)
+      var safeAreaXpx = safeAreaX * this.panorama.attr('data-width');
+      var safeAreaY = (this.safeArea.lowerRight.y - this.safeArea.upperLeft.y);
+      var safeAreaYpx = safeAreaY * this.panorama.attr('data-height');
+      var safeRatio = safeAreaXpx / safeAreaYpx;
+      var imageRatio = this.panorama.attr('data-width') / this.panorama.attr('data-height');
 
-      if (portrait) {
+      if(safeAreaXpx <= $(window).width() && safeAreaYpx <= $(window).height()) {
+      /*  console.log('safe area in screen');
+        if (imageRatio <= windowRatio) {
+          this.panorama.width(this.options.page.width() * this.environment);
+          this.panorama.height(this.options.page.width() * this.environment / imageRatio);
+        }
+        else {
+          this.panorama.height(this.options.page.height() * this.environment);
+          this.panorama.width(this.options.page.height() * this.environment * imageRatio);
+        } */
 
+        console.log('yeah', safeAreaXpx, safeAreaYpx);
+        this.panorama.height(this.panorama.attr('data-height'));
+        this.panorama.width(this.panorama.attr('data-width'));
       }
       else {
-        this.img.height(this.options.page.height() * 1.2);
-        this.img.width(this.options.page.height() * 1.2 * imageRatio);
+        console.log('safe area out of screen');
+        if (safeRatio <= windowRatio) {
+          console.log('safeRatio <= windowRatio');
+          var heightRatio = 1/safeAreaY;
+          this.panorama.height(this.options.page.height() * heightRatio);
+          this.panorama.width(this.options.page.height() * heightRatio * imageRatio);
+
+        }
+        else {
+          console.log('safeRatio > windowRatio');
+          var widthRatio = 1/safeAreaX;
+          this.panorama.width(this.options.page.width() * widthRatio);
+          this.panorama.height(this.options.page.width() * widthRatio / imageRatio);
+        }
       }
+      this.scroller.iscroll.hasVerticalScroll = this.options.scrollY;
+      this.scroller.iscroll.hasHorizontalScroll = this.options.scrollX;
+    },
+
+    centerToPoint: function(x, y, time) {
+      var that = this;
+    //  this.scroller.iscroll.hasHorizontalScroll = true;
+     // this.scroller.iscroll.hasVerticalScroll = true;
+      this.scroller.iscroll.scrollTo(this.scroller.iscroll.maxScrollX * x, this.scroller.iscroll.maxScrollY * y, time);
     }
   });
 }(jQuery));
-

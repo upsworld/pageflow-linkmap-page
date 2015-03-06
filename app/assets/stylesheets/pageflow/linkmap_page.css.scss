@@ -2,7 +2,7 @@
 
 
 .js .page .scroller > div.linkmap {
-  padding: 0;
+  padding: 0 !important;
   width: auto;
   height: auto;
 
@@ -40,6 +40,11 @@
     vertical-align: middle;
     display: block;
     position: relative;
+    display: none;
+
+    &.active {
+      display: block;
+    }
   }
 
   .hover_area {
@@ -70,4 +75,14 @@
       }
     }
   }
+}
+
+/* for testing, take out!!!!! */
+
+.panorama_image {
+  background-image: url('http://localhost:5000/panorama.png') !important;
+}
+
+.load_images .image_13 {
+  background-image: url('http://localhost:5000/panorama_aktiv.png') !important;
 }
