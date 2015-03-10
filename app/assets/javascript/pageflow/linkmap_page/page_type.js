@@ -83,6 +83,9 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
     this.resize(pageElement, configuration);
     this.scroller.refresh();
+    if(pageflow.browser.has('mobile platform')) {
+      this.content.linkmapPanorama('initGyro');
+    }
   },
 
   activated: function(pageElement, configuration) {
@@ -91,6 +94,10 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
   deactivating: function(pageElement, configuration) {
     this.poolPlayer.pause();
+
+    if(pageflow.browser.has('mobile platform')) {
+      this.content.linkmapPanorama('cancelGyro');
+    }
   },
 
   deactivated: function(pageElement, configuration) {},

@@ -1,5 +1,24 @@
 (function($) {
   $.widget('pageflow.linkmapPanorama', {
+    speedX : 0,
+    speedY : 0,
+    speedUp : 30,
+    drag : false,
+    safeArea : {
+      upperLeft: {
+        x: 0.04,
+        y: 0.33
+      },
+      lowerRight: {
+        x: 0.13,
+        y: 0.64
+      }
+    },
+    marginScrolling : true,
+    scrollHoverAreasOnly : true,
+    scrollHoverMargin : 0,
+    environmentMargin : 0.2,
+
     _create: function() {
       var that = this,
           pageElement = this.options.page;
@@ -8,34 +27,15 @@
 
 
       this.scroller = this.options.scroller;
+      //this.scroller.iscroll = this.scroller('returnScroller');
 
       this.panorama = this.element.find('.panorama');
       this.limitScrolling = this.options.limitScrolling;
 
-
-      var scrollTimer,
-          containerWidth = this.element.width(),
+      var containerWidth = this.element.width(),
           containerHeight = this.element.height(),
-          activeMargin = 0.2,
-          speedX = 0,
-          speedY = 0,
-          speedUp = 30,
-          drag = false,
-          safeArea = {
-            upperLeft: {
-              x: 0.04,
-              y: 0.33
-            },
-            lowerRight: {
-              x: 0.13,
-              y: 0.64
-            }
-          },
-          marginScrolling = true,
-          scrollHoverAreasOnly = true;
+          activeMargin = 0.2;
 
-      this.scrollHoverMargin = 0.2;
-      this.environmentMargin = 0.2;
 
       /*this.scrollX = true;
       this.scrollY = false; */
@@ -44,13 +44,11 @@
 
       var that = this;
 
-      this.safeArea = safeArea;
-
       this.panorama.append('<div style=" position: absolute; left: ' +this.safeArea.upperLeft.x * 100 + '%; top: ' +this.safeArea.upperLeft.y * 100 + '%; width:  ' + (this.safeArea.lowerRight.x - this.safeArea.upperLeft.x) * 100 + '%; height: ' + (this.safeArea.lowerRight.y - this.safeArea.upperLeft.y) * 100 + '%"></div>');
 
       this.startScrollPosition = {
-        x: (safeArea.upperLeft.x + safeArea.lowerRight.x) / 2,
-        y: (safeArea.upperLeft.y + safeArea.lowerRight.y) / 2
+        x: (this.safeArea.upperLeft.x + this.safeArea.lowerRight.x) / 2,
+        y: (this.safeArea.upperLeft.y + this.safeArea.lowerRight.y) / 2
       };
 
       this.currentScrollPosition = this.startScrollPosition;
@@ -71,30 +69,30 @@
       });
 
       this.element.on('mousedown touchstart', function () {
-        drag = true;
+        that.drag = true;
       });
 
       this.element.on('mouseup touchend', function () {
-        drag = false;
+        that.drag = false;
       });
 
       this.element.on('mouseenter', function() {
-        speedX = 0;
-        speedY = 0;
+        that.speedX = 0;
+        that.speedY = 0;
 
-        newTimer();
+        that.newTimer();
       });
 
       this.element.on('mouseleave', function() {
-        speedX = 0;
-        speedY = 0;
+        that.speedX = 0;
+        that.speedY = 0;
 
-        clearInterval(scrollTimer);
-        scrollTimer = null;
+        clearInterval(that.scrollTimer);
+        that.scrollTimer = null;
       });
 
       this.element.on('mousemove', function(e) {
-        newTimer();
+        that.newTimer();
 
         containerWidth = that.element.width();
         containerHeight = that.element.height();
@@ -107,35 +105,54 @@
         var faktorX = percentagePositionX > 0 ? 1 : -1;
         var faktorY = percentagePositionY > 0 ? 1 : -1;
 
-        speedX = onOuterAreasX ? (percentagePositionX - ((1-activeMargin*2)*(faktorX))) / (activeMargin*2) : 0;
-        speedY = onOuterAreasY ? (percentagePositionY - ((1-activeMargin*2)*(faktorY))) / (activeMargin*2) : 0;
+        that.speedX = onOuterAreasX ? (percentagePositionX - ((1-activeMargin*2)*(faktorX))) / (activeMargin*2) : 0;
+        that.speedY = onOuterAreasY ? (percentagePositionY - ((1-activeMargin*2)*(faktorY))) / (activeMargin*2) : 0;
       });
 
-      function newTimer() {
-        if (!scrollTimer) {
-          scrollTimer = setInterval(function() {
-            var scrollX = -speedX * speedUp;
-            var scrollY = -speedY * speedUp;
+      this.element.on('touchstart', function () {
+        that.drag = true;
+      });
 
-            if(!drag && marginScrolling) {
-              if(scrollHoverAreasOnly) {
-                that.scroller.scrollBy(scrollX, scrollY, that.getScrollArea(that.activeAreas));
-              }
-              else {
-                that.scroller.scrollBy(scrollX, scrollY, that.getScrollArea(that.panorama));
-              }
+      this.element.on('touchend', function () {
+        that.initialBeta = null;
+        that.initialGamma = null;
+        that.drag = false;
+      });
+
+      $( window ).on( "orientationchange", function( event ) {
+        that.initialBeta = null;
+        that.initialGamma = null;
+        that.drag = false;
+      });
+    },
+
+    newTimer: function() {
+      if (!this.scrollTimer) {
+        var that = this;
+        this.scrollTimer = setInterval(function() {
+          console.log('speedX', that.speedX);
+          var scrollX = -that.speedX * that.speedUp;
+          var scrollY = -that.speedY * that.speedUp;
+
+          if(!that.drag && that.marginScrolling) {
+            if(that.scrollHoverAreasOnly) {
+              that.scroller.scrollBy(scrollX, scrollY, that.getScrollArea(that.activeAreas));
             }
-          }, 25);
-        }
+            else {
+              that.scroller.scrollBy(scrollX, scrollY, that.getScrollArea(that.panorama));
+            }
+          }
+        }, 25);
       }
     },
+
     getScrollArea: function(activeAreas) {
       window.activeAreas = activeAreas;
 
       var panorama = this.panorama;
       var pageElement = this.options.page;
 
-      if(activeAreas[0]) {
+      if(activeAreas[0] && this.limitScrolling) {
         var firstElement = $(activeAreas[0]);
 
         var scrollArea = {
@@ -153,11 +170,11 @@
           scrollArea.right = scrollArea.right < el.position().left + el.width() ? el.position().left + el.width() : scrollArea.right;
         }
 
-
         scrollArea.top = Math.max(0, scrollArea.top - pageElement.height() * this.scrollHoverMargin);
         scrollArea.left = Math.max(0, scrollArea.left - pageElement.width() * this.scrollHoverMargin);
-        scrollArea.bottom = Math.min(pageElement.height(), scrollArea.bottom + pageElement.height() * this.scrollHoverMargin);
-        scrollArea.right = Math.min(pageElement.width(), scrollArea.right + pageElement.width() * this.scrollHoverMargin);
+        scrollArea.bottom = Math.min(panorama.height(), scrollArea.bottom + pageElement.height() * this.scrollHoverMargin);
+        scrollArea.right = Math.min(panorama.width(), scrollArea.right + pageElement.width() * this.scrollHoverMargin);
+
 
         if(scrollArea.bottom - scrollArea.top < pageElement.height()) {
           scrollArea.top = this.scroller.iscroll.maxScrollY * this.startScrollPosition.y;
@@ -183,8 +200,8 @@
         var scrollArea = {
           top: -panorama.position().top,
           left: -panorama.position().left,
-          bottom: -(panorama.position().top + panorama.height()),
-          right: -(panorama.position().left + panorama.width()),
+          bottom: -(panorama.position().top + panorama.height() - pageElement.height()),
+          right: -(panorama.position().left + panorama.width() - pageElement.width()),
         }
       }
 
@@ -251,11 +268,45 @@
     },
 
     centerToPoint: function(x, y, time) {
-      console.log('center to point', x, y);
       var that = this;
     //  this.scroller.iscroll.hasHorizontalScroll = true;
      // this.scroller.iscroll.hasVerticalScroll = true;
       this.scroller.iscroll.scrollTo(this.scroller.iscroll.maxScrollX * x, this.scroller.iscroll.maxScrollY * y, time);
-    }
+    },
+
+    initGyro: function() {
+      this.newTimer();
+
+      var that = this;
+      var limit = 8;
+
+      gyro.startTracking(function(o) {
+          if(!that.initialBeta) {
+            that.initialBeta = o.beta;
+          }
+          if(!that.initialGamma) {
+            that.initialGamma = o.gamma;
+          }
+
+          if(!this.drag) {
+            if($(window).height() >= $(window).width()) {
+              that.speedX = o.gamma - that.initialGamma < limit && o.gamma - that.initialGamma > -limit ? 0 : (o.gamma - that.initialGamma) / 90 / 10;
+              that.speedY = o.beta - that.initialBeta < limit && o.beta - that.initialBeta > -limit ? 0 : -(o.beta - that.initialBeta) / 90 / 10;
+            }
+            else {
+              that.speedY = o.gamma - that.initialGamma < limit && o.gamma - that.initialGamma > -limit ? 0 : (o.gamma - that.initialGamma) / 90 / 10;
+              that.speedX = o.beta - that.initialBeta < limit && o.beta - that.initialBeta > -limit ? 0 : -(o.beta - that.initialBeta) / 90 / 10;
+            }
+          }
+          else {
+            that.speedX = 0;
+            that.speedY = 0;
+          }
+      });
+    },
+
+    cancelGyro: function() {
+      gyro.stopTracking();
+    },
   });
 }(jQuery));
