@@ -1,5 +1,5 @@
 <%= content_tag(:div, class: "linkmap_areas #{attribute_name}") do %>
-  <% configuration.fetch(attribute_name, []).each do |attributes| %>
+  <% (configuration[attribute_name].presence || []).each do |attributes| %>
     <%= linkmap_area(attributes) do %>
       <%= background_image_div_with_size(configuration, 'hover_image', style_group: :original) %>
     <% end %>
