@@ -130,7 +130,6 @@
       if (!this.scrollTimer) {
         var that = this;
         this.scrollTimer = setInterval(function() {
-          console.log('speedX', that.speedX);
           var scrollX = -that.speedX * that.speedUp;
           var scrollY = -that.speedY * that.speedUp;
 
@@ -193,8 +192,6 @@
           scrollArea.left = -scrollArea.left ;
           scrollArea.right = -(scrollArea.right - pageElement.width());
         }
-
-        console.log('scrollarearight ', scrollArea.right, ' width ', pageElement.width(), ' border right:',-(scrollArea.right - pageElement.width()), '   scrollmaxx ', this.scroller.iscroll.maxScrollX )
       }
       else {
         var scrollArea = {
@@ -205,7 +202,6 @@
         }
       }
 
-      console.log('scrollArea', scrollArea);
       return scrollArea;
 
     },
@@ -221,17 +217,13 @@
       var imageRatio = this.panorama.attr('data-width') / this.panorama.attr('data-height');
 
       if(imageRatio > windowRatio) {
-        console.log('hans', pageElement.height(), 'imageRatio ' + imageRatio, pageElement.height() * (1 + this.environmentMargin) * imageRatio);
         this.panorama.height(pageElement.height() * (1 + this.environmentMargin));
         this.panorama.width(pageElement.height() * (1 + this.environmentMargin) * imageRatio);
       }
       else {
-        console.log('franz');
         this.panorama.width(pageElement.width() * (1 + this.environmentMargin));
         this.panorama.height(pageElement.width() * (1 + this.environmentMargin) / imageRatio);
       }
-
-      console.log('refresh of panorama widget');
 
       this.activeAreas = $(this.options.activeAreasSelector);
 
