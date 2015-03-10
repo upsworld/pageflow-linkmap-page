@@ -1,0 +1,208 @@
+diff --git a/app/assets/javascript/pageflow/linkmap_page/editor/config.js b/app/assets/javascript/pageflow/linkmap_page/editor/config.js
+index 1970696..7f97c36 100644
+--- a/app/assets/javascript/pageflow/linkmap_page/editor/config.js
++++ b/app/assets/javascript/pageflow/linkmap_page/editor/config.js
+@@ -2,7 +2,7 @@ pageflow.editor.pageTypes.register('linkmap_page', {
+   configurationEditorView: pageflow.linkmapPage.ConfigurationEditorView,
+ 
+   embeddedViews: {
+-    '.panorama': {
++    '.panorama_image': {
+       view: pageflow.BackgroundImageEmbeddedView,
+       options: {propertyName: 'background_image_id', dataSizeAttributes : true}
+     },
+diff --git a/app/assets/javascript/pageflow/linkmap_page/editor/views/configuration_editor_view.js b/app/assets/javascript/pageflow/linkmap_page/editor/views/configuration_editor_view.js
+index 25f22df..e74cc83 100644
+--- a/app/assets/javascript/pageflow/linkmap_page/editor/views/configuration_editor_view.js
++++ b/app/assets/javascript/pageflow/linkmap_page/editor/views/configuration_editor_view.js
+@@ -6,9 +6,33 @@ pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.
+     });
+ 
+     this.tab('files', function() {
+-      this.input('background_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
+-      this.input('hover_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
+-      this.input('visited_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
++      this.input('background_type', pageflow.SelectInputView, {
++        values: ['image', 'video'],
++        ensureValueDefined: true
++      });
++
++      this.input('background_image_id', pageflow.FileInputView, {
++        collection: pageflow.imageFiles,
++        positioning: false,
++        visibleBinding: 'background_type',
++        visibleBindingValue: 'image'
++      });
++
++      this.input('background_video_id', pageflow.FileInputView, {
++        collection: pageflow.videoFiles,
++        positioning: false,
++        visibleBinding: 'background_type',
++        visibleBindingValue: 'video'
++      });
++
++      this.input('hover_image_id', pageflow.FileInputView, {
++        collection: pageflow.imageFiles,
++        positioning: false
++      });
++      this.input('visited_image_id', pageflow.FileInputView, {
++        collection: pageflow.imageFiles,
++        positioning: false
++      });
+       this.input('thumbnail_image_id', pageflow.FileInputView, {
+         collection: pageflow.imageFiles,
+         positioning: false
+diff --git a/app/assets/javascript/pageflow/linkmap_page/page_type.js b/app/assets/javascript/pageflow/linkmap_page/page_type.js
+index f7d3617..7636bda 100644
+--- a/app/assets/javascript/pageflow/linkmap_page/page_type.js
++++ b/app/assets/javascript/pageflow/linkmap_page/page_type.js
+@@ -5,7 +5,12 @@ pageflow.pageType.register('linkmap_page', _.extend({
+   enhance: function(pageElement, configuration) {
+     this.content = pageElement.find('.scroller');
+     this.panorama = pageElement.find('.linkmap');
+-    this.content.linkmapPanorama({page: pageElement});
++
++    this._initVideoPlayer(pageElement, configuration);
++
++    this.content.linkmapPanorama({
++      page: pageElement
++    });
+ 
+     this.linkmapAreas = pageElement.find('.linkmap_areas');
+     this.linkmapAreas.linkmap({
+@@ -63,8 +68,19 @@ pageflow.pageType.register('linkmap_page', _.extend({
+   activating: function(pageElement, configuration) {
+     var that = this;
+ 
++    this.videoPlayer.ensureCreated();
++    pageElement.find('.panorama_image').toggleClass('active', configuration['background_type'] === 'image');
++    pageElement.find('.panorama_video').toggleClass('active', configuration['background_type'] === 'video');
++
++
+     this.resize(pageElement, configuration);
+     this.content.scroller('refresh');
++
++    if (!pageflow.browser.has('mobile platform')) {
++      this.prebufferingPromise = this.videoPlayer.prebuffer().then(function() {
++        that.videoPlayer.play();
++      });
++    }
+   },
+ 
+   activated: function(pageElement, configuration) {
+@@ -80,14 +96,26 @@ pageflow.pageType.register('linkmap_page', _.extend({
+     this.updateCommonPageCssClasses(pageElement, configuration);
+ 
+ 
+-    if(pageElement.find('.panorama').length == 0) {
+-      pageElement.find('.linkmap').prepend('<img class="panorama" />');
+-    }
++    pageElement.find('.panorama_image').toggleClass('active', configuration.get('background_type') === 'image');
++    pageElement.find('.panorama_video').toggleClass('active', configuration.get('background_type') === 'video');
+ 
+-    this.updateCommonPageCssClasses(pageElement, configuration);
++    var videoPlayer = this.videoPlayer;
+ 
++    videoPlayer.ensureCreated();
++
++    if (!this.srcDefined) {
++      videoPlayer.ready(function() {
++        videoPlayer.src(configuration.getVideoFileSources('background_video_id'));
++      });
++    }
++
++    if (!this.srcDefined || configuration.hasChanged('background_video_id')) {
++      this.srcDefined = true;
++      this.videoPlayer.src(configuration.getVideoFileSources('background_video_id'));
++    }
+ 
+     this.content.linkmapPanorama("refresh");
++    this.content.scroller('refresh');
+ 
+     this.updateLinkmapAfterEmbeddedViewsHaveBeenUpdated();
+ 
+@@ -102,5 +130,21 @@ pageflow.pageType.register('linkmap_page', _.extend({
+     setTimeout(_.bind(function() {
+       this.linkmapAreas.linkmap('refresh');
+     }, this), 10);
++  },
++
++  _initVideoPlayer: function(pageElement, configuration) {
++    var that = this;
++    var template =pageElement.find('[data-template=video]');
++
++    that.min_w = 300; // minimum video width allowed
++    that.vid_w_orig = template.attr("data-video-width") || 1280;
++    this.vid_h_orig = template.attr("data-video-height") || 720;
++
++    console.log('video geo', that.vid_w_orig, that.vid_h_orig);
++
++    this.videoPlayer = new pageflow.VideoPlayer.Lazy(template, {
++      width: '100%',
++      height: '100%'
++    });
+   }
+ }, pageflow.commonPageCssClasses));
+diff --git a/app/assets/javascript/pageflow/linkmap_page/panorama_widget.js b/app/assets/javascript/pageflow/linkmap_page/panorama_widget.js
+index ddb901d..55895e9 100644
+--- a/app/assets/javascript/pageflow/linkmap_page/panorama_widget.js
++++ b/app/assets/javascript/pageflow/linkmap_page/panorama_widget.js
+@@ -5,7 +5,7 @@
+       var that = this,
+         pageElement = this.options.page;
+ 
+-      this.img = this.element.find('.panorama');
++      this.img = this.element.find('.panorama.active');
+ 
+       this.img.load(function() {
+         that.content.scroller('refresh');
+@@ -13,8 +13,6 @@
+ 
+       this.refresh();
+ 
+-      window.myscroller = this.element.scroller('returnScroller');
+-
+       this.scroller = this.element.scroller('returnScroller');
+ 
+       var scrollTimer,
+@@ -94,6 +92,7 @@
+       }
+     },
+     refresh: function() {
++      this.img = this.element.find('.panorama.active');
+       var portrait = this.img.attr('data-height') > this.img.attr('data-width'),
+       imageRatio = this.img.attr('data-width') / this.img.attr('data-height');
+ 
+diff --git a/app/assets/stylesheets/pageflow/linkmap_page.css.scss b/app/assets/stylesheets/pageflow/linkmap_page.css.scss
+index 18a6ae3..53d0478 100644
+--- a/app/assets/stylesheets/pageflow/linkmap_page.css.scss
++++ b/app/assets/stylesheets/pageflow/linkmap_page.css.scss
+@@ -40,6 +40,11 @@
+     vertical-align: middle;
+     display: block;
+     position: relative;
++    display: none;
++
++    &.active {
++      display: block;
++    }
+   }
+ 
+   .hover_area {
+diff --git a/app/views/pageflow/linkmap_page/page.html b/app/views/pageflow/linkmap_page/page.html
+index d5ec45e..6b2af11 100644
+--- a/app/views/pageflow/linkmap_page/page.html
++++ b/app/views/pageflow/linkmap_page/page.html
+@@ -6,6 +6,12 @@
+                                            'background_image',
+                                            class: 'panorama panorama_image',
+                                            style_group: :original) %>
++      <%= lookup_video_tag(configuration['background_video_id'],
++                           configuration['poster_image_id'],
++                           class: 'panorama panorama_video',
++                           loop: true,
++                           unique_id: page.id,
++                           preload: page.is_first) %>
+ 
+       <%= linkmap_areas_div(configuration, 'linkmap_page_link_areas') %>
+       <%= linkmap_areas_div(configuration, 'linkmap_audio_file_areas') %>

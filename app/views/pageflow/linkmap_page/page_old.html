@@ -1,0 +1,41 @@
+<div class="blackLayer"></div>
+<div class="content_and_background linkmap_page">
+  <div class="backgroundArea">
+    <%= background_image_div(configuration, 'background_image', class: 'fixed_background') %>
+  </div>
+  <div class="scroller">
+    <div class="linkmap">
+      <%= background_image_div_with_size(configuration,
+                                           'panorama_image',
+                                           class: 'panorama panorama_image',
+                                           style_group: :original) %>
+      <!-- <video src="http://localhost:5000/movie.mp4" class="panorama" controls="true" autoplay=true></video>//-->
+
+      <%= linkmap_areas_div(configuration, 'linkmap_page_link_areas') %>
+      <%= linkmap_areas_div(configuration, 'linkmap_audio_file_areas') %>
+    </div>
+  </div>
+
+<!--  <div class="content">
+    <div class="scroller">
+      <div>
+        <div class="contentWrapper">
+          <div class="page_header">
+            <h2>
+              <span class="tagline"><%= configuration['tagline'] %></span>
+              <span class="title"><%= configuration['title'] %></span>
+              <span class="subtitle"><%= configuration['subtitle'] %></span>
+            </h2>
+
+            <%= background_image_tag(configuration['background_image_id'],
+                                     class: 'print_image') %>
+          </div>
+          <div class="contentText">
+            <p><%= raw configuration['text'] %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  //-->
+</div>

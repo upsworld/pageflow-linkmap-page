@@ -14,7 +14,9 @@ pageflow.pageType.register('linkmap_page', _.extend({
       page: pageElement,
       scroller: this.scroller,
       scrollX: true,
-      scrollY: false
+      scrollY: true,
+      activeAreasSelector: '.linkmap_areas > *',
+      limitScrolling: true
     });
 
     this.linkmapAreas = pageElement.find('.linkmap_areas');
@@ -75,9 +77,9 @@ pageflow.pageType.register('linkmap_page', _.extend({
   activating: function(pageElement, configuration) {
     var that = this;
 
-    this.videoPlayer.ensureCreated();
+    /*this.videoPlayer.ensureCreated();
     pageElement.find('.panorama_image').toggleClass('active', configuration['background_type'] === 'image');
-    pageElement.find('.panorama_video').toggleClass('active', configuration['background_type'] === 'video');
+    pageElement.find('.panorama_video').toggleClass('active', configuration['background_type'] === 'video'); */
 
     this.resize(pageElement, configuration);
     this.scroller.refresh();

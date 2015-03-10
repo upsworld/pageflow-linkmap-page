@@ -40,11 +40,11 @@
     vertical-align: middle;
     display: block;
     position: relative;
-    display: none;
+ /*   display: none;
 
     &.active {
       display: block;
-    }
+    } */
   }
 
   .hover_area {
@@ -58,6 +58,7 @@
     display: block;
     pointer-events: all;
     z-index: 1;
+    background-color: red;
 
     .background_image {
       visibility: hidden;
