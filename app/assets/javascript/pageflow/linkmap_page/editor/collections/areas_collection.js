@@ -3,6 +3,17 @@ pageflow.linkmapPage.AreasCollection = Backbone.Collection.extend({
 
   initialize: function(models, options) {
     this.page = options.page;
+    this.defaultPosition = {
+      left: 10,
+      top: 10
+    };
+  },
+
+  /**
+   * @param [Object, Function] value
+   */
+  setDefaultPosition: function(value) {
+    this.defaultPosition = value;
   },
 
   canAddLink: function() {
@@ -22,12 +33,11 @@ pageflow.linkmapPage.AreasCollection = Backbone.Collection.extend({
   },
 
   addWithPosition: function(attributes) {
-    this.add(_.extend({
-      left: 10,
-      top: 10,
-      width: 7,
-      height: 7
-    }, attributes));
+    this.add(_.extend(
+      {width: 7, height: 7},
+      _.result(this, 'defaultPosition'),
+      attributes
+    ));
   },
 
   updateLink: function(link, targetPageId) {
