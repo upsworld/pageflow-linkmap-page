@@ -13,11 +13,6 @@
         .width(baseImage.width())
         .height(baseImage.height());
 
-      this.element
-        .parent()
-        .width(baseImage.width())
-        .height(baseImage.height());
-
       hoverImages
         .width(baseImage.width())
         .height(baseImage.height());

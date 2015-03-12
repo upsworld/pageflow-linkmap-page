@@ -15,22 +15,36 @@
       }
     },
     marginScrolling : true,
-    scrollHoverAreasOnly : true,
     scrollHoverMargin : 0,
-    environmentMargin : 0.2,
+    environmentMargin : 0,
 
     _create: function() {
       var that = this,
           pageElement = this.options.page;
 
       this.activeAreas = $(this.options.activeAreasSelector);
+      this.panorama = this.element.find('.panorama');
+      this.panoramaWrapper = this.element.find('.panorama_wrapper');
 
+      this.limitScrolling = this.options.limitScrolling;
+
+      this.innerScrollerElement = this.element.find('.linkmap');
 
       this.scroller = this.options.scroller;
-      //this.scroller.iscroll = this.scroller('returnScroller');
 
-      this.panorama = this.element.find('.panorama');
-      this.limitScrolling = this.options.limitScrolling;
+      console.log('set position');
+
+      this.startScrollPosition = {
+        x: this.options.startX,
+        y: this.options.startY
+      };
+
+      window.pagetype = this;
+
+      this.scrollArea = this.getScrollArea(this.activeAreas);
+
+      window.scrollArea = this.scrollArea;
+      //this.scroller.iscroll = this.scroller('returnScroller');
 
       var containerWidth = this.element.width(),
           containerHeight = this.element.height(),
@@ -44,24 +58,17 @@
 
       var that = this;
 
-      this.panorama.append('<div style=" position: absolute; left: ' +this.safeArea.upperLeft.x * 100 + '%; top: ' +this.safeArea.upperLeft.y * 100 + '%; width:  ' + (this.safeArea.lowerRight.x - this.safeArea.upperLeft.x) * 100 + '%; height: ' + (this.safeArea.lowerRight.y - this.safeArea.upperLeft.y) * 100 + '%"></div>');
+      //this.panorama.append('<div style="background-color: rgba(0,0,0,0.4); position: absolute; left: ' + this.scrollArea.left * 100 + '%; top: ' +this.scrollArea.top * 100 + '%; width:  ' + (this.scrollArea.right - this.scrollArea.left) * 100 + '%; height: ' + (this.scrollArea.bottom - this.scrollArea.top) * 100 + '%"></div>');
 
-      this.startScrollPosition = {
-        x: (this.safeArea.upperLeft.x + this.safeArea.lowerRight.x) / 2,
-        y: (this.safeArea.upperLeft.y + this.safeArea.lowerRight.y) / 2
+      this.currentScrollPosition = {
+        x: this.options.startX,
+        y: this.options.startY
       };
-
-      this.currentScrollPosition = this.startScrollPosition;
-
-      this.refresh();
 
       this.centerToPoint(this.startScrollPosition.x, this.startScrollPosition.y, 1000);
 
       this.scroller.onScrollEnd(function() {
-        setTimeout(function() {
-          that.currentScrollPosition.x = that.scroller.iscroll.x / that.scroller.iscroll.maxScrollX;
-          that.currentScrollPosition.y = that.scroller.iscroll.y / that.scroller.iscroll.maxScrollY;
-        }, 10);
+        that.updateScrollPosition();
       });
 
       $(window).on('resize', function () {
@@ -119,11 +126,13 @@
         that.drag = false;
       });
 
-      $( window ).on( "orientationchange", function( event ) {
+      $(window).on( "orientationchange", function( event ) {
         that.initialBeta = null;
         that.initialGamma = null;
         that.drag = false;
       });
+
+      this.refresh();
     },
 
     newTimer: function() {
@@ -134,12 +143,8 @@
           var scrollY = -that.speedY * that.speedUp;
 
           if(!that.drag && that.marginScrolling) {
-            if(that.scrollHoverAreasOnly) {
-              that.scroller.scrollBy(scrollX, scrollY, that.getScrollArea(that.activeAreas));
-            }
-            else {
-              that.scroller.scrollBy(scrollX, scrollY, that.getScrollArea(that.panorama));
-            }
+            that.scroller.scrollBy(scrollX, scrollY);
+            that.updateScrollPosition();
           }
         }, 25);
       }
@@ -150,17 +155,18 @@
 
       var panorama = this.panorama;
       var pageElement = this.options.page;
+      var that = this;
+      var startScrollPosition = that.startScrollPosition;
 
-      if(activeAreas[0] && this.limitScrolling) {
-        var firstElement = $(activeAreas[0]);
-
+      if(activeAreas[0] && that.limitScrolling) {
         var scrollArea = {
-          top: firstElement.position().top,
-          left: firstElement.position().left,
-          bottom: firstElement.position().top + firstElement.height(),
-          right: firstElement.position().left + firstElement.width(),
+          top: that.startScrollPosition.y * panorama.height(),
+          left: that.startScrollPosition.x * panorama.width(),
+          bottom: that.startScrollPosition.y * panorama.height(),
+          right: that.startScrollPosition.x * panorama.width(),
         }
 
+        console.log('areaslength', activeAreas.length);
         for (var i = 1; i < activeAreas.length; i++) {
           var el = $(activeAreas[i]);
           scrollArea.top = scrollArea.top > el.position().top ? el.position().top : scrollArea.top;
@@ -173,32 +179,13 @@
         scrollArea.left = Math.max(0, scrollArea.left - pageElement.width() * this.scrollHoverMargin);
         scrollArea.bottom = Math.min(panorama.height(), scrollArea.bottom + pageElement.height() * this.scrollHoverMargin);
         scrollArea.right = Math.min(panorama.width(), scrollArea.right + pageElement.width() * this.scrollHoverMargin);
-
-
-        if(scrollArea.bottom - scrollArea.top < pageElement.height()) {
-          scrollArea.top = this.scroller.iscroll.maxScrollY * this.startScrollPosition.y;
-          scrollArea.bottom = this.scroller.iscroll.maxScrollY * this.startScrollPosition.y;
-        }
-        else {
-          scrollArea.top = -scrollArea.top;
-          scrollArea.bottom = -(scrollArea.bottom - pageElement.height());
-        }
-
-        if(scrollArea.right - scrollArea.left < pageElement.width()) {
-          scrollArea.left = this.scroller.iscroll.maxScrollX * this.startScrollPosition.x;
-          scrollArea.right = this.scroller.iscroll.maxScrollX * this.startScrollPosition.x;
-        }
-        else {
-          scrollArea.left = -scrollArea.left ;
-          scrollArea.right = -(scrollArea.right - pageElement.width());
-        }
       }
       else {
         var scrollArea = {
-          top: -panorama.position().top,
-          left: -panorama.position().left,
-          bottom: -(panorama.position().top + panorama.height() - pageElement.height()),
-          right: -(panorama.position().left + panorama.width() - pageElement.width()),
+          top: panorama.position().top,
+          left: panorama.position().left,
+          bottom: (panorama.position().top + panorama.height()),
+          right: (panorama.position().left + panorama.width()),
         }
       }
 
@@ -215,6 +202,9 @@
       var safeAreaYpx = safeAreaY * this.panorama.attr('data-height');
       var safeRatio = safeAreaXpx / safeAreaYpx;
       var imageRatio = this.panorama.attr('data-width') / this.panorama.attr('data-height');
+      var that = this;
+
+      that.scroller.refresh();
 
       if(imageRatio > windowRatio) {
         this.panorama.height(pageElement.height() * (1 + this.environmentMargin));
@@ -227,8 +217,26 @@
 
       this.activeAreas = $(this.options.activeAreasSelector);
 
-      this.getScrollArea(this.activeAreas);
+      this.scrollArea = this.getScrollArea(this.activeAreas);
 
+      var topToCenterInnerScroller = (this.scrollArea.bottom - this.scrollArea.top) < pageElement.height() ?
+        (pageElement.height() - (this.scrollArea.bottom - this.scrollArea.top)) / 2 : 0;
+
+      var leftToCenterInnerScroller = (this.scrollArea.right - this.scrollArea.left) < pageElement.width() ?
+        (pageElement.width() - (this.scrollArea.right - this.scrollArea.left)) / 2 : 0;
+
+
+      this.innerScrollerElement.addClass('measuring');
+      this.innerScrollerElement.width((this.scrollArea.right - this.scrollArea.left) + leftToCenterInnerScroller);
+      this.innerScrollerElement.height((this.scrollArea.bottom - this.scrollArea.top) + topToCenterInnerScroller);
+      this.innerScrollerElement.removeClass('measuring');
+
+      this.panoramaWrapper.css({
+        'left' : -this.scrollArea.left + leftToCenterInnerScroller +'px',
+        'top' : -this.scrollArea.top + topToCenterInnerScroller + 'px'
+      });
+
+      this.scroller.refresh();
 
 /*    if(safeAreaXpx <= $(window).width() && safeAreaYpx <= $(window).height()) {
         console.log('yeah', safeAreaXpx, safeAreaYpx);
@@ -251,19 +259,28 @@
           this.panorama.height(this.options.page.width() * widthRatio / imageRatio);
         }
       } */
-
-
-      /* restricting iscroll
-
-      this.scroller.iscroll.hasVerticalScroll = this.options.scrollY;
-      this.scroller.iscroll.hasHorizontalScroll = this.options.scrollX; */
     },
 
     centerToPoint: function(x, y, time) {
       var that = this;
-    //  this.scroller.iscroll.hasHorizontalScroll = true;
-     // this.scroller.iscroll.hasVerticalScroll = true;
-      this.scroller.iscroll.scrollTo(this.scroller.iscroll.maxScrollX * x, this.scroller.iscroll.maxScrollY * y, time);
+
+      x = !x ? this.currentScrollPosition.x : x;
+      y = !y ? this.currentScrollPosition.y : y;
+
+      var absoluteX = this.scroller.maxX() * x;
+      var absoluteY = this.scroller.maxY() * y;
+
+      this.scroller.scrollTo(absoluteX, this.scroller.iscroll.maxScrollY * y, time);
+    },
+
+    updateScrollPosition: function() {
+      var that = this;
+
+      setTimeout(function() {
+        that.currentScrollPosition.x = that.scroller.maxX() != 0 ? that.scroller.positionX() / that.scroller.maxX() : 0;
+        that.currentScrollPosition.y = that.scroller.maxY() != 0 ? that.scroller.positionY() / that.scroller.maxY() : 0;
+      }, 10);
+
     },
 
     initGyro: function() {

@@ -8,15 +8,18 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   enhance: function(pageElement, configuration) {
+
     this.content = pageElement.find('.scroller');
-    this.panorama = pageElement.find('.linkmap');
+    this.panorama = pageElement.find('.panorama');
     this.content.linkmapPanorama({
       page: pageElement,
       scroller: this.scroller,
       scrollX: true,
       scrollY: true,
       activeAreasSelector: '.linkmap_areas > *',
-      limitScrolling: true
+      limitScrolling: true,
+      startX: 0.5,
+      startY: 0.5
     });
 
     this.linkmapAreas = pageElement.find('.linkmap_areas');
@@ -62,9 +65,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
   resize: function(pageElement, configuration) {
     this.content.linkmapPanorama('refresh');
-    this.scroller.refresh();
     this.linkmapAreas.linkmap('refresh');
-    this.content.linkmapPanorama("centerToPoint", 0.5, 0.5);
   },
 
   prepare: function(pageElement, configuration) {
@@ -81,15 +82,20 @@ pageflow.pageType.register('linkmap_page', _.extend({
     pageElement.find('.panorama_image').toggleClass('active', configuration['background_type'] === 'image');
     pageElement.find('.panorama_video').toggleClass('active', configuration['background_type'] === 'video'); */
 
-    this.resize(pageElement, configuration);
-    this.scroller.refresh();
+    this.content.linkmapPanorama('refresh');
+    this.linkmapAreas.linkmap('refresh');
+
     if(pageflow.browser.has('mobile platform')) {
       this.content.linkmapPanorama('initGyro');
     }
+    this.content.linkmapPanorama('centerToPoint');
+
+    console.log('date activating', Date.now());
   },
 
   activated: function(pageElement, configuration) {
     this.scroller.refresh();
+    console.log('date activated', Date.now());
   },
 
   deactivating: function(pageElement, configuration) {

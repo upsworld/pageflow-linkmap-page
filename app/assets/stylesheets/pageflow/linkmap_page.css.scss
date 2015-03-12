@@ -14,6 +14,11 @@
 
   .scroller {
     overflow: hidden;
+
+    > div {
+      min-height: 0;
+      background-color: rgba(255,255,255,0.5);
+    }
   }
 
   .linkmap {
@@ -26,6 +31,14 @@
     &.moving_background {
       @include transition(none);
     }
+
+    &.measuring {
+      @include transition(none);
+    }
+  }
+
+  .panorama_wrapper {
+    position: absolute;
   }
 
   .linkmap_areas {
@@ -61,6 +74,7 @@
     display: block;
     pointer-events: all;
     z-index: 1;
+    background-color: rgba(50,50,50,0.5);
 
     .background_image {
       visibility: hidden;
@@ -81,11 +95,11 @@
 }
 
 /* for testing, take out!!!!! */
-/*
+
 .panorama_image {
-  background-image: url('http://localhost:5000/panorama.png') !important;
+  background-image: url('http://192.168.0.39:5000/panorama.png') !important;
 }
 
 .load_images .image_13 {
-  background-image: url('http://localhost:5000/panorama_aktiv.png') !important;
-}*/
+  background-image: url('http://192.168.0.39:5000/panorama_aktiv.png') !important;
+}

@@ -5,15 +5,17 @@
   </div>
   <div class="scroller">
     <div class="linkmap">
-      <%= background_image_div_with_size(configuration,
-                                           'panorama_image',
-                                           class: 'panorama panorama_image',
-                                           style_group: :original) %>
-      <!-- <video src="http://localhost:5000/movie.mp4" class="panorama" controls="true" autoplay=true></video>//-->
+      <div class="panorama_wrapper">
+        <%= background_image_div_with_size(configuration,
+                                             'panorama_image',
+                                             class: 'panorama panorama_image',
+                                             style_group: :original) %>
+        <!-- <video src="http://localhost:5000/movie.mp4" class="panorama" controls="true" autoplay=true></video>//-->
 
 
-      <%= linkmap_areas_div(configuration, 'linkmap_page_link_areas') %>
-      <%= linkmap_areas_div(configuration, 'linkmap_audio_file_areas') %>
+        <%= linkmap_areas_div(configuration, 'linkmap_page_link_areas') %>
+        <%= linkmap_areas_div(configuration, 'linkmap_audio_file_areas') %>
+      </div>
     </div>
   </div>
 
