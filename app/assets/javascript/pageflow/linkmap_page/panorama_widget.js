@@ -32,38 +32,21 @@
 
       this.scroller = this.options.scroller;
 
-      console.log('set position');
-
       this.startScrollPosition = {
         x: this.options.startX,
         y: this.options.startY
       };
 
-      window.pagetype = this;
-
-      this.scrollArea = this.getScrollArea(this.activeAreas);
-
-      window.scrollArea = this.scrollArea;
-      //this.scroller.iscroll = this.scroller('returnScroller');
-
-      var containerWidth = this.element.width(),
-          containerHeight = this.element.height(),
-          activeMargin = 0.2;
-
-
-      /*this.scrollX = true;
-      this.scrollY = false; */
-
-      window.myscroller = this.scroller;
-
-      var that = this;
-
-      //this.panorama.append('<div style="background-color: rgba(0,0,0,0.4); position: absolute; left: ' + this.scrollArea.left * 100 + '%; top: ' +this.scrollArea.top * 100 + '%; width:  ' + (this.scrollArea.right - this.scrollArea.left) * 100 + '%; height: ' + (this.scrollArea.bottom - this.scrollArea.top) * 100 + '%"></div>');
-
       this.currentScrollPosition = {
         x: this.options.startX,
         y: this.options.startY
       };
+
+      this.scrollArea = this.getScrollArea(this.activeAreas);
+
+      var containerWidth = this.element.width(),
+          containerHeight = this.element.height(),
+          activeMargin = 0.2;
 
       this.centerToPoint(this.startScrollPosition.x, this.startScrollPosition.y, 1000);
 
@@ -166,7 +149,6 @@
           right: that.startScrollPosition.x * panorama.width(),
         }
 
-        console.log('areaslength', activeAreas.length);
         for (var i = 1; i < activeAreas.length; i++) {
           var el = $(activeAreas[i]);
           scrollArea.top = scrollArea.top > el.position().top ? el.position().top : scrollArea.top;

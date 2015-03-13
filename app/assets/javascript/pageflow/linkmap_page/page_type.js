@@ -17,9 +17,9 @@ pageflow.pageType.register('linkmap_page', _.extend({
       scrollX: true,
       scrollY: true,
       activeAreasSelector: '.linkmap_areas > *',
-      limitScrolling: true,
-      startX: 0.5,
-      startY: 0.5
+      limitScrolling: false,
+      startX: 0,
+      startY: 0
     });
 
     this.linkmapAreas = pageElement.find('.linkmap_areas');
@@ -89,13 +89,10 @@ pageflow.pageType.register('linkmap_page', _.extend({
       this.content.linkmapPanorama('initGyro');
     }
     this.content.linkmapPanorama('centerToPoint');
-
-    console.log('date activating', Date.now());
   },
 
   activated: function(pageElement, configuration) {
     this.scroller.refresh();
-    console.log('date activated', Date.now());
   },
 
   deactivating: function(pageElement, configuration) {
