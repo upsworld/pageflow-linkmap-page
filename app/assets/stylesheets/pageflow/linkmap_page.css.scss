@@ -2,15 +2,22 @@
 
 
 .js .page .scroller > div.linkmap {
-  padding: 0;
+  padding: 0 !important;
   width: auto;
   height: auto;
 
 }
-
 .linkmap_page {
   .content {
 /*    pointer-events: none; */
+  }
+
+  .scroller {
+    overflow: hidden;
+
+    > div {
+      min-height: 0;
+    }
   }
 
   .linkmap {
@@ -19,11 +26,18 @@
     height: 100%;
     width: 100%;
     left:0;
-    @include transition(0.5s ease-out);
 
     &.moving_background {
       @include transition(none);
     }
+
+    &.measuring {
+      @include transition(none);
+    }
+  }
+
+  .panorama_wrapper {
+    position: absolute;
   }
 
   .linkmap_areas {
@@ -57,13 +71,12 @@
     cursor: pointer;
     display: block;
     pointer-events: all;
-    z-index: 1;
 
     .background_image {
       visibility: hidden;
       opacity: 0;
       position: absolute;
-      @include transition(opacity 0.5s ease);
+      @include transition(opacity 0.5s ease, visibility 0.5s ease);
     }
 
     &:hover,

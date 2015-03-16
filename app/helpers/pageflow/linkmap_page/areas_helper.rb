@@ -30,7 +30,9 @@ module Pageflow
           {
             audio_file: attributes[:audio_file_id],
             page: attributes[:target_page_id],
-            page_transition: attributes[:page_transition]
+            page_transition: attributes[:page_transition],
+            width: attributes[:width],
+            height: attributes[:height]
           }
         end
 

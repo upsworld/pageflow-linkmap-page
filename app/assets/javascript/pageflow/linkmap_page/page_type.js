@@ -11,9 +11,20 @@ pageflow.pageType.register('linkmap_page', _.extend({
     this.setupVideoPlayer(pageElement);
 
     this.content = pageElement.find('.scroller');
+    this.panorama = pageElement.find('.panorama');
+
     this.content.linkmapPanorama({
       page: pageElement,
-      scroller: this.scroller
+      panorama: function() {
+        return pageElement.find('.panorama.active');
+      },
+      scroller: this.scroller,
+      scrollX: true,
+      scrollY: true,
+      activeAreasSelector: '.linkmap_areas > *',
+      limitScrolling: false,
+      startX: 0,
+      startY: 0
     });
 
     this.linkmapAreas = pageElement.find('.linkmap_areas');
@@ -88,8 +99,6 @@ pageflow.pageType.register('linkmap_page', _.extend({
   resize: function(pageElement, configuration) {
     this.content.linkmapPanorama('refresh');
     this.linkmapAreas.linkmap('refresh');
-
-    this.scroller.refresh();
   },
 
   prepare: function(pageElement, configuration) {
@@ -102,24 +111,29 @@ pageflow.pageType.register('linkmap_page', _.extend({
   activating: function(pageElement, configuration) {
     var that = this;
 
-    this.resize(pageElement, configuration);
-    this.scroller.refresh();
+    /*this.videoPlayer.ensureCreated();
+    pageElement.find('.panorama_image').toggleClass('active', configuration['background_type'] === 'image');
+    pageElement.find('.panorama_video').toggleClass('active', configuration['background_type'] === 'video'); */
 
-    if (configuration.background_type === 'video') {
-      this.videoPlayer.ensureCreated();
+    this.content.linkmapPanorama('refresh');
+    this.linkmapAreas.linkmap('refresh');
 
-      this.prebufferingPromise = this.videoPlayer.prebuffer().then(function() {
-        that.videoPlayer.volume(0);
-        that.videoPlayer.play();
-      });
+    if(pageflow.browser.has('mobile platform')) {
+      this.content.linkmapPanorama('initGyro');
     }
+    this.content.linkmapPanorama('centerToPoint');
   },
 
   activated: function(pageElement, configuration) {
+    this.scroller.refresh();
   },
 
   deactivating: function(pageElement, configuration) {
     this.poolPlayer.pause();
+
+    if(pageflow.browser.has('mobile platform')) {
+      this.content.linkmapPanorama('cancelGyro');
+    }
   },
 
   deactivated: function(pageElement, configuration) {
@@ -151,7 +165,6 @@ pageflow.pageType.register('linkmap_page', _.extend({
           };
         });
       });
-
       this.defaultPositionDefined = true;
     }
 

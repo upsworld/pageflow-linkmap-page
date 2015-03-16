@@ -11,7 +11,7 @@ pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.
         ensureValueDefined: true
       });
 
-      this.input('background_image_id', pageflow.FileInputView, {
+      this.input('panorama_image_id', pageflow.FileInputView, {
         collection: pageflow.imageFiles,
         positioning: false,
         visibleBinding: 'background_type',
@@ -39,7 +39,9 @@ pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.
         collection: pageflow.imageFiles,
         positioning: false
       });
+      this.input('background_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
     });
+
 
     this.tab('areas', function() {
       this.view(pageflow.PageLinksView, {

@@ -101,6 +101,9 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
 
     this.$el.toggleClass('highlighted', !!this.model.get('highlighted'));
 
+    this.$el.attr('data-width', this.model.get('width'));
+    this.$el.attr('data-height', this.model.get('height'));
+
     this.$el.css('left', this.model.get('left') + '%');
     this.$el.css('top', this.model.get('top') + '%');
     this.$el.css('width', this.model.get('width') + '%');
