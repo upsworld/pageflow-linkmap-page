@@ -238,11 +238,6 @@
       this.innerScrollerElement.height((this.scrollArea.bottom - this.scrollArea.top) + topToCenterInnerScroller);
       this.innerScrollerElement.removeClass('measuring');
 
-      this.panoramaWrapper.css({
-        'left' : -this.scrollArea.left + leftToCenterInnerScroller +'px',
-        'top' : -this.scrollArea.top + topToCenterInnerScroller + 'px'
-      });
-
       this.scroller.refresh();
     },
 

@@ -111,10 +111,6 @@ pageflow.pageType.register('linkmap_page', _.extend({
   activating: function(pageElement, configuration) {
     var that = this;
 
-    /*this.videoPlayer.ensureCreated();
-    pageElement.find('.panorama_image').toggleClass('active', configuration['background_type'] === 'image');
-    pageElement.find('.panorama_video').toggleClass('active', configuration['background_type'] === 'video'); */
-
     if (configuration.background_type === 'video') {
       this.videoPlayer.ensureCreated();
 
@@ -134,7 +130,6 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   activated: function(pageElement, configuration) {
-    this.scroller.refresh();
   },
 
   deactivating: function(pageElement, configuration) {
@@ -161,6 +156,15 @@ pageflow.pageType.register('linkmap_page', _.extend({
       this.linkmapAreas.linkmap('refresh');
       this.scroller.refresh();
     });
+  },
+
+  embeddedEditorViews: function() {
+    return {
+      '.background_image': {
+        view: pageflow.BackgroundImageEmbeddedView,
+        options: {propertyName: 'background_image_id'}
+      }
+    }
   },
 
   setupDefaultAreaPositions: function(configuration) {
