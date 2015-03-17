@@ -58,6 +58,9 @@ pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.
 
     this.tab('options', function() {
       this.group('options');
+      this.input('limit_scrolling', pageflow.CheckBoxInputView);
+      this.input('add_environment', pageflow.CheckBoxInputView);
+      this.input('margin_scrolling_disabled', pageflow.CheckBoxInputView);
     });
   }
 });

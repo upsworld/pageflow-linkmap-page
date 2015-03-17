@@ -4,19 +4,9 @@
     speedY : 0,
     speedUp : 30,
     drag : false,
-    safeArea : {
-      upperLeft: {
-        x: 0.04,
-        y: 0.33
-      },
-      lowerRight: {
-        x: 0.13,
-        y: 0.64
-      }
-    },
-    marginScrolling : true,
-    scrollHoverMargin : 0,
-    environmentMargin : 0,
+    marginScrollingDisabled : false,
+    scrollHoverMargin : 0.2,
+    environmentMargin : 0.2,
     minScaling: true,
     minScalingSize: 50,
 
@@ -24,6 +14,8 @@
       var that = this,
           pageElement = this.options.page;
 
+      this.addEnvironment = this.options.addEnvironment;
+      this.marginScrollingDisabled = this.options.marginScrollingDisabled;
       this.activeAreas = $(this.options.activeAreasSelector);
       this.panorama = this.options.panorama();
       this.panoramaWrapper = this.element.find('.panorama_wrapper');
@@ -127,7 +119,7 @@
           var scrollX = -that.speedX * that.speedUp;
           var scrollY = -that.speedY * that.speedUp;
 
-          if(!that.drag && that.marginScrolling) {
+          if(!that.drag && !that.marginScrollingDisabled) {
             that.scroller.scrollBy(scrollX, scrollY);
             that.updateScrollPosition();
           }
@@ -201,27 +193,27 @@
       return smallestScale;
     },
 
+    update: function(addEnvironment,limitScrolling,marginScrollingDisabled) {
+      this.addEnvironment = addEnvironment;
+      this.limitScrolling = limitScrolling;
+      this.marginScrollingDisabled = marginScrollingDisabled;
+    },
+
     refresh: function() {
+      this.panorama = this.options.panorama();
       var pageElement = this.options.page;
       var windowRatio = pageElement.width() / pageElement.height();
-      var safeAreaX = (this.safeArea.lowerRight.x - this.safeArea.upperLeft.x)
-      var safeAreaXpx = safeAreaX * this.panorama.attr('data-width');
-      var safeAreaY = (this.safeArea.lowerRight.y - this.safeArea.upperLeft.y);
-      var safeAreaYpx = safeAreaY * this.panorama.attr('data-height');
-      var safeRatio = safeAreaXpx / safeAreaYpx;
       var imageRatio = this.panorama.attr('data-width') / this.panorama.attr('data-height');
       var that = this;
-
-     // this.scroller.refresh();
-
       var smallestScale = this.getMinScale(this.activeAreas);
+      var environmentMargin = this.addEnvironment ? (1 + this.environmentMargin) : 1;
 
       if(imageRatio > windowRatio) {
-        this.panorama.height(pageElement.height() * (1 + this.environmentMargin));
+        this.panorama.height(pageElement.height() * environmentMargin);
         this.panorama.width(this.panorama.height() * imageRatio);
       }
       else {
-        this.panorama.width(pageElement.width() * (1 + this.environmentMargin));
+        this.panorama.width(pageElement.width() * environmentMargin);
         this.panorama.height(this.panorama.width() / imageRatio);
       }
 
@@ -252,28 +244,6 @@
       });
 
       this.scroller.refresh();
-
-      /*    if(safeAreaXpx <= $(window).width() && safeAreaYpx <= $(window).height()) {
-        console.log('yeah', safeAreaXpx, safeAreaYpx);
-        this.panorama.height(this.panorama.attr('data-height'));
-        this.panorama.width(this.panorama.attr('data-width'));
-      }
-      else {
-        console.log('safe area out of screen');
-        if (safeRatio <= windowRatio) {
-          console.log('safeRatio <= windowRatio');
-          var heightRatio = 1/safeAreaY;
-          this.panorama.height(this.options.page.height() * heightRatio);
-          this.panorama.width(this.options.page.height() * heightRatio * imageRatio);
-
-        }
-        else {
-          console.log('safeRatio > windowRatio');
-          var widthRatio = 1/safeAreaX;
-          this.panorama.width(this.options.page.width() * widthRatio);
-          this.panorama.height(this.options.page.width() * widthRatio / imageRatio);
-        }
-      } */
     },
 
     centerToPoint: function(x, y, time) {

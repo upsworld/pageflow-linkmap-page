@@ -19,12 +19,12 @@ pageflow.pageType.register('linkmap_page', _.extend({
         return pageElement.find('.panorama.active');
       },
       scroller: this.scroller,
-      scrollX: true,
-      scrollY: true,
       activeAreasSelector: '.linkmap_areas > *',
-      limitScrolling: false,
+      limitScrolling: configuration.limit_scrolling,
+      addEnvironment: configuration.add_environment,
+      marginScrollingDisabled: configuration.margin_scrolling_disabled,
       startX: 0,
-      startY: 0
+      startY: 0,
     });
 
     this.linkmapAreas = pageElement.find('.linkmap_areas');
@@ -115,6 +115,15 @@ pageflow.pageType.register('linkmap_page', _.extend({
     pageElement.find('.panorama_image').toggleClass('active', configuration['background_type'] === 'image');
     pageElement.find('.panorama_video').toggleClass('active', configuration['background_type'] === 'video'); */
 
+    if (configuration.background_type === 'video') {
+      this.videoPlayer.ensureCreated();
+
+      this.prebufferingPromise = this.videoPlayer.prebuffer().then(function() {
+        that.videoPlayer.volume(0);
+        that.videoPlayer.play();
+      });
+    }
+
     this.content.linkmapPanorama('refresh');
     this.linkmapAreas.linkmap('refresh');
 
@@ -147,6 +156,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
     this.updateCommonPageCssClasses(pageElement, configuration);
 
     this.afterEmbeddedViewsUpdate(function() {
+      this.content.linkmapPanorama('update', configuration.get('add_environment'), configuration.get('limit_scrolling'), configuration.get('margin_scrolling_disabled'));
       this.content.linkmapPanorama('refresh');
       this.linkmapAreas.linkmap('refresh');
       this.scroller.refresh();

@@ -32,10 +32,14 @@ de:
       "pageflow/page":
         background_type: "Hintergrund-Typ"
         linked_linkmap_page_perma_ids: "Verlinkte Seiten"
-        hover_image_id: "Hover Image"
-        visited_image_id: "Visited Image"
+        panorama_image_id: "Panorama Bild"
+        hover_image_id: "Panorama Hover Image"
+        visited_image_id: "Panorama Visited Image"
         linkmap_areas: "Verweisbereiche"
         audio_areas: "Bereiche mit Audio"
+        limit_scrolling: "Scrollbereich auf aktive Bereiche beschränken"
+        add_environment: "Scrollumgebung erzwingen"
+        margin_scrolling_disabled: "Am Bildrand scrollen deaktivieren"
     values:
       "pageflow/page":
         background_type:
