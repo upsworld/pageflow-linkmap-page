@@ -49,15 +49,13 @@
         that.speedX = 0;
         that.speedY = 0;
 
+        that.stopping = false;
+
         that.newTimer();
       });
 
       this.element.on('mouseleave', function() {
-        that.speedX = 0;
-        that.speedY = 0;
-
-        clearInterval(that.scrollTimer);
-        that.scrollTimer = null;
+        that.stopping = true;
       });
 
       this.element.on('mousemove', function(e) {
@@ -109,9 +107,29 @@
     newTimer: function() {
       if (!this.scrollTimer) {
         var that = this;
+
         this.scrollTimer = setInterval(function() {
-          var scrollX = -that.speedX * that.speedUp;
-          var scrollY = -that.speedY * that.speedUp;
+          var scrollX;
+          var scrollY;
+
+          if (that.stopping) {
+            that.speedX = that.speedX * 0.8;
+            that.speedY = that.speedY * 0.8;
+
+            if (Math.abs(that.speedX) < 0.001 &&
+                Math.abs(that.speedY) < 0.001) {
+              clearInterval(that.scrollTimer);
+
+              that.speedX = 0;
+              that.speedY = 0;
+
+              that.scrollTimer = null;
+              that.stopping = false;
+            }
+          }
+
+          scrollX = -that.speedX * that.speedUp;
+          scrollY = -that.speedY * that.speedUp;
 
           if(!that.drag && that.marginScrolling && !that.marginScrollingDisabled) {
             that.scroller.scrollBy(scrollX, scrollY);
