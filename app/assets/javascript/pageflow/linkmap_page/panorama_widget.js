@@ -15,7 +15,7 @@
           pageElement = this.options.page;
 
       this.addEnvironment = this.options.addEnvironment;
-      this.marginScrollingDisabled = this.options.marginScrollingDisabled;
+      this.marginScrolling = !this.options.marginScrollingDisabled;
       this.panorama = this.options.panorama();
       this.limitScrolling = this.options.limitScrolling;
       this.scroller = this.options.scroller;
@@ -98,6 +98,14 @@
       this.refresh();
     },
 
+    enableMarginScrolling: function() {
+      this.marginScrollingDisabled = false;
+    },
+
+    disableMarginScrolling: function() {
+      this.marginScrollingDisabled = true;
+    },
+
     newTimer: function() {
       if (!this.scrollTimer) {
         var that = this;
@@ -105,7 +113,7 @@
           var scrollX = -that.speedX * that.speedUp;
           var scrollY = -that.speedY * that.speedUp;
 
-          if(!that.drag && !that.marginScrollingDisabled) {
+          if(!that.drag && that.marginScrolling && !that.marginScrollingDisabled) {
             that.scroller.scrollBy(scrollX, scrollY);
             that.updateScrollPosition();
           }
@@ -183,7 +191,7 @@
     update: function(addEnvironment, limitScrolling, marginScrollingDisabled, startScrollPosition) {
       this.addEnvironment = addEnvironment;
       this.limitScrolling = limitScrolling;
-      this.marginScrollingDisabled = marginScrollingDisabled;
+      this.marginScrolling = !marginScrollingDisabled;
       this.startScrollPosition = _.clone(startScrollPosition);
 
       this.refresh();

@@ -2,6 +2,13 @@ pageflow.editor.pageTypes.register('linkmap_page', {
   configurationEditorView: pageflow.linkmapPage.ConfigurationEditorView,
 
   embeddedViews: {
+    '.scroller': {
+      view: pageflow.linkmapPage.PanoramaEmbeddedView,
+      options: {
+        disableMarginScrollingPropertyName: 'areas_editable'
+      }
+    },
+
     '.panorama_image': {
       view: pageflow.BackgroundImageEmbeddedView,
       options: {
