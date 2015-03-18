@@ -16,7 +16,7 @@
 
       this.addEnvironment = this.options.addEnvironment;
       this.marginScrollingDisabled = this.options.marginScrollingDisabled;
-      this.activeAreas = $(this.options.activeAreasSelector);
+      this.activeAreas = pageElement.find(this.options.activeAreasSelector);
       this.panorama = this.options.panorama();
       this.panoramaWrapper = this.element.find('.panorama_wrapper');
 
@@ -132,22 +132,24 @@
       var pageElement = this.options.page;
       var that = this;
       var startScrollPosition = that.startScrollPosition;
+      var scrollArea;
 
-      if(activeAreas[0] && that.limitScrolling) {
-        var scrollArea = {
+      if (activeAreas.length && that.limitScrolling) {
+        scrollArea = {
           top: that.startScrollPosition.y * panorama.height(),
           left: that.startScrollPosition.x * panorama.width(),
           bottom: that.startScrollPosition.y * panorama.height(),
           right: that.startScrollPosition.x * panorama.width(),
-        }
+        };
 
-        for (var i = 1; i < activeAreas.length; i++) {
-          var el = $(activeAreas[i]);
+        activeAreas.each(function() {
+          var el = $(this);
+
           scrollArea.top = scrollArea.top > el.position().top ? el.position().top : scrollArea.top;
           scrollArea.left = scrollArea.left > el.position().left ? el.position().left : scrollArea.left;
           scrollArea.bottom = scrollArea.bottom < el.position().top + el.height() ? el.position().top + el.height() : scrollArea.bottom;
           scrollArea.right = scrollArea.right < el.position().left + el.width() ? el.position().left + el.width() : scrollArea.right;
-        }
+        });
 
         scrollArea.top = Math.max(0, scrollArea.top - pageElement.height() * this.scrollHoverMargin);
         scrollArea.left = Math.max(0, scrollArea.left - pageElement.width() * this.scrollHoverMargin);
@@ -155,12 +157,12 @@
         scrollArea.right = Math.min(panorama.width(), scrollArea.right + pageElement.width() * this.scrollHoverMargin);
       }
       else {
-        var scrollArea = {
+        scrollArea = {
           top: panorama.position().top,
           left: panorama.position().left,
           bottom: (panorama.position().top + panorama.height()),
           right: (panorama.position().left + panorama.width()),
-        }
+        };
       }
 
       return scrollArea;
