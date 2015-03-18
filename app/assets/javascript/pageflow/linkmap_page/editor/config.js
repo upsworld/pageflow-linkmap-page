@@ -4,21 +4,16 @@ pageflow.editor.pageTypes.register('linkmap_page', {
   embeddedViews: {
     '.panorama_image': {
       view: pageflow.BackgroundImageEmbeddedView,
-      options: {propertyName: 'panorama_image_id', dataSizeAttributes : true}
-    },
-
-    '.fixed_background': {
-      view: pageflow.BackgroundImageEmbeddedView,
       options: {
-        propertyName: 'background_image_id',
-        dataSizeAttributes: true
+        propertyName: 'panorama_image_id',
+        dataSizeAttributes : true
       }
     },
 
     '.panorama_video': {
       view: pageflow.LazyVideoEmbeddedView,
       options: {
-        propertyName: 'background_video_id',
+        propertyName: 'panorama_video_id',
         dataSizeAttributes: true
       }
     },
@@ -35,6 +30,11 @@ pageflow.editor.pageTypes.register('linkmap_page', {
       options: {
         propertyName: 'linkmap_audio_file_areas'
       }
+    },
+
+    '.fixed_background': {
+      view: pageflow.BackgroundImageEmbeddedView,
+      options: {propertyName: 'background_image_id'}
     }
   },
 

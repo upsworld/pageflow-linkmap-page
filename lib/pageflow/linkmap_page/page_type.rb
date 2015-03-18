@@ -10,8 +10,8 @@ module Pageflow
       def thumbnail_candidates
         [
           {attribute: 'thumbnail_image_id', file_collection: 'image_files'},
-          {attribute: 'background_image_id', file_collection: 'image_files'},
-          {attribute: 'background_video_id', file_collection: 'video_files'}
+          {attribute: 'panorama_image_id', file_collection: 'image_files'},
+          {attribute: 'panorama_video_id', file_collection: 'video_files'}
         ]
       end
     end

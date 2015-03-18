@@ -16,40 +16,25 @@
 
       this.addEnvironment = this.options.addEnvironment;
       this.marginScrollingDisabled = this.options.marginScrollingDisabled;
-      this.activeAreas = pageElement.find(this.options.activeAreasSelector);
       this.panorama = this.options.panorama();
-      this.panoramaWrapper = this.element.find('.panorama_wrapper');
-
       this.limitScrolling = this.options.limitScrolling;
-
-      this.innerScrollerElement = this.element.find('.linkmap');
-
       this.scroller = this.options.scroller;
 
-      this.startScrollPosition = {
-        x: this.options.startX,
-        y: this.options.startY
-      };
+      this.activeAreas = pageElement.find(this.options.activeAreasSelector);
+      this.panoramaWrapper = this.element.find('.panorama_wrapper');
+      this.innerScrollerElement = this.element.find('.linkmap');
 
-      this.currentScrollPosition = {
-        x: this.options.startX,
-        y: this.options.startY
-      };
+      this.startScrollPosition = _.clone(this.options.startScrollPosition);
+      this.currentScrollPosition = null;
 
-      this.scrollArea = this.getScrollArea(this.activeAreas);
-
-      var containerWidth = this.element.width(),
-          containerHeight = this.element.height(),
-          activeMargin = 0.2;
-
-      this.centerToPoint(this.startScrollPosition.x, this.startScrollPosition.y, 1000);
+      this.refresh();
 
       this.scroller.onScrollEnd(function() {
         that.updateScrollPosition();
       });
 
       $(window).on('resize', function () {
-        that.centerToPoint(that.currentScrollPosition.x, that.currentScrollPosition.y, 0);
+        that.centerToPoint(null, 0);
       });
 
       this.element.on('mousedown touchstart', function () {
@@ -78,8 +63,9 @@
       this.element.on('mousemove', function(e) {
         that.newTimer();
 
-        containerWidth = that.element.width();
-        containerHeight = that.element.height();
+        var containerWidth = that.element.width();
+        var containerHeight = that.element.height();
+        var activeMargin = 0.2;
 
         var percentagePositionX = (e.pageX - containerWidth/2) / (containerWidth/2),
           percentagePositionY = (e.pageY - containerHeight/2) / (containerHeight/2),
@@ -130,16 +116,15 @@
     getScrollArea: function(activeAreas) {
       var panorama = this.panorama;
       var pageElement = this.options.page;
-      var that = this;
-      var startScrollPosition = that.startScrollPosition;
+      var startScrollPosition = this.startScrollPosition;
       var scrollArea;
 
-      if (activeAreas.length && that.limitScrolling) {
+      if (activeAreas.length && this.limitScrolling) {
         scrollArea = {
-          top: that.startScrollPosition.y * panorama.height(),
-          left: that.startScrollPosition.x * panorama.width(),
-          bottom: that.startScrollPosition.y * panorama.height(),
-          right: that.startScrollPosition.x * panorama.width(),
+          top: this.startScrollPosition.y * panorama.height(),
+          left: this.startScrollPosition.x * panorama.width(),
+          bottom: this.startScrollPosition.y * panorama.height(),
+          right: this.startScrollPosition.x * panorama.width(),
         };
 
         activeAreas.each(function() {
@@ -195,72 +180,130 @@
       return smallestScale;
     },
 
-    update: function(addEnvironment,limitScrolling,marginScrollingDisabled) {
+    update: function(addEnvironment, limitScrolling, marginScrollingDisabled, startScrollPosition) {
       this.addEnvironment = addEnvironment;
       this.limitScrolling = limitScrolling;
       this.marginScrollingDisabled = marginScrollingDisabled;
+      this.startScrollPosition = _.clone(startScrollPosition);
+
+      this.refresh();
     },
 
     refresh: function() {
-      this.panorama = this.options.panorama();
-      var pageElement = this.options.page;
-      var windowRatio = pageElement.width() / pageElement.height();
-      var imageRatio = this.panorama.attr('data-width') / this.panorama.attr('data-height');
-      var that = this;
-      var smallestScale = this.getMinScale(this.activeAreas);
-      var environmentMargin = this.addEnvironment ? (1 + this.environmentMargin) : 1;
+      this.keepingScrollPosition(function() {
+        var pageElement = this.options.page;
 
-      if(imageRatio > windowRatio) {
-        this.panorama.height(pageElement.height() * environmentMargin);
-        this.panorama.width(this.panorama.height() * imageRatio);
-      }
-      else {
-        this.panorama.width(pageElement.width() * environmentMargin);
-        this.panorama.height(this.panorama.width() / imageRatio);
-      }
+        this.panorama = this.options.panorama();
 
-      if(this.panorama.width() < this.panorama.attr('data-width') * smallestScale) {
-        this.panorama.width(this.panorama.attr('data-width') * smallestScale);
-        this.panorama.height(this.panorama.attr('data-height') * smallestScale);
-      }
+        this.panoramaSize = this.getPanoramaSize(pageElement);
+        this.panorama.width(this.panoramaSize.width);
+        this.panorama.height(this.panoramaSize.height);
 
-      this.activeAreas = $(this.options.activeAreasSelector);
+        this.activeAreas = pageElement.find(this.options.activeAreasSelector);
+        this.scrollArea = this.getScrollArea(this.activeAreas);
 
-      this.scrollArea = this.getScrollArea(this.activeAreas);
+        this.innerScrollerElement.addClass('measuring');
 
-      var topToCenterInnerScroller = (this.scrollArea.bottom - this.scrollArea.top) < pageElement.height() ?
-        (pageElement.height() - (this.scrollArea.bottom - this.scrollArea.top)) / 2 : 0;
+        this.innerScrollerElement.width(this.scrollArea.right - this.scrollArea.left);
+        this.innerScrollerElement.height(this.scrollArea.bottom - this.scrollArea.top);
 
-      var leftToCenterInnerScroller = (this.scrollArea.right - this.scrollArea.left) < pageElement.width() ?
-        (pageElement.width() - (this.scrollArea.right - this.scrollArea.left)) / 2 : 0;
+        var maxTranslateX = this.panoramaSize.width - pageElement.width();
+        var maxTranslateY = this.panoramaSize.height - pageElement.height();
 
+        this.panoramaWrapper.css({
+          left: -Math.min(maxTranslateX, this.scrollArea.left) +'px',
+          top: -Math.min(maxTranslateY, this.scrollArea.top) + 'px'
+        });
 
-      this.innerScrollerElement.addClass('measuring');
-      this.innerScrollerElement.width((this.scrollArea.right - this.scrollArea.left) + leftToCenterInnerScroller);
-      this.innerScrollerElement.height((this.scrollArea.bottom - this.scrollArea.top) + topToCenterInnerScroller);
-      this.innerScrollerElement.removeClass('measuring');
-
-      this.scroller.refresh();
+        this.innerScrollerElement.removeClass('measuring');
+        this.scroller.refresh();
+      });
     },
 
-    centerToPoint: function(x, y, time) {
-      var that = this;
+    getPanoramaSize: function(pageElement) {
+      var result = {};
+      var windowRatio = pageElement.width() / pageElement.height();
+      var imageRatio = this.panorama.attr('data-width') / this.panorama.attr('data-height');
+      var environmentMargin = this.addEnvironment ? (1 + this.environmentMargin) : 1;
+      var smallestScale = this.getMinScale(this.activeAreas);
 
-      x = !x ? this.currentScrollPosition.x : x;
-      y = !y ? this.currentScrollPosition.y : y;
+      if(imageRatio > windowRatio) {
+        result.height = pageElement.height() * environmentMargin;
+        result.width = result.height * imageRatio;
+      }
+      else {
+        result.width = pageElement.width() * environmentMargin;
+        result.height = result.width / imageRatio;
+      }
 
-      var absoluteX = this.scroller.maxX() * x;
-      var absoluteY = this.scroller.maxY() * y;
+      if (result.width < this.panorama.attr('data-width') * smallestScale) {
+        result.width = this.panorama.attr('data-width') * smallestScale;
+        result.height = this.panorama.attr('data-height') * smallestScale;
+      }
 
-      this.scroller.scrollTo(absoluteX, this.scroller.iscroll.maxScrollY * y, time);
+      return result;
+    },
+
+    centerToPoint: function(point, time) {
+      point = point || this.currentScrollPosition;
+
+      var absoluteX = this.scroller.maxX() * point.x;
+      var absoluteY = this.scroller.maxY() * point.y;
+
+      this.scroller.scrollTo(absoluteX, absoluteY, time);
+
+      this.currentScrollPosition = this.currentScrollPosition || point;
+    },
+
+    keepingScrollPosition: function(fn) {
+      var panoramaPosition;
+
+      if (this.currentScrollPosition) {
+        panoramaPosition = this.scrollerToPanorama(this.currentScrollPosition);
+      }
+      else {
+        panoramaPosition = this.startScrollPosition;
+      }
+
+      fn.call(this);
+
+      this.centerToPoint(this.panoramaToScroller(panoramaPosition));
+    },
+
+    scrollerToPanorama: function(point) {
+      var scrollAreaWidth = (this.scrollArea.right - this.scrollArea.left);
+      var scrollAreaHeight = (this.scrollArea.bottom - this.scrollArea.top);
+
+      return {
+        x: this.panoramaSize.width === 0 ?
+          0 :
+          (this.scrollArea.left + point.x * scrollAreaWidth) / this.panoramaSize.width,
+        y: this.panoramaSize.height === 0?
+          0 :
+          (this.scrollArea.top + point.y * scrollAreaHeight) / this.panoramaSize.height
+      };
+    },
+
+    panoramaToScroller: function(point) {
+      var scrollAreaWidth = (this.scrollArea.right - this.scrollArea.left);
+      var scrollAreaHeight = (this.scrollArea.bottom - this.scrollArea.top);
+
+      return {
+        x: scrollAreaWidth === 0 ?
+          0 :
+          (point.x * this.panoramaSize.width - this.scrollArea.left) / scrollAreaWidth ,
+        y: scrollAreaHeight === 0 ?
+          0 :
+          (point.y * this.panoramaSize.height - this.scrollArea.top) / scrollAreaHeight
+      };
     },
 
     updateScrollPosition: function() {
       var that = this;
 
       setTimeout(function() {
-        that.currentScrollPosition.x = that.scroller.maxX() != 0 ? that.scroller.positionX() / that.scroller.maxX() : 0;
-        that.currentScrollPosition.y = that.scroller.maxY() != 0 ? that.scroller.positionY() / that.scroller.maxY() : 0;
+        that.currentScrollPosition.x = that.scroller.maxX() !== 0 ? that.scroller.positionX() / that.scroller.maxX() : 0;
+        that.currentScrollPosition.y = that.scroller.maxY() !== 0 ? that.scroller.positionY() / that.scroller.maxY() : 0;
       }, 10);
 
     },
