@@ -40,7 +40,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
   setupPanoramaBackground: function(pageElement, configuration) {
     pageElement.find('.panorama_image')
-      .toggleClass('active', configuration.background_type === 'image');
+      .toggleClass('active', configuration.background_type !== 'video');
 
     pageElement.find('.panorama_video')
       .toggleClass('active', configuration.background_type === 'video');
