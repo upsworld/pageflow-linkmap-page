@@ -206,11 +206,12 @@
       return smallestScale;
     },
 
-    update: function(addEnvironment, limitScrolling, marginScrollingDisabled, startScrollPosition) {
+    update: function(addEnvironment, limitScrolling, marginScrollingDisabled, startScrollPosition, minScaling) {
       this.addEnvironment = addEnvironment;
       this.limitScrolling = limitScrolling;
       this.marginScrolling = !marginScrollingDisabled;
       this.startScrollPosition = _.clone(startScrollPosition);
+      this.minScaling = minScaling;
 
       this.refresh();
     },

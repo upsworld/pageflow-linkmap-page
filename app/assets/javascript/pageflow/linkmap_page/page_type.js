@@ -174,11 +174,14 @@ pageflow.pageType.register('linkmap_page', _.extend({
     this.updateCommonPageCssClasses(pageElement, configuration);
 
     this.afterEmbeddedViewsUpdate(function() {
+      var minScaling = false;
+
       this.content.linkmapPanorama('update',
                                    configuration.get('add_environment'),
                                    configuration.get('limit_scrolling'),
                                    configuration.get('margin_scrolling_disabled'),
-                                   this.getPanoramaStartScrollPosition(configuration.attributes));
+                                   this.getPanoramaStartScrollPosition(configuration.attributes),
+                                   minScaling);
 
       this.linkmapAreas.linkmap('refresh');
       this.scroller.refresh();
