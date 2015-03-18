@@ -27,6 +27,7 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
   onRender: function() {
     this.setupHoverImageView();
     this.setupDraggableAndResizable();
+    this.listenToEditable();
 
     this.update();
   },
@@ -49,6 +50,7 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
 
     this.$el.resizable({
       handles: 'n, e, s, w, ne, se, sw, nw',
+      disabled: true,
 
       start: function() {
         that.$el.addClass('hover editing');
@@ -65,6 +67,7 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
 
     this.$el.draggable({
       iframeFix: true,
+      disabled: true,
 
       start: function() {
         that.$el.addClass('hover editing');
@@ -92,6 +95,19 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
         height: parseInt(element.css('height'), 10) / (element.parent().height() / 100)
       });
     }
+  },
+
+  listenToEditable: function() {
+    this.listenTo(this.options.page, 'change:areas_editable', function(model, editable) {
+      if (editable) {
+        this.$el.resizable('enable');
+        this.$el.draggable('enable');
+      }
+      else {
+        this.$el.resizable('disable');
+        this.$el.draggable('disable');
+      }
+    });
   },
 
   update: function() {

@@ -12,7 +12,7 @@
 
 .ui-resizable-disabled .ui-resizable-handle,
 .ui-resizable-autohide .ui-resizable-handle {
-  display: none;
+  display: none !important;
 }
 
 .ui-resizable-n {
