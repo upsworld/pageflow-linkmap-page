@@ -23,8 +23,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
       limitScrolling: configuration.limit_scrolling,
       addEnvironment: configuration.add_environment,
       marginScrollingDisabled: configuration.margin_scrolling_disabled,
-      startX: 0,
-      startY: 0,
+      startScrollPosition: this.getPanoramaStartScrollPosition(configuration)
     });
 
     this.linkmapAreas = pageElement.find('.linkmap_areas');
@@ -38,9 +37,33 @@ pageflow.pageType.register('linkmap_page', _.extend({
     this.setupAudioFileAreas(pageElement);
   },
 
+  getPanoramaStartScrollPosition: function(configuration) {
+    function getRatio(attributeName) {
+      if (attributeName in configuration) {
+        return configuration[attributeName] / 100;
+      }
+      else {
+        return 0.5;
+      }
+    }
+
+    if (configuration.background_type === 'video') {
+      return {
+        x: getRatio('panorama_video_x'),
+        y: getRatio('panorama_video_y')
+      };
+    }
+    else {
+      return {
+        x: getRatio('panorama_image_x'),
+        y: getRatio('panorama_image_y')
+      };
+    }
+  },
+
   setupPanoramaBackground: function(pageElement, configuration) {
     pageElement.find('.panorama_image')
-      .toggleClass('active', configuration.background_type === 'image');
+      .toggleClass('active', configuration.background_type !== 'video');
 
     pageElement.find('.panorama_video')
       .toggleClass('active', configuration.background_type === 'video');
@@ -151,20 +174,18 @@ pageflow.pageType.register('linkmap_page', _.extend({
     this.updateCommonPageCssClasses(pageElement, configuration);
 
     this.afterEmbeddedViewsUpdate(function() {
-      this.content.linkmapPanorama('update', configuration.get('add_environment'), configuration.get('limit_scrolling'), configuration.get('margin_scrolling_disabled'));
-      this.content.linkmapPanorama('refresh');
+      var minScaling = false;
+
+      this.content.linkmapPanorama('update',
+                                   configuration.get('add_environment'),
+                                   configuration.get('limit_scrolling'),
+                                   configuration.get('margin_scrolling_disabled'),
+                                   this.getPanoramaStartScrollPosition(configuration.attributes),
+                                   minScaling);
+
       this.linkmapAreas.linkmap('refresh');
       this.scroller.refresh();
     });
-  },
-
-  embeddedEditorViews: function() {
-    return {
-      '.background_image': {
-        view: pageflow.BackgroundImageEmbeddedView,
-        options: {propertyName: 'background_image_id'}
-      }
-    }
   },
 
   setupDefaultAreaPositions: function(configuration) {

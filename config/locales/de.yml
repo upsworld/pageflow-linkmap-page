@@ -33,6 +33,7 @@ de:
         background_type: "Hintergrund-Typ"
         linked_linkmap_page_perma_ids: "Verlinkte Seiten"
         panorama_image_id: "Panorama Bild"
+        panorama_video_id: "Panorama Video"
         hover_image_id: "Panorama Hover Image"
         visited_image_id: "Panorama Visited Image"
         linkmap_areas: "Verweisbereiche"

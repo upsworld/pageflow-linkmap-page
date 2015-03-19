@@ -13,14 +13,14 @@ pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.
 
       this.input('panorama_image_id', pageflow.FileInputView, {
         collection: pageflow.imageFiles,
-        positioning: false,
+        positioning: true,
         visibleBinding: 'background_type',
         visibleBindingValue: 'image'
       });
 
-      this.input('background_video_id', pageflow.FileInputView, {
+      this.input('panorama_video_id', pageflow.FileInputView, {
         collection: pageflow.videoFiles,
-        positioning: false,
+        positioning: true,
         visibleBinding: 'background_type',
         visibleBindingValue: 'video'
       });

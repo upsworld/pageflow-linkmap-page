@@ -9,9 +9,10 @@
         <%= background_image_div_with_size(configuration,
                                              'panorama_image',
                                              class: 'panorama panorama_image',
-                                             style_group: :original) %>
+                                             style_group: :panorama) %>
+
         <div class="panorama panorama_video">
-          <%= lookup_video_tag(configuration['background_video_id'],
+          <%= lookup_video_tag(configuration['panorama_video_id'],
                                configuration['poster_image_id'],
                                loop: true,
                                unique_id: page.id,
