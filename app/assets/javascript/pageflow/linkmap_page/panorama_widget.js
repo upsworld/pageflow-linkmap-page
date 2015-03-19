@@ -29,6 +29,10 @@
 
       this.refresh();
 
+      var centerDot = '<div style="background-color: red; position: absolute; width:4px; height: 4px; margin-top: -2px; margin-left: -2px; left: ' + this.startScrollPosition.x * this.panorama.width() + 'px; top:' + this.startScrollPosition.y * this.panorama.height() + 'px; border-radius: 50%"></div>';
+
+      this.panorama.append($(centerDot));
+
       this.scroller.onScrollEnd(function() {
         that.updateScrollPosition();
       });
@@ -244,6 +248,12 @@
 
         this.innerScrollerElement.removeClass('measuring');
         this.scroller.refresh();
+
+        var leftToCenterInnerScroller = (pageElement.width() - (this.scrollArea.right - this.scrollArea.left)) / 2;
+        var topToCenterInnerScroller = (pageElement.height() - (this.scrollArea.bottom - this.scrollArea.top)) / 2;
+
+        this.innerScrollerElement.css('left', (this.scroller.maxX() == 0 && this.panoramaSize.width > this.scrollArea.right - this.scrollArea.left ? Math.min(leftToCenterInnerScroller, this.scrollArea.left) : 0) + "px");
+        this.innerScrollerElement.css('top', (this.scroller.maxY() == 0 && this.panoramaSize.height > pageElement.height() ? Math.min(topToCenterInnerScroller, this.scrollArea.top) : 0) + "px");
       });
     },
 
