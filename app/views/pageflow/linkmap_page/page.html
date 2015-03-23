@@ -2,25 +2,25 @@
 <div class="content_and_background linkmap_page">
   <div class="backgroundArea">
     <%= background_image_div(configuration, 'background_image', class: 'fixed_background') %>
-  </div>
-  <div class="scroller">
-    <div class="linkmap">
-      <div class="panorama_wrapper">
-        <%= background_image_div_with_size(configuration,
-                                             'panorama_image',
-                                             class: 'panorama panorama_image',
-                                             style_group: :panorama) %>
+    <div class="scroller">
+      <div class="linkmap">
+        <div class="panorama_wrapper">
+          <%= background_image_div_with_size(configuration,
+                                               'panorama_image',
+                                               class: 'panorama panorama_image',
+                                               style_group: :panorama) %>
 
-        <div class="panorama panorama_video">
-          <%= lookup_video_tag(configuration['panorama_video_id'],
-                               configuration['poster_image_id'],
-                               loop: true,
-                               unique_id: page.id,
-                               preload: page.is_first) %>
+          <div class="panorama panorama_video">
+            <%= lookup_video_tag(configuration['panorama_video_id'],
+                                 configuration['poster_image_id'],
+                                 loop: true,
+                                 unique_id: page.id,
+                                 preload: page.is_first) %>
+          </div>
+
+          <%= linkmap_areas_div(configuration, 'linkmap_page_link_areas') %>
+          <%= linkmap_areas_div(configuration, 'linkmap_audio_file_areas') %>
         </div>
-
-        <%= linkmap_areas_div(configuration, 'linkmap_page_link_areas') %>
-        <%= linkmap_areas_div(configuration, 'linkmap_audio_file_areas') %>
       </div>
     </div>
   </div>
