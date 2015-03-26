@@ -9,6 +9,7 @@
     environmentMargin : 0.2,
     minScaling: true,
     minScalingSize: 50,
+    lastMouseMoveEvent: null,
 
     _create: function() {
       var that = this,
@@ -21,17 +22,14 @@
       this.scroller = this.options.scroller;
 
       this.activeAreas = pageElement.find(this.options.activeAreasSelector);
-      this.panoramaWrapper = this.element.find('.panorama_wrapper');
-      this.innerScrollerElement = this.element.find('.linkmap');
+      this.panoramaWrapper = pageElement.find('.panorama_wrapper');
+      this.innerScrollerElement = pageElement.find('.linkmap');
 
       this.startScrollPosition = _.clone(this.options.startScrollPosition);
+
       this.currentScrollPosition = null;
 
       this.refresh();
-
-      var centerDot = '<div style="background-color: red; position: absolute; width:4px; height: 4px; margin-top: -2px; margin-left: -2px; left: ' + this.startScrollPosition.x * this.panorama.width() + 'px; top:' + this.startScrollPosition.y * this.panorama.height() + 'px; border-radius: 50%"></div>';
-
-      this.panorama.append($(centerDot));
 
       this.scroller.onScrollEnd(function() {
         that.updateScrollPosition();
@@ -79,6 +77,9 @@
 
         that.speedX = onOuterAreasX ? (percentagePositionX - ((1-activeMargin*2)*(faktorX))) / (activeMargin*2) : 0;
         that.speedY = onOuterAreasY ? (percentagePositionY - ((1-activeMargin*2)*(faktorY))) / (activeMargin*2) : 0;
+
+        that.lastMouseMoveEvent = e;
+        that.calcAreaOpacity(that.activeAreas, e.pageX, e.pageY);
       });
 
       this.element.on('touchstart', function () {
@@ -106,6 +107,28 @@
 
     disableMarginScrolling: function() {
       this.marginScrollingDisabled = true;
+    },
+
+    calcAreaOpacity: function(activeAreas, mX, mY) {
+      var distanceLimit = $(window).width() > $(window).height() ? $(window).height()  : $(window).width();
+      var minOpacity = 0.1;
+      activeAreas.each(function() {
+        var distance = calculateDistance($(this), mX, mY);
+        if(distance <= distanceLimit) {
+          var opacity = 1 + minOpacity - Math.sqrt(distance / distanceLimit);
+          $(this).find('.linkmap_circle').css('opacity', opacity);
+          //console.log('distance', distance, 'opacity', opacity);
+        }
+        else {
+          $(this).find('.linkmap_circle').css('opacity', minOpacity);
+        }
+
+
+      });
+
+      function calculateDistance(elem, mouseX, mouseY) {
+        return Math.floor(Math.sqrt(Math.pow(mouseX - (elem.offset().left+(elem.width()/2)), 2) + Math.pow(mouseY - (elem.offset().top+(elem.height()/2)), 2)));
+      }
     },
 
     newTimer: function() {
@@ -342,6 +365,8 @@
         that.currentScrollPosition.x = that.scroller.maxX() !== 0 ? that.scroller.positionX() / that.scroller.maxX() : 0;
         that.currentScrollPosition.y = that.scroller.maxY() !== 0 ? that.scroller.positionY() / that.scroller.maxY() : 0;
       }, 10);
+
+      this.calcAreaOpacity(this.activeAreas, this.lastMouseMoveEvent.pageX, this.lastMouseMoveEvent.pageY);
 
     },
 

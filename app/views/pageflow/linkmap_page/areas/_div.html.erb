@@ -2,6 +2,7 @@
   <% (configuration[attribute_name].presence || []).each do |attributes| %>
     <%= linkmap_area(attributes) do %>
       <%= background_image_div_with_size(configuration, 'hover_image', style_group: :panorama) %>
+      <div class="linkmap_circle"></div>
     <% end %>
   <% end %>
 <% end %>
