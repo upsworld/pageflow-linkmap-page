@@ -110,17 +110,17 @@
     },
 
     calcAreaOpacity: function(activeAreas, mX, mY) {
-      var distanceLimit = $(window).width() > $(window).height() ? $(window).height()  : $(window).width();
+      var pageElement = this.options.page;
+      var distanceLimit = pageElement.width() > pageElement.height() ? pageElement.height() : pageElement.width();
       var minOpacity = 0.1;
       activeAreas.each(function() {
         var distance = calculateDistance($(this), mX, mY);
         if(distance <= distanceLimit) {
           var opacity = 1 + minOpacity - Math.sqrt(distance / distanceLimit);
-          $(this).find('.linkmap_circle').css('opacity', opacity);
-          //console.log('distance', distance, 'opacity', opacity);
+          $(this).find('.linkmap_marker').css('opacity', opacity);
         }
         else {
-          $(this).find('.linkmap_circle').css('opacity', minOpacity);
+          $(this).find('.linkmap_marker').css('opacity', minOpacity);
         }
 
 

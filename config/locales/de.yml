@@ -13,6 +13,11 @@ de:
           file_area_item:
             edit: "Bearbeiten"
             remove: "Entfernen"
+            toggle_marker: "Linkmarkierung aktivieren"
+          embedded:
+            area_item:
+              toggle_marker: "Linkmarkierung aktivieren"
+              edit: "Bearbeiten"
         views:
           file_area_item_view:
             no_file: "(Keine Datei)"
@@ -29,6 +34,7 @@ de:
         audio_file_id: "Audio Datei"
         name: "Bezeichnung"
         page_transition: "Seitenwechsel-Animation"
+        marker: "Linkmarkierung"
       "pageflow/page":
         background_type: "Hintergrund-Typ"
         linked_linkmap_page_perma_ids: "Verlinkte Seiten"
@@ -46,3 +52,7 @@ de:
         background_type:
           image: "Bild"
           video: "Video"
+      "pageflow/linkmap_page/area":
+        marker:
+          no_marker: "Keine Markierung"
+          dynamic_marker: "Flexible Markierung"

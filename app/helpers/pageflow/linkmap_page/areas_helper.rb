@@ -18,7 +18,7 @@ module Pageflow
           content_tag(:a,
                       '',
                       href: '#',
-                      class: 'hover_area',
+                      class: css_classes,
                       style: inline_styles,
                       data: data_attributes,
                       &block)
@@ -41,6 +41,10 @@ module Pageflow
                         left: in_percent(attributes[:left]),
                         width: in_percent(attributes[:width]),
                         height: in_percent(attributes[:height]))
+        end
+
+        def css_classes
+          'hover_area' + ' ' + attributes[:marker].to_s
         end
 
         def styles_string(properties)

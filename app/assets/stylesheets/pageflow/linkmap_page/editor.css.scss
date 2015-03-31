@@ -17,15 +17,27 @@
     border: solid 1px #888;
   }
 
+  .toggle_marker {
+    @include icon-only-button(white);
+    @include eye-icon;
+    position: absolute;
+    display: none;
+    z-index: 2;
+    top: 5px;
+    right: 36px;
+    background-color: #fff;
+    border: solid 1px #888;
+  }
+
   &.editable {
     .hover_area {
       cursor: move;
 
-      &:hover .edit {
+      &:hover .edit, &:hover .toggle_marker {
         display: block;
       }
 
-      &.editing .edit {
+      &.editing .edit, &.editing .toggle_marker {
         display: none;
       }
 

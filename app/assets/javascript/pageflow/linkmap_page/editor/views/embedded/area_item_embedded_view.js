@@ -17,6 +17,15 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
       if (this.$el.is('.editable .hover_area')) {
         return false;
       }
+    },
+
+    'click .toggle_marker': function() {
+      if(this.model.get('marker') === 'dynamic_marker') {
+        this.model.set('marker', 'no_marker')
+      }
+      else {
+        this.model.set('marker', 'dynamic_marker')
+      }
     }
   },
 
@@ -125,5 +134,14 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
     this.$el.css('top', this.model.get('top') + '%');
     this.$el.css('width', this.model.get('width') + '%');
     this.$el.css('height', this.model.get('height') + '%');
+
+    var marker = this.model.get('marker');
+    var element = this.$el;
+    var that = this;
+
+    _.forEach(pageflow.linkmapPage.toggleMarkerOptions, function(option) {
+      element.toggleClass(option, that.model.get('marker') === option);
+    });
+
   }
 });
