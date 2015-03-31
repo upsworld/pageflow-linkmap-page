@@ -5,3 +5,5 @@
 //= require ./linkmap_page/gyro
 
 pageflow.linkmapPage = pageflow.linkmapPage || {};
+
+pageflow.linkmapPage.toggleMarkerOptions = ['no_marker', 'dynamic_marker'];
