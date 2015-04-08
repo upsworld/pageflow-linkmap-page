@@ -24,20 +24,38 @@
     display: none;
     z-index: 2;
     top: 5px;
-    right: 36px;
+    right: 40px;
     background-color: #fff;
     border: solid 1px #888;
+  }
+
+  .area_type_pictogram {
+    @include background-icon-center($color: #fff);
+    @include link-icon;
+    display: none;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 2;
   }
 
   &.editable {
     .hover_area {
       cursor: move;
 
-      &:hover .edit, &:hover .toggle_marker {
+      &:hover .edit,
+      &:hover .toggle_marker,
+      &:hover .area_type_pictogram {
         display: block;
       }
 
-      &.editing .edit, &.editing .toggle_marker {
+      &.editing .edit,
+      &.editing .toggle_marker,
+      &.editing .area_type_pictogram {
         display: none;
       }
 
@@ -70,6 +88,16 @@
       &:after {
         border: solid 2px #fff;
         @include animation(blink 3s linear infinite);
+      }
+    }
+
+    &.linkmap_audio_file_areas {
+      .hover_area:before {
+        border-color: #006add;
+      }
+
+      .area_type_pictogram {
+        @include note-icon;
       }
     }
   }
