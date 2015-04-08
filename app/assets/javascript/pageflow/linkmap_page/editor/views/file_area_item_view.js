@@ -7,15 +7,11 @@ pageflow.linkmapPage.FileAreaItemView = Backbone.Marionette.ItemView.extend({
   ui: {
     thumbnail: '.file_thumbnail',
     title: '.title',
+    label: '.label',
     editButton: '.edit'
   },
 
   events: {
-    'click .remove': function() {
-      this.model.destroy();
-      return false;
-    },
-
     'click .edit': function() {
       pageflow.editor.navigate(this.model.editPath(), {trigger: true});
       return false;
@@ -45,7 +41,10 @@ pageflow.linkmapPage.FileAreaItemView = Backbone.Marionette.ItemView.extend({
       this.ui.title.text(I18n.t('pageflow.linkmap_page.editor.views.file_area_item_view.no_file'));
     }
 
+    this.ui.label.text(this.model.label());
+    this.ui.label.toggle(!!this.model.label());
     this.ui.editButton.toggle(!!this.model.editPath());
+
     this.$el.toggleClass('dangling', !file);
   },
 

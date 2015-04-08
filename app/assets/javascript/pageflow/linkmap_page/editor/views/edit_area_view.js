@@ -10,11 +10,15 @@ pageflow.linkmapPage.EditAreaView = Backbone.Marionette.Layout.extend({
   },
 
   events: {
-    'click a.back': 'goBack'
+    'click a.back': 'goBack',
+
+    'click a.destroy': 'destroy'
   },
 
   onRender: function() {
     var view = this;
+    var area = this.model;
+    var areaCollection = this.model.collection;
     var configurationEditor = new pageflow.ConfigurationEditorView({
       model: this.model
     });
@@ -24,13 +28,20 @@ pageflow.linkmapPage.EditAreaView = Backbone.Marionette.Layout.extend({
     this.formContainer.show(configurationEditor);
     this.model.set('highlighted', true);
     this.model.collection.page.set('areas_editable', true);
+
+    this.on('close', function() {
+      area.unset('highlighted');
+      areaCollection.page.unset('areas_editable');
+    });
   },
 
   configure: function(configurationEditor) {},
 
-  onClose: function() {
-    this.model.unset('highlighted');
-    this.model.collection.page.unset('areas_editable');
+  destroy: function() {
+    if (confirm(I18n.t('pageflow.linkmap_page.editor.views.edit_area_view.confirm_destroy'))) {
+      this.model.remove();
+      this.goBack();
+    }
   },
 
   goBack: function() {

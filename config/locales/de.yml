@@ -18,9 +18,14 @@ de:
             area_item:
               toggle_marker: "Linkmarkierung aktivieren"
               edit: "Bearbeiten"
+          edit_area:
+            back: "Zurück"
+            destroy: "Löschen"
         views:
           file_area_item_view:
             no_file: "(Keine Datei)"
+          edit_area_view:
+            confirm_destroy: "Bereich wirklich löschen?"
 
     ui:
       configuration_editor:

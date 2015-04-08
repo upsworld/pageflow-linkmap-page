@@ -1,4 +1,4 @@
-.linkmap_page_file_areas {
+div.linkmap_page_file_areas {
   .add_area {
     @include plus-circled-icon;
     @include icon-button;
@@ -8,27 +8,29 @@
     margin-bottom: 10px;
   }
 
-  a.remove {
-    @include icon-only-button(#aaa);
-    @include trash-icon;
-    position: absolute;
-    right: 4px;
-    top: 4px;
-  }
-
   a.edit {
     @include icon-only-button(#aaa);
     @include pencil-icon;
     position: absolute;
-    right: 40px;
+    right: 4px;
     top: 4px;
   }
 
   li {
     margin-bottom: 2px;
 
+    > div:first-child {
+      padding-left: 45px;
+    }
+
     .title {
       cursor: default;
+      padding-right: 30px;
+    }
+
+    .label {
+      margin-top: 10px;
+      color: #666;
     }
 
     .file_thumbnail,
@@ -36,7 +38,7 @@
       position: absolute;
       top: 0;
       left: 0;
-      height: 35px;
+      height: 100%;
       width: 35px;
       background-size: cover;
       background-color: #444;

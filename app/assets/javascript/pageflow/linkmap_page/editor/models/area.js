@@ -3,6 +3,7 @@ pageflow.linkmapPage.Area = Backbone.Model.extend({
   i18nKey: 'pageflow/linkmap_page/area',
 
   label: function() {
+    return this.get('name');
   },
 
   highlight: function() {
@@ -15,5 +16,9 @@ pageflow.linkmapPage.Area = Backbone.Model.extend({
 
   getRoutableId: function() {
     return this.collection.page.id;
+  },
+
+  remove: function() {
+    this.collection.remove(this);
   }
 });
