@@ -33,7 +33,7 @@ module Pageflow
             page_transition: attributes[:page_transition],
             width: attributes[:width],
             height: attributes[:height]
-          }
+          }.delete_if { |key, value| value.blank? }
         end
 
         def inline_styles
