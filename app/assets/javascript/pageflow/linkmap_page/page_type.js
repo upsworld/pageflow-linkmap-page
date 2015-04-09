@@ -98,27 +98,16 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   setupAudioFileAreas: function(pageElement) {
-    var player = this.poolPlayer = pageflow.audio.createMultiPlayer({fadeDuration: 1000});
-
-    pageElement.on('click', '[data-audio-file]', function() {
-      player.play($(this).data('audioFile'));
-      return false;
+    this.multiPlayer = pageflow.audio.createMultiPlayer({
+      playFromBeginning: true,
+      fadeDuration: 1000
     });
 
-    player.on('play', function(options) {
-      resetHighlights();
-      highlight(options.audioFileId);
+    pageElement.linkmapAudioPlayersController({
+      player: this.multiPlayer
     });
 
-    player.on('ended', resetHighlights);
-
-    function highlight(audioFileId) {
-      pageElement.find('[data-audio-file="' + audioFileId + '"]').addClass('playing');
-    }
-
-    function resetHighlights() {
-      pageElement.find('[data-audio-file]').removeClass('playing');
-    }
+    pageElement.find('[data-audio-file]').linkmapAudioPlayerControls();
   },
 
   resize: function(pageElement, configuration) {
@@ -157,7 +146,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   deactivating: function(pageElement, configuration) {
-    this.poolPlayer.pause();
+    this.multiPlayer.pause();
 
     if(pageflow.browser.has('mobile platform')) {
       this.content.linkmapPanorama('cancelGyro');

@@ -36,6 +36,7 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
   onRender: function() {
     this.setupHoverImageView();
     this.setupDraggableAndResizable();
+    this.setupAudioPlayer();
     this.listenToEditable();
 
     this.update();
@@ -104,6 +105,12 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
         width: parseInt(element.css('width'), 10) / (element.parent().width() / 100),
         height: parseInt(element.css('height'), 10) / (element.parent().height() / 100)
       });
+    }
+  },
+
+  setupAudioPlayer: function() {
+    if (this.model.get('audio_file_id')) {
+      this.$el.linkmapAudioPlayerControls();
     }
   },
 

@@ -3,6 +3,7 @@
 //= require ./linkmap_page/linkmap_widget
 //= require ./linkmap_page/page_type
 //= require ./linkmap_page/gyro
+//= require_tree ./linkmap_page/widgets
 
 pageflow.linkmapPage = pageflow.linkmapPage || {};
 

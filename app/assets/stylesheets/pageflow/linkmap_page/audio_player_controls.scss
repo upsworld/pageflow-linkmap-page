@@ -1,0 +1,19 @@
+.linkmap_audio_player_controls {
+  position: relative;
+  top: 50%;
+  left: 50%;
+
+  .pause {
+    display: none;
+  }
+
+  &.playing {
+    .play {
+      display: none;
+    }
+
+    .pause {
+      display: block;
+    }
+  }
+}
