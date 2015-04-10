@@ -35,7 +35,7 @@
         .appendTo(this.wrapper)
       ;
 
-      this.playButton.on('click', function() {
+      this.playButton.on('click', function(e) {
         widget._trigger('play', null, {
           audioFileId: widget.element.data('audioFile')
         });
