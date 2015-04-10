@@ -36,7 +36,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
     });
 
     this.setupPageLinkAreas(pageElement);
-    this.setupAudioFileAreas(pageElement);
+    this.setupAudioFileAreas(pageElement, configuration);
   },
 
   getPanoramaStartScrollPosition: function(configuration) {
@@ -99,10 +99,11 @@ pageflow.pageType.register('linkmap_page', _.extend({
     });
   },
 
-  setupAudioFileAreas: function(pageElement) {
+  setupAudioFileAreas: function(pageElement, configuration) {
     this.multiPlayer = pageflow.audio.createMultiPlayer({
       playFromBeginning: true,
-      fadeDuration: 1000
+      fadeDuration: 1000,
+      hooks: pageflow.Atmo.createMediaPlayerHooks(configuration)
     });
 
     pageElement.linkmapAudioPlayersController({
