@@ -2,20 +2,19 @@
   $.widget('pageflow.linkmapAudioPlayerControls', {
     _create: function() {
       var widget = this;
+      var that = this;
 
       this.wrapper = $('<div />')
         .addClass('linkmap_audio_player_controls')
-        .appendTo(this.element);
+        .appendTo(this.element.find('.linkmap_marker'));
 
       this.playButton = $('<div />')
         .addClass('play')
-        .text('Play')
         .appendTo(this.wrapper)
       ;
 
       this.pauseButton = $('<div />')
         .addClass('pause')
-        .text('Pause')
         .appendTo(this.wrapper)
       ;
 
@@ -23,6 +22,8 @@
         .addClass('progress')
         .appendTo(this.wrapper)
       ;
+
+      this.progressElement.html('<div class="audio_inline_progress"><div class="progress_inner"><div class="left_circle"><div class="circle_inner"></div></div><div class="right_circle"><div class="circle_inner"></div></div><div class="loading_spinner_inner"><div></div></div></div></div>');
 
       this.currentTimeElement = $('<div />')
         .addClass('current_time')
@@ -38,28 +39,61 @@
         widget._trigger('play', null, {
           audioFileId: widget.element.data('audioFile')
         });
+        e.preventDefault();
+        e.stopPropagation();
       });
 
-      this.pauseButton.on('click', function() {
+      this.pauseButton.on('click', function(e) {
         widget._trigger('pause', null, {
           audioFileId: widget.element.data('audioFile')
         });
+
+        e.preventDefault();
+        e.stopPropagation();
       });
 
-      this.progressElement.on('click', function() {
+      this.progressElement.on('click', function(e) {
+
+        var elementCenter = {
+          x: $(this).offset().left + $(this).width() / 2,
+          y: $(this).offset().top + $(this).height() / 2,
+        };
+
+        var angleDeg = Math.atan2(e.pageY - elementCenter.y, e.pageX - elementCenter.x) * 180 / Math.PI;
+        var circlePercentage = (angleDeg + 90) / 360;
+
+        circlePercentage = circlePercentage < 0 ? 1 + circlePercentage : circlePercentage;
+
         widget._trigger('seek', null, {
-          position: 0,
+          positionInPercent: circlePercentage,
           audioFileId: widget.element.data('audioFile')
         });
+
+        e.stopPropagation();
       });
+    },
+
+    drawCircle: function(percentage) {
+      var rightCircle = this.element.find('.right_circle .circle_inner');
+      var leftCircle = this.element.find('.left_circle .circle_inner');
+
+      var rotationRight = Math.min(percentage/100 * 360, 180);
+      var rotationLeft = Math.max(percentage/100 * 360 - 180, 0);
+      var rotation;
+
+      rotation = rotationRight;
+      rightCircle.attr("style", "-webkit-transform: rotate(" + rotation + "deg); -moz-transform: rotate(" + rotation + "deg); -ms-transform: rotate(" + rotation + "deg); -o-transform: rotate(" + rotation + "deg); transform: rotate(" + rotation + "deg)");
+
+      rotation = rotationLeft;
+      leftCircle.attr("style", "-webkit-transform: rotate(" + rotation + "deg); -moz-transform: rotate(" + rotation + "deg); -ms-transform: rotate(" + rotation + "deg); -o-transform: rotate(" + rotation + "deg); transform: rotate(" + rotation + "deg)");
     },
 
     playing: function() {
-      this.wrapper.addClass('playing');
+      this.element.addClass('playing');
     },
 
     notPlaying: function() {
-      this.wrapper.removeClass('playing');
+      this.element.removeClass('playing');
     },
 
     updateProgress: function(player) {
@@ -67,7 +101,7 @@
       this.durationElement.text(player.formatTime(player.duration()));
 
       var percent = player.duration() > 0 ? player.position() / player.duration() * 100 : 0;
-      this.progressElement.text(percent + '%');
+      this.drawCircle(percent);
     },
 
     refresh: function() {

@@ -24,6 +24,9 @@
       this.activeAreas = pageElement.find(this.options.activeAreasSelector);
       this.panoramaWrapper = pageElement.find('.panorama_wrapper');
       this.innerScrollerElement = pageElement.find('.linkmap');
+      this.overlayBox = pageElement.find('.description_overlay');
+      this.overlayTitle = pageElement.find('.description_overlay .link_title');
+      this.overlayDescription = pageElement.find('.description_overlay .link_description');
 
       this.startScrollPosition = _.clone(this.options.startScrollPosition);
 
@@ -96,6 +99,32 @@
         that.initialBeta = null;
         that.initialGamma = null;
         that.drag = false;
+      });
+
+      $('body').on('mouseenter', '.hover_area', function() {
+        var linkTitle = $(this).find('.link_title').html();
+        var linkDescription = $(this).find('.link_description').html();
+
+
+        if(linkTitle != "" || linkDescription != "") {
+          that.overlayTitle.html(linkTitle);
+          that.overlayDescription.html(linkDescription);
+
+          if(true) {
+            that.overlayBox.css({
+              'left': $(this).position().left + $(this).width(),
+              'top': $(this).position().top,
+              'margin-top': $(this).height() / 2
+            });
+          }
+
+          that.overlayBox.addClass('active');
+        }
+      });
+
+      $('body').on('mouseleave', '.hover_area', function() {
+
+        that.overlayBox.removeClass('active');
       });
 
       this.refresh();

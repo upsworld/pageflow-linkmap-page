@@ -16,6 +16,7 @@
       });
 
       this.element.on('linkmapaudioplayercontrolsseek', function(event, options) {
+        player.seek(player.duration() * options.positionInPercent);
       });
     },
 

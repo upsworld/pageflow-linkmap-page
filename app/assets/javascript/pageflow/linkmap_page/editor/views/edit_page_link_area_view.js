@@ -12,6 +12,8 @@ pageflow.linkmapPage.EditPageLinkAreaView = pageflow.linkmapPage.EditAreaView.ex
         values: pageflow.pageTransitions.names()
       });
       this.input('marker', pageflow.SelectInputView, {values: pageflow.linkmapPage.toggleMarkerOptions});
+      this.input('link_title', pageflow.TextInputView);
+      this.input('link_description', pageflow.TextAreaInputView, {size: 'short'});
     });
   }
 });

@@ -14,6 +14,9 @@ pageflow.linkmapPage.EditAudioFileAreaView = pageflow.linkmapPage.EditAreaView.e
           areaIndex: view.options.areaIndex,
         },
       });
+      this.input('marker', pageflow.SelectInputView, {values: pageflow.linkmapPage.toggleMarkerOptions});
+      this.input('link_title', pageflow.TextInputView);
+      this.input('link_description', pageflow.TextAreaInputView, {size: 'short'});
     });
   }
 });

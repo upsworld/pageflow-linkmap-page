@@ -40,6 +40,8 @@ de:
         name: "Bezeichnung"
         page_transition: "Seitenwechsel-Animation"
         marker: "Linkmarkierung"
+        link_title: "Linkbeschreibung: Titel"
+        link_description: "Linkbeschreibung: Text"
       "pageflow/page":
         background_type: "Hintergrund-Typ"
         linked_linkmap_page_perma_ids: "Verlinkte Seiten"

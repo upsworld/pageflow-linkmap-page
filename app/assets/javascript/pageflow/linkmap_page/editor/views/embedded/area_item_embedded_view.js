@@ -142,9 +142,34 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
     this.$el.css('width', this.model.get('width') + '%');
     this.$el.css('height', this.model.get('height') + '%');
 
+    this.$el.toggleClass('portrait', this.model.get('width') <= this.model.get('height'));
+    this.$el.toggleClass('landscape', this.model.get('width') > this.model.get('height'));
+
+    var linkmapMarker = this.$el.find('.linkmap_marker');
+    var margin = 32;
+
+    if(this.model.get('width') <= this.model.get('height')) {
+      linkmapMarker.css({
+        'width': this.$el.width() - margin,
+        'height': this.$el.width() - margin,
+      });
+    }
+    else {
+      linkmapMarker.css({
+        'width': this.$el.height() - margin,
+        'height': this.$el.height() - margin,
+      });
+    }
+
     var marker = this.model.get('marker');
     var element = this.$el;
     var that = this;
+
+    var linkTitle = this.$el.find('.link_title');
+    var linkDescription = this.$el.find('.link_description');
+
+    linkTitle.html(this.model.get('link_title'));
+    linkDescription.html(this.model.get('link_description'));
 
     _.forEach(pageflow.linkmapPage.toggleMarkerOptions, function(option) {
       element.toggleClass(option, that.model.get('marker') === option);

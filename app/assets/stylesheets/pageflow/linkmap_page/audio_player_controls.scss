@@ -1,18 +1,110 @@
 .linkmap_audio_player_controls {
   position: relative;
-  top: 50%;
-  left: 50%;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
 
   .pause {
     display: none;
   }
 
-  &.playing {
+  .play, .pause {
+    position: absolute;
+    z-index: 1;
+  }
+
+  .progress {
+    display: none;
+  }
+
+  .progress, .audio_inline_progress {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  .current_time {
+    display: none;
+  }
+
+  .progress_inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 95%;
+    height: 95%;
+    @include transform(translate(-50%,-50%));
+  }
+
+  .left_circle, .right_circle {
+    position: absolute;
+    height: 100%;
+    width: 50%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+
+
+    .circle_inner {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      @include transform(rotate(0));
+
+      &:before {
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 200%;
+        top: 0;
+        left: 0;
+        border: 3px solid green;
+        box-sizing: border-box;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  .left_circle {
+    .circle_inner {
+      left: 100%;
+      @include transform-origin(center left);
+
+      &:before {
+        left: initial;
+        right: 0;
+      }
+    }
+  }
+
+  .right_circle {
+    left: 50%;
+
+    .circle_inner {
+      left: initial;
+      right: 100%;
+      @include transform-origin(center right);
+    }
+  }
+}
+
+.hover_area.playing {
+  .linkmap_audio_player_controls {
     .play {
       display: none;
     }
 
     .pause {
+      display: block;
+    }
+
+    .progress, .current_time {
       display: block;
     }
   }
