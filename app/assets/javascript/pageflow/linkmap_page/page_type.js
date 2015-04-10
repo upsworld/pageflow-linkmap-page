@@ -80,6 +80,8 @@ pageflow.pageType.register('linkmap_page', _.extend({
       .attr('data-height', template.data('videoHeight'));
 
     this.videoPlayer = new pageflow.VideoPlayer.Lazy(template, {
+      volumeFading: true,
+
       width: '100%',
       height: '100%'
     });
