@@ -119,6 +119,9 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   prepare: function(pageElement, configuration) {
+    if (configuration.background_type === 'video') {
+      return this.videoPlayer.ensureCreated();
+    }
   },
 
   preload: function(pageElement, configuration) {
