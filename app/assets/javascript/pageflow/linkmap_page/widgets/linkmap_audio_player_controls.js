@@ -52,6 +52,14 @@
         e.stopPropagation();
       });
 
+      this.element.on('click', function() {
+        if (widget.element.hasClass('no_marker')) {
+          widget._trigger('play', null, {
+            audioFileId: widget.element.data('audioFile')
+          });
+        }
+      });
+
       this.progressElement.on('click', function(e) {
 
         var elementCenter = {
