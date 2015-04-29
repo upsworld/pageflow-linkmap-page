@@ -7,11 +7,11 @@ module Pageflow
         render('pageflow/linkmap_page/areas/div', configuration: configuration, attribute_name: attribute_name)
       end
 
-      def linkmap_area(attributes, &block)
-        Link.new(self, attributes.symbolize_keys).render(&block)
+      def linkmap_area(attributes, index, &block)
+        Link.new(self, attributes.symbolize_keys, index).render(&block)
       end
 
-      class Link < Struct.new(:template, :attributes)
+      class Link < Struct.new(:template, :attributes, :index)
         delegate :content_tag, to: :template
 
         def render(&block)
@@ -27,8 +27,10 @@ module Pageflow
         private
 
         def data_attributes
+          audio_file_id = attributes[:audio_file_id]
+
           {
-            audio_file: attributes[:audio_file_id],
+            audio_file: audio_file_id.present? ? "#{audio_file_id}.area_#{index}" : nil,
             page: attributes[:target_page_id],
             page_transition: attributes[:page_transition],
             width: attributes[:width],

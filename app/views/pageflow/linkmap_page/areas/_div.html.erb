@@ -1,6 +1,6 @@
 <%= content_tag(:div, class: "linkmap_areas #{attribute_name}") do %>
-  <% (configuration[attribute_name].presence || []).each do |attributes| %>
-    <%= linkmap_area(attributes) do %>
+  <% (configuration[attribute_name].presence || []).each_with_index do |attributes, index| %>
+    <%= linkmap_area(attributes, index) do %>
       <%= background_image_div_with_size(configuration, 'hover_image', style_group: :panorama) %>
       <div class="linkmap_marker <%= attributes['marker'] %>"></div>
       <div class="linkmap_description">

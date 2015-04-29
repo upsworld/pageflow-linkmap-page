@@ -25,13 +25,13 @@ module Pageflow
 
           html = helper.linkmap_areas_div(configuration, 'linkmap_page_link_areas')
 
-          expect(html).to have_selector('a div[class~="image_5"]')
+          expect(html).to have_selector('a div[class~="image_panorama_5"]')
         end
       end
 
       describe '#linkmap_area' do
         it 'renders link tag' do
-          html = helper.linkmap_area({})
+          html = helper.linkmap_area({}, 0)
 
           expect(html).to have_selector('a[href]')
         end
@@ -39,7 +39,7 @@ module Pageflow
         it 'sets inline styles for position and size' do
           attributes = {top: 20, left: 30, width: 40, height: 50}
 
-          html = helper.linkmap_area(attributes)
+          html = helper.linkmap_area(attributes, 0)
 
           expect(html).to include('top: 20%;')
           expect(html).to include('left: 30%;')
@@ -50,15 +50,15 @@ module Pageflow
         it 'sets data attribute for audio file' do
           attributes = {audio_file_id: 25}
 
-          html = helper.linkmap_area(attributes)
+          html = helper.linkmap_area(attributes, 5)
 
-          expect(html).to have_selector('a[data-audio-file="25"]')
+          expect(html).to have_selector('a[data-audio-file="25.area_5"]')
         end
 
         it 'sets data attribute for audio file' do
           attributes = {target_page_id: 10}
 
-          html = helper.linkmap_area(attributes)
+          html = helper.linkmap_area(attributes, 0)
 
           expect(html).to have_selector('a[data-page="10"]')
         end
