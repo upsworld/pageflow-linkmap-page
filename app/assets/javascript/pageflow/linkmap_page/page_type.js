@@ -13,8 +13,6 @@ pageflow.pageType.register('linkmap_page', _.extend({
     this.content = pageElement.find('.scroller');
     this.panorama = pageElement.find('.panorama');
 
-    pageElement.attr('data-scroll-direction', 'horizontal');
-
     this.content.linkmapPanorama({
       page: pageElement,
       panorama: function() {
