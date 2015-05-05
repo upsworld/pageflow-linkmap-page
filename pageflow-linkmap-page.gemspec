@@ -15,6 +15,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency 'pageflow', '>= 0.8.pre'
+  spec.add_runtime_dependency 'pageflow-external-links', '>= 0.3.pre'
 
   # Using translations from rails locales in javascript code.
   spec.add_runtime_dependency 'i18n-js'

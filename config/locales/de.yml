@@ -35,7 +35,9 @@ de:
   activerecord:
     attributes:
       "pageflow/linkmap_page/area":
+        type: "Ziel Typ"
         target_page_id: "Ziel Seite"
+        external_site_id: "Ziel Seite"
         audio_file_id: "Audio Datei"
         name: "Bezeichnung"
         page_transition: "Seitenwechsel-Animation"
@@ -63,3 +65,6 @@ de:
         marker:
           no_marker: "Keine Markierung"
           dynamic_marker: "Flexible Markierung"
+        type:
+          page_link: "Interner Verweis"
+          external_site: "Externer Verweis"

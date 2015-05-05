@@ -17,7 +17,7 @@ module Pageflow
         def render(&block)
           content_tag(:a,
                       '',
-                      href: '#',
+                      href: href,
                       class: css_classes,
                       style: inline_styles,
                       data: data_attributes,
@@ -25,6 +25,15 @@ module Pageflow
         end
 
         private
+
+        def href
+          if attributes[:type] == 'external_site'
+            site = ExternalLinks::Site.find_by_perma_id(attributes[:external_site_id])
+            site ? site.url : '#'
+          else
+            '#'
+          end
+        end
 
         def data_attributes
           audio_file_id = attributes[:audio_file_id]

@@ -90,6 +90,11 @@ pageflow.pageType.register('linkmap_page', _.extend({
   setupPageLinkAreas: function(pageElement) {
     pageElement.on('click', '[data-page]', function(e) {
       var area = $(this);
+
+      if (area.data('type') === 'external_site') {
+        return true;
+      }
+
       pageflow.slides.goToByPermaId(area.data('page'), {
         transition: area.data('pageTransition')
       });
