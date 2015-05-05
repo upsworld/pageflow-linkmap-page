@@ -39,6 +39,7 @@ module Pageflow
           audio_file_id = attributes[:audio_file_id]
 
           {
+            type: attributes[:type],
             audio_file: audio_file_id.present? ? "#{audio_file_id}.area_#{index}" : nil,
             page: attributes[:target_page_id],
             page_transition: attributes[:page_transition],
