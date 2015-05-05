@@ -18,8 +18,8 @@
                                  preload: page.is_first) %>
           </div>
 
-          <%= linkmap_areas_div(configuration, 'linkmap_page_link_areas') %>
-          <%= linkmap_areas_div(configuration, 'linkmap_audio_file_areas') %>
+          <%= linkmap_areas_div(@entry, configuration, 'linkmap_page_link_areas') %>
+          <%= linkmap_areas_div(@entry, configuration, 'linkmap_audio_file_areas') %>
           <div class="description_overlay">
             <div class="description_overlay_wrapper">
               <div class="link_title">Testtitle></div>

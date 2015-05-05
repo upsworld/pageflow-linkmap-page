@@ -3,15 +3,18 @@ module Pageflow
     module AreasHelper
       include BackgroundImageHelper
 
-      def linkmap_areas_div(configuration, attribute_name)
-        render('pageflow/linkmap_page/areas/div', configuration: configuration, attribute_name: attribute_name)
+      def linkmap_areas_div(entry, configuration, attribute_name)
+        render('pageflow/linkmap_page/areas/div',
+               entry: entry,
+               configuration: configuration,
+               attribute_name: attribute_name)
       end
 
-      def linkmap_area(attributes, index, &block)
-        Link.new(self, attributes.symbolize_keys, index).render(&block)
+      def linkmap_area(entry, attributes, index, &block)
+        Link.new(self, entry, attributes.symbolize_keys, index).render(&block)
       end
 
-      class Link < Struct.new(:template, :attributes, :index)
+      class Link < Struct.new(:template, :entry, :attributes, :index)
         delegate :content_tag, to: :template
 
         def render(&block)
@@ -28,7 +31,8 @@ module Pageflow
 
         def href
           if attributes[:type] == 'external_site'
-            site = ExternalLinks::Site.find_by_perma_id(attributes[:external_site_id])
+            site = ExternalLinks::Site.find_by_revision_id_and_perma_id(entry.try(:revision),
+                                                                        attributes[:external_site_id])
             site ? site.url : '#'
           else
             '#'
