@@ -1,23 +1,28 @@
 pageflow.linkmapPage.pageConfigurationMixin = {
-  linkmapAreas: function(propertyName) {
-    var configuration = this;
-    var model = propertyName.indexOf('audio_file') >= 0 ? pageflow.linkmapPage.AudioFileArea : pageflow.linkmapPage.PageLinkArea;
+  linkmapPageLinks: function() {
+    this._linkmapPageLinks = this._linkmapPageLinks || new pageflow.linkmapPage.PageLinksCollection({
+      areas: this.linkmapAreas()
+    });
 
-    this._linkmapAreas = this._linkmapAreas || {};
-    this._linkmapAreas[propertyName] = this._linkmapAreas[propertyName] || create();
-    return this._linkmapAreas[propertyName];
+    return this._linkmapPageLinks;
+  },
+
+  linkmapAreas: function() {
+    var configuration = this;
+
+    this._linkmapAreas = this._linkmapAreas || create();
+    return this._linkmapAreas;
 
     function create() {
       var collection = new pageflow.linkmapPage.AreasCollection(
-        configuration.get(propertyName),
+        configuration.get('linkmap_areas'),
         {
-          model: model,
           page: configuration.page
         }
       );
 
       configuration.listenTo(collection, 'add remove change', function() {
-        configuration.set(propertyName, collection.map(function(area) {
+        configuration.set('linkmap_areas', collection.map(function(area) {
           return _.omit(area.attributes, 'highlighted');
         }));
       });

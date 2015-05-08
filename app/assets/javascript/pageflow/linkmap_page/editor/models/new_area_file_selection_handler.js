@@ -2,7 +2,7 @@ pageflow.linkmapPage.NewAreaFileSelectionHandler = function(options) {
   var page = pageflow.pages.get(options.id);
 
   this.call = function(file) {
-    page.configuration.linkmapAreas(options.areasPropertyName).addAudioFile(file.id);
+    page.configuration.linkmapAreas().addAudioFile(file.id);
   };
 
   this.getReferer = function() {

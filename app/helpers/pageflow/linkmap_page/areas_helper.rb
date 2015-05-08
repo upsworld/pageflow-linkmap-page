@@ -3,11 +3,10 @@ module Pageflow
     module AreasHelper
       include BackgroundImageHelper
 
-      def linkmap_areas_div(entry, configuration, attribute_name)
+      def linkmap_areas_div(entry, configuration)
         render('pageflow/linkmap_page/areas/div',
                entry: entry,
-               configuration: configuration,
-               attribute_name: attribute_name)
+               configuration: configuration)
       end
 
       def linkmap_area(entry, attributes, index, &block)
@@ -30,9 +29,9 @@ module Pageflow
         private
 
         def href
-          if attributes[:type] == 'external_site'
+          if attributes[:target_type] == 'external_site'
             site = ExternalLinks::Site.find_by_revision_id_and_perma_id(entry.try(:revision),
-                                                                        attributes[:external_site_id])
+                                                                        attributes[:target_id])
             site ? site.url : '#'
           else
             '#'
@@ -40,12 +39,12 @@ module Pageflow
         end
 
         def data_attributes
-          audio_file_id = attributes[:audio_file_id]
+          audio_file_id = attributes[:target_id]
 
           {
-            type: attributes[:type],
+            target_type: attributes[:target_type],
+            target_id: attributes[:target_id],
             audio_file: audio_file_id.present? ? "#{audio_file_id}.area_#{index}" : nil,
-            page: attributes[:target_page_id],
             page_transition: attributes[:page_transition],
             width: attributes[:width],
             height: attributes[:height]
@@ -60,7 +59,9 @@ module Pageflow
         end
 
         def css_classes
-          'hover_area' + ' ' + attributes[:marker].to_s
+          ['hover_area',
+            attributes[:marker].to_s,
+            "#{attributes[:target_type]}_area"].join(' ')
         end
 
         def styles_string(properties)

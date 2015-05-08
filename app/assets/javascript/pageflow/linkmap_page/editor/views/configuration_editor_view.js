@@ -44,15 +44,12 @@ pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.
 
 
     this.tab('areas', function() {
-      this.view(pageflow.PageLinksView, {
-        model: this.model.page
+      this.view(pageflow.linkmapPage.AreasListView, {
+        model: this.model
       });
+
       this.view(pageflow.linkmapPage.EditableAreasModeView, {
         model: this.model.page
-      });
-      this.view(pageflow.linkmapPage.FileAreasView, {
-        model: this.model,
-        propertyName: 'linkmap_audio_file_areas'
       });
     });
 

@@ -109,9 +109,7 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
   },
 
   setupAudioPlayer: function() {
-    if (this.model.get('audio_file_id')) {
-      this.$el.linkmapAudioPlayerControls();
-    }
+    this.$el.linkmapAudioPlayerControls();
   },
 
   listenToEditable: function() {
@@ -128,10 +126,11 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
   },
 
   update: function() {
-    var audioFileId = this.model.get('audio_file_id');
+    var audioFileId = this.model.get('target_id');
 
     this.$el.attr('data-audio-file', audioFileId ? audioFileId + '.' + this.cid : '');
-    this.$el.attr('data-page', this.model.get('target_page_id'));
+    this.$el.attr('data-target-type', this.model.get('target_type'));
+    this.$el.attr('data-target-id', this.model.get('target_id'));
     this.$el.attr('data-page-transition', this.model.get('page_transition'));
 
     this.$el.toggleClass('highlighted', !!this.model.get('highlighted'));
@@ -146,6 +145,10 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
 
     this.$el.toggleClass('portrait', this.model.get('width') <= this.model.get('height'));
     this.$el.toggleClass('landscape', this.model.get('width') > this.model.get('height'));
+
+    _(['page', 'audio_file', 'external_site']).each(function(type) {
+      this.$el.toggleClass(type + '_area', this.model.get('target_type') === type);
+    }, this);
 
     var linkmapMarker = this.$el.find('.linkmap_marker');
     var margin = 32;

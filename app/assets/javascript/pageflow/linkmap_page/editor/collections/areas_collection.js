@@ -22,13 +22,22 @@ pageflow.linkmapPage.AreasCollection = Backbone.Collection.extend({
 
   addLink: function(targetPageId) {
     this.addWithPosition({
-      target_page_id: targetPageId
+      target_type: 'page',
+      target_id: targetPageId
     });
   },
 
   addAudioFile: function(audioFileId) {
     this.addWithPosition({
-      audio_file_id: audioFileId
+      target_type: 'audio_file',
+      target_id: audioFileId
+    });
+  },
+
+  addExternalSite: function(siteId) {
+    this.addWithPosition({
+      target_type: 'external_site',
+      target_id: siteId
     });
   },
 
@@ -38,13 +47,5 @@ pageflow.linkmapPage.AreasCollection = Backbone.Collection.extend({
       _.result(this, 'defaultPosition'),
       attributes
     ));
-  },
-
-  updateLink: function(link, targetPageId) {
-    link.set({target_page_id: targetPageId});
-  },
-
-  removeLink: function(link) {
-    this.remove(link);
-  },
+  }
 });

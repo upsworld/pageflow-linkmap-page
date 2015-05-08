@@ -1,5 +1,5 @@
 .editor {
-  @import "./editor/file_areas";
+  @import "./editor/areas_list";
 }
 
 .linkmap_areas {
@@ -41,6 +41,13 @@
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.4);
     z-index: 2;
+  }
+
+  .page_area,
+  .external_site_area {
+    .linkmap_audio_player_controls {
+      display: none !important;
+    }
   }
 
   &.editable {
@@ -91,8 +98,8 @@
       }
     }
 
-    &.linkmap_audio_file_areas {
-      .hover_area:before {
+    .audio_file_area {
+      &:before {
         border-color: #006add;
       }
 

@@ -88,14 +88,10 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   setupPageLinkAreas: function(pageElement) {
-    pageElement.on('click', '[data-page]', function(e) {
+    pageElement.on('click', '[data-target-type="page"]', function(e) {
       var area = $(this);
 
-      if (area.data('type') === 'external_site') {
-        return true;
-      }
-
-      pageflow.slides.goToByPermaId(area.data('page'), {
+      pageflow.slides.goToByPermaId(area.data('targetId'), {
         transition: area.data('pageTransition')
       });
       return false;
@@ -113,7 +109,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
       player: this.multiPlayer
     });
 
-    pageElement.find('[data-audio-file]').linkmapAudioPlayerControls();
+    pageElement.find('[data-target-type="audio_file"]').linkmapAudioPlayerControls();
   },
 
   resize: function(pageElement, configuration) {

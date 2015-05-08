@@ -25,18 +25,8 @@ pageflow.editor.pageTypes.register('linkmap_page', {
       }
     },
 
-    '.linkmap_page_link_areas': {
-      view: pageflow.linkmapPage.AreasEmbeddedView,
-      options: {
-        propertyName: 'linkmap_page_link_areas'
-      }
-    },
-
-    '.linkmap_audio_file_areas': {
-      view: pageflow.linkmapPage.AreasEmbeddedView,
-      options: {
-        propertyName: 'linkmap_audio_file_areas'
-      }
+    '.linkmap_areas': {
+      view: pageflow.linkmapPage.AreasEmbeddedView
     },
 
     '.fixed_background': {
@@ -46,7 +36,7 @@ pageflow.editor.pageTypes.register('linkmap_page', {
   },
 
   pageLinks: function(configuration) {
-    return configuration.linkmapAreas('linkmap_page_link_areas');
+    return configuration.linkmapPageLinks();
   }
 });
 

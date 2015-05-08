@@ -7,6 +7,6 @@ pageflow.linkmapPage.AreaFileSelectionHandler = function(options) {
   };
 
   this.getReferer = function() {
-    return '/linkmap_pages/' + options.id + '/audio_file_areas/' + options.areaIndex;
+    return '/linkmap_pages/' + options.id + '/areas/' + options.areaIndex;
   };
 };

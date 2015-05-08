@@ -6,6 +6,10 @@ de:
       manage_sites: "Verweise verwalten"
       default_page_transition: "(Standard)"
       editor:
+        area_types:
+          page: "Seiten Verweis"
+          audio_file: "Audio Datei"
+          external_site: "Externer Verweis"
         templates:
           file_areas:
             label: "Audios"
@@ -22,8 +26,9 @@ de:
             back: "Zurück"
             destroy: "Löschen"
         views:
-          file_area_item_view:
-            no_file: "(Keine Datei)"
+          areas_list:
+            label: "Bereiche"
+            add: "Hinzufügen"
           edit_area_view:
             confirm_destroy: "Bereich wirklich löschen?"
 
@@ -31,14 +36,13 @@ de:
       configuration_editor:
         tabs:
           areas: "Bereiche"
+          appearance: "Erscheinungsbild"
 
   activerecord:
     attributes:
       "pageflow/linkmap_page/area":
-        type: "Ziel Typ"
-        target_page_id: "Ziel Seite"
-        external_site_id: "Ziel Seite"
-        audio_file_id: "Audio Datei"
+        target_type: "Bereichstyp"
+        target_id: "Ziel"
         name: "Bezeichnung"
         page_transition: "Seitenwechsel-Animation"
         marker: "Linkmarkierung"
@@ -65,6 +69,7 @@ de:
         marker:
           no_marker: "Keine Markierung"
           dynamic_marker: "Flexible Markierung"
-        type:
-          page_link: "Interner Verweis"
+        target_type:
+          page: "Interner Verweis"
           external_site: "Externer Verweis"
+          audio_file: "Audio Datei"

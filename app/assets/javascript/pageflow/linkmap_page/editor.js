@@ -10,3 +10,15 @@
 //= require ./editor/config
 
 pageflow.linkmapPage = pageflow.linkmapPage || {};
+
+pageflow.linkmapPage.areaTypesFor = function(pageConfiguration) {
+  return new Backbone.Collection(_([
+    pageflow.linkmapPage.PageLinkAreaType,
+    pageflow.linkmapPage.AudioFileAreaType,
+    pageflow.linkmapPage.ExternalLinkAreaType
+  ]).map(function(constructor) {
+    return new constructor({}, {
+      pageConfiguration: pageConfiguration
+    });
+  }));
+};
