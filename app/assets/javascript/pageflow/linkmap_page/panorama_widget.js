@@ -25,6 +25,7 @@
       this.panoramaWrapper = pageElement.find('.panorama_wrapper');
       this.innerScrollerElement = pageElement.find('.linkmap');
       this.overlayBox = pageElement.find('.description_overlay');
+      this.overlayInnerBox = pageElement.find('.description_overlay_wrapper');
       this.overlayTitle = pageElement.find('.description_overlay .link_title');
       this.overlayDescription = pageElement.find('.description_overlay .link_description');
 
@@ -102,8 +103,18 @@
       });
 
       pageElement.on('mouseenter', '.hover_area', function() {
-        var area = $(this);
+        positionOverlay($(this));
+      });
 
+      $('body').on('mouseleave', '.hover_area', function() {
+        that.overlayBox.removeClass('active');
+      });
+
+      pageElement.on('dragstart resizestart', '.hover_area', function() {
+        that.overlayBox.removeClass('active');
+      });
+
+      var positionOverlay = function(area) {
         if (area.is('.editing')) {
           return;
         }
@@ -115,25 +126,45 @@
           that.overlayTitle.html(linkTitle);
           that.overlayDescription.html(linkDescription);
 
-          if(true) {
+          that.overlayBox.addClass('active');
+
+          if(that.panorama.width() - (area.position().left + area.outerWidth()) < that.overlayBox.outerWidth()) {
+            var overlayAlignmentDirection = "left";
+            that.overlayBox.addClass('left_aligned');
+          }
+          else {
+            var overlayAlignmentDirection = "right";
+            that.overlayBox.removeClass('left_aligned');
+          }
+
+          if(overlayAlignmentDirection == "right") {
+            that.overlayBox.removeClass('left_aligned');
             that.overlayBox.css({
               'left': area.position().left + area.width(),
               'top': area.position().top,
               'margin-top': area.height() / 2
             });
           }
+          if(overlayAlignmentDirection == "left") {
+            that.overlayBox.addClass('left_aligned');
+            that.overlayBox.css({
+              'left': area.position().left - that.overlayBox.outerWidth(),
+              'top': area.position().top,
+              'margin-top': area.height() / 2
+            });
+          }
 
-          that.overlayBox.addClass('active');
+          var spaceToBottom = that.panorama.height() - area.position().top;
+          var minMargin = 40;
+
+          if(that.overlayBox.outerHeight() > spaceToBottom) {
+            that.overlayInnerBox.css('top', (spaceToBottom - that.overlayInnerBox.outerHeight() - minMargin - area.height() / 2) + 'px');
+          }
+          else {
+            that.overlayInnerBox.css('top', '0px');
+          }
         }
-      });
-
-      $('body').on('mouseleave', '.hover_area', function() {
-        that.overlayBox.removeClass('active');
-      });
-
-      pageElement.on('dragstart resizestart', '.hover_area', function() {
-        that.overlayBox.removeClass('active');
-      });
+      }
 
       this.refresh();
     },
