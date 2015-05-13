@@ -320,9 +320,16 @@
     getPanoramaSize: function(pageElement) {
       var result = {};
       var windowRatio = pageElement.width() / pageElement.height();
-      var imageRatio = this.panorama.attr('data-width') / this.panorama.attr('data-height');
       var environmentMargin = this.addEnvironment ? (1 + this.environmentMargin) : 1;
       var smallestScale = this.getMinScale(this.activeAreas);
+      var imageRatio;
+
+      if (this.panorama.attr('data-height') > 0) {
+        imageRatio = this.panorama.attr('data-width') / this.panorama.attr('data-height');
+      }
+      else {
+        imageRatio = 1;
+      }
 
       if(imageRatio > windowRatio) {
         result.height = pageElement.height() * environmentMargin;
