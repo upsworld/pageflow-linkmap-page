@@ -57,11 +57,9 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
   setupDraggableAndResizable: function() {
     var that = this;
     var scroller = this.options.container.$('.scroller');
-    var disabled = !this.options.page.get('areas_editable');
 
     this.$el.resizable({
       handles: 'n, e, s, w, ne, se, sw, nw',
-      disabled: disabled,
 
       start: function() {
         that.$el.addClass('hover editing');
@@ -78,7 +76,6 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
 
     this.$el.draggable({
       iframeFix: true,
-      disabled: disabled,
 
       start: function() {
         that.$el.addClass('hover editing');
@@ -95,6 +92,11 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
         savePositionAndSize();
       }
     }).css('position', 'absolute');
+
+    if (!this.options.page.get('areas_editable')) {
+      this.$el.resizable('disable');
+      this.$el.draggable('disable');
+    }
 
     function savePositionAndSize() {
       var element = that.$el;
