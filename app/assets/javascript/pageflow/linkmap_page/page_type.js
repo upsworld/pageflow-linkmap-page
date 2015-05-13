@@ -1,6 +1,4 @@
 pageflow.pageType.register('linkmap_page', _.extend({
-  prepareNextPageTimeout: 0,
-
   scrollerOptions: {
     freeScroll: true,
     scrollX: true
@@ -121,6 +119,22 @@ pageflow.pageType.register('linkmap_page', _.extend({
     if (configuration.background_type === 'video') {
       return this.videoPlayer.ensureCreated();
     }
+  },
+
+  unprepare: function(pageElement, configuration) {
+    if (configuration.background_type === 'video') {
+      return this.videoPlayer.scheduleDispose();
+    }
+  },
+
+  linkedPages: function(pageElement, configuration) {
+    return _(configuration.linkmap_areas)
+      .select(function(area) {
+        return area.target_type === 'page';
+      })
+      .map(function(area) {
+        return area.target_id;
+      });
   },
 
   preload: function(pageElement, configuration) {
