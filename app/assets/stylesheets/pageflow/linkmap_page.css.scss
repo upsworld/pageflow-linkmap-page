@@ -137,17 +137,18 @@
     display: block;
     pointer-events: none;
     opacity: 0;
+    max-width: 510px;
+    max-height: 400px;
 
     .description_overlay_wrapper {
       overflow: hidden;
+      position: relative;
     }
 
     @include transition(opacity 0.15s);
 
     &.active {
       display: block;
-      max-width: 510px;
-      max-height: 400px;
       opacity: 1;
     }
 
