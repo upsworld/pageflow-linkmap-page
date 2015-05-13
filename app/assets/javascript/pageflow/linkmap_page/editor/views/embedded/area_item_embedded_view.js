@@ -145,8 +145,8 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
     this.$el.css('width', this.model.get('width') + '%');
     this.$el.css('height', this.model.get('height') + '%');
 
-    this.$el.toggleClass('portrait', this.model.get('width') <= this.model.get('height'));
-    this.$el.toggleClass('landscape', this.model.get('width') > this.model.get('height'));
+    this.$el.toggleClass('portrait', this.$el.width() <= this.$el.height());
+    this.$el.toggleClass('landscape', this.$el.width() > this.$el.height());
 
     _(['page', 'audio_file', 'external_site']).each(function(type) {
       this.$el.toggleClass(type + '_area', this.model.get('target_type') === type);
@@ -155,7 +155,7 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
     var linkmapMarker = this.$el.find('.linkmap_marker');
     var margin = 32;
 
-    if(this.model.get('width') <= this.model.get('height')) {
+    if (this.$el.width() <= this.$el.height()) {
       linkmapMarker.css({
         'width': this.$el.width() - margin,
         'height': this.$el.width() - margin,
