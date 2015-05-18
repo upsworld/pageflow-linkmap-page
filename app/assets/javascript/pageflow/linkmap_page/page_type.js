@@ -1,7 +1,8 @@
 pageflow.pageType.register('linkmap_page', _.extend({
   scrollerOptions: {
     freeScroll: true,
-    scrollX: true
+    scrollX: true,
+    noMouseWheelScrollX: true
   },
 
   enhance: function(pageElement, configuration) {
