@@ -101,7 +101,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
     this.multiPlayer = pageflow.audio.createMultiPlayer({
       playFromBeginning: true,
       fadeDuration: 1000,
-      hooks: pageflow.Atmo.createMediaPlayerHooks(configuration)
+      hooks: pageflow.atmo.createMediaPlayerHooks(configuration)
     });
 
     pageElement.linkmapAudioPlayersController({
