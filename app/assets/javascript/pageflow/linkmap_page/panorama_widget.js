@@ -337,8 +337,9 @@
         that.currentScrollPosition.y = that.scroller.maxY() !== 0 ? that.scroller.positionY() / that.scroller.maxY() : 0;
       }, 10);
 
-      this.calcAreaOpacity(this.activeAreas, this.lastMouseMoveEvent.pageX, this.lastMouseMoveEvent.pageY);
-
+      if (this.lastMouseMoveEvent) {
+        this.calcAreaOpacity(this.activeAreas, this.lastMouseMoveEvent.pageX, this.lastMouseMoveEvent.pageY);
+      }
     }
   });
 }(jQuery));
