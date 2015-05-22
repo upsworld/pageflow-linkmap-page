@@ -1,10 +1,5 @@
 (function($) {
   $.widget('pageflow.linkmapPanorama', {
-    speedX : 0,
-    speedY : 0,
-    speedUp : 30,
-    drag : false,
-    marginScrollingDisabled : false,
     scrollHoverMargin : 0.2,
     environmentMargin : 0.2,
     minScaling: true,
@@ -16,7 +11,6 @@
           pageElement = this.options.page;
 
       this.addEnvironment = this.options.addEnvironment;
-      this.marginScrolling = !this.options.marginScrollingDisabled;
       this.panorama = this.options.panorama();
       this.limitScrolling = this.options.limitScrolling;
       this.scroller = this.options.scroller;
@@ -43,63 +37,9 @@
         that.centerToPoint(null, 0);
       });
 
-      this.element.on('mousedown touchstart', function () {
-        that.drag = true;
-      });
-
-      this.element.on('mouseup touchend', function () {
-        that.drag = false;
-      });
-
-      this.element.on('mouseenter', function() {
-        that.speedX = 0;
-        that.speedY = 0;
-
-        that.stopping = false;
-
-        that.newTimer();
-      });
-
-      this.element.on('mouseleave', function() {
-        that.stopping = true;
-      });
-
       this.element.on('mousemove', function(e) {
-        that.newTimer();
-
-        var containerWidth = that.element.width();
-        var containerHeight = that.element.height();
-        var activeMargin = 0.2;
-
-        var percentagePositionX = (e.pageX - containerWidth/2) / (containerWidth/2),
-          percentagePositionY = (e.pageY - containerHeight/2) / (containerHeight/2),
-          onOuterAreasX = (percentagePositionX > 1 - activeMargin*2 || percentagePositionX < -1 + activeMargin*2),
-          onOuterAreasY = (percentagePositionY > 1 - activeMargin*2 || percentagePositionY < -1 + activeMargin*2);
-
-        var faktorX = percentagePositionX > 0 ? 1 : -1;
-        var faktorY = percentagePositionY > 0 ? 1 : -1;
-
-        that.speedX = onOuterAreasX ? (percentagePositionX - ((1-activeMargin*2)*(faktorX))) / (activeMargin*2) : 0;
-        that.speedY = onOuterAreasY ? (percentagePositionY - ((1-activeMargin*2)*(faktorY))) / (activeMargin*2) : 0;
-
         that.lastMouseMoveEvent = e;
         that.calcAreaOpacity(that.activeAreas, e.pageX, e.pageY);
-      });
-
-      this.element.on('touchstart', function () {
-        that.drag = true;
-      });
-
-      this.element.on('touchend', function () {
-        that.initialBeta = null;
-        that.initialGamma = null;
-        that.drag = false;
-      });
-
-      $(window).on( "orientationchange", function( event ) {
-        that.initialBeta = null;
-        that.initialGamma = null;
-        that.drag = false;
       });
 
       pageElement.on('mouseenter', '.hover_area', function() {
@@ -169,14 +109,6 @@
       this.refresh();
     },
 
-    enableMarginScrolling: function() {
-      this.marginScrollingDisabled = false;
-    },
-
-    disableMarginScrolling: function() {
-      this.marginScrollingDisabled = true;
-    },
-
     calcAreaOpacity: function(activeAreas, mX, mY) {
       var pageElement = this.options.page;
       var distanceLimit = pageElement.width() > pageElement.height() ? pageElement.height() : pageElement.width();
@@ -196,41 +128,6 @@
 
       function calculateDistance(elem, mouseX, mouseY) {
         return Math.floor(Math.sqrt(Math.pow(mouseX - (elem.offset().left+(elem.width()/2)), 2) + Math.pow(mouseY - (elem.offset().top+(elem.height()/2)), 2)));
-      }
-    },
-
-    newTimer: function() {
-      if (!this.scrollTimer) {
-        var that = this;
-
-        this.scrollTimer = setInterval(function() {
-          var scrollX;
-          var scrollY;
-
-          if (that.stopping) {
-            that.speedX = that.speedX * 0.8;
-            that.speedY = that.speedY * 0.8;
-
-            if (Math.abs(that.speedX) < 0.001 &&
-                Math.abs(that.speedY) < 0.001) {
-              clearInterval(that.scrollTimer);
-
-              that.speedX = 0;
-              that.speedY = 0;
-
-              that.scrollTimer = null;
-              that.stopping = false;
-            }
-          }
-
-          scrollX = -that.speedX * that.speedUp;
-          scrollY = -that.speedY * that.speedUp;
-
-          if(!that.drag && that.marginScrolling && !that.marginScrollingDisabled) {
-            that.scroller.scrollBy(scrollX, scrollY);
-            that.updateScrollPosition();
-          }
-        }, 25);
       }
     },
 
@@ -301,10 +198,9 @@
       return smallestScale;
     },
 
-    update: function(addEnvironment, limitScrolling, marginScrollingDisabled, startScrollPosition, minScaling) {
+    update: function(addEnvironment, limitScrolling, startScrollPosition, minScaling) {
       this.addEnvironment = addEnvironment;
       this.limitScrolling = limitScrolling;
-      this.marginScrolling = !marginScrollingDisabled;
       this.startScrollPosition = _.clone(startScrollPosition);
       this.minScaling = minScaling;
 
@@ -443,41 +339,6 @@
 
       this.calcAreaOpacity(this.activeAreas, this.lastMouseMoveEvent.pageX, this.lastMouseMoveEvent.pageY);
 
-    },
-
-    initGyro: function() {
-      this.newTimer();
-
-      var that = this;
-      var limit = 8;
-
-      gyro.startTracking(function(o) {
-          if(!that.initialBeta) {
-            that.initialBeta = o.beta;
-          }
-          if(!that.initialGamma) {
-            that.initialGamma = o.gamma;
-          }
-
-          if(!this.drag) {
-            if($(window).height() >= $(window).width()) {
-              that.speedX = o.gamma - that.initialGamma < limit && o.gamma - that.initialGamma > -limit ? 0 : (o.gamma - that.initialGamma) / 90 / 10;
-              that.speedY = o.beta - that.initialBeta < limit && o.beta - that.initialBeta > -limit ? 0 : -(o.beta - that.initialBeta) / 90 / 10;
-            }
-            else {
-              that.speedY = o.gamma - that.initialGamma < limit && o.gamma - that.initialGamma > -limit ? 0 : (o.gamma - that.initialGamma) / 90 / 10;
-              that.speedX = o.beta - that.initialBeta < limit && o.beta - that.initialBeta > -limit ? 0 : -(o.beta - that.initialBeta) / 90 / 10;
-            }
-          }
-          else {
-            that.speedX = 0;
-            that.speedY = 0;
-          }
-      });
-    },
-
-    cancelGyro: function() {
-      gyro.stopTracking();
-    },
+    }
   });
 }(jQuery));

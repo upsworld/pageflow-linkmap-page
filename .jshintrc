@@ -12,10 +12,11 @@
     "vjs": true,
     "Audio5js": true,
     "I18n": true,
+    "gyro": true,
 
     "pageflow": true,
     "editor": true,
-    
+
     "confirm": true,
     "alert": true
   }

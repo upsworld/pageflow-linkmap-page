@@ -25,6 +25,11 @@ pageflow.pageType.register('linkmap_page', _.extend({
       startScrollPosition: this.getPanoramaStartScrollPosition(configuration)
     });
 
+    this.content.linkmapLookaround({
+      scroller: this.scroller,
+      marginScrollingDisabled: configuration.margin_scrolling_disabled
+    });
+
     this.linkmapAreas = pageElement.find('.linkmap_areas');
     this.linkmapAreas.linkmap({
       baseImage: function() {
@@ -156,9 +161,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
     this.content.linkmapPanorama('refresh');
     this.linkmapAreas.linkmap('refresh');
 
-    if(pageflow.browser.has('mobile platform')) {
-      this.content.linkmapPanorama('initGyro');
-    }
+    this.content.linkmapLookaround('activate');
     this.content.linkmapPanorama('centerToPoint');
   },
 
@@ -168,9 +171,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
   deactivating: function(pageElement, configuration) {
     this.multiPlayer.pause();
 
-    if(pageflow.browser.has('mobile platform')) {
-      this.content.linkmapPanorama('cancelGyro');
-    }
+    this.content.linkmapLookaround('deactivate');
   },
 
   deactivated: function(pageElement, configuration) {
@@ -189,9 +190,11 @@ pageflow.pageType.register('linkmap_page', _.extend({
       this.content.linkmapPanorama('update',
                                    configuration.get('add_environment'),
                                    configuration.get('limit_scrolling'),
-                                   configuration.get('margin_scrolling_disabled'),
                                    this.getPanoramaStartScrollPosition(configuration.attributes),
                                    minScaling);
+
+      this.content.linkmapLookaround('update',
+                                     configuration.get('margin_scrolling_disabled'));
 
       this.linkmapAreas.linkmap('refresh');
       this.scroller.refresh();
