@@ -1,8 +1,8 @@
 de:
   pageflow:
     linkmap_page:
-      page_type_name: "Verweisbereiche-Seite"
-      page_type_feature_name: "Verweisbereiche-Seitentyp"
+      page_type_name: "Hotspots"
+      page_type_feature_name: "Hotspot-Seitentyp"
       manage_sites: "Verweise verwalten"
       default_page_transition: "(Standard)"
       editor:
