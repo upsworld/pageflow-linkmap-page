@@ -109,3 +109,11 @@
     }
   }
 }
+
+.hover_area.small {
+  .linkmap_audio_player_controls {
+    .current_time {
+      display: none;
+    }
+  }
+}
