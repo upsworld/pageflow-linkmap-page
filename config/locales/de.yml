@@ -5,6 +5,25 @@ de:
       page_type_feature_name: "Hotspot-Seitentyp"
       manage_sites: "Verweise verwalten"
       default_page_transition: "(Standard)"
+
+      page_attributes:
+        background_type: "Panorama-Typ"
+
+        panorama_image: "Hintergrund-Bild"
+        panorama_video: "Hintergrund-Video"
+        panorama_fallback_image: "Hintergrund-Bild (mobil)"
+
+        hover_image: "Hover-Bild"
+        hover_video: "Hover-Video"
+        hover_fallback_image: "Hover-Bild (mobil)"
+
+        visited_image_id: "Visited-Bild"
+        linkmap_areas: "Verweisbereiche"
+        audio_areas: "Bereiche mit Audio"
+        limit_scrolling: "Scrollbereich auf aktive Bereiche beschränken"
+        add_environment: "Scrollumgebung erzwingen"
+        margin_scrolling_disabled: "Am Bildrand scrollen deaktivieren"
+
       editor:
         area_types:
           page: "Seiten Verweis"
@@ -49,12 +68,12 @@ de:
         link_title: "Linkbeschreibung: Titel"
         link_description: "Linkbeschreibung: Text"
       "pageflow/page":
-        background_type: "Hintergrund-Typ"
+        background_type: "Panorama-Typ"
         linked_linkmap_page_perma_ids: "Verlinkte Seiten"
-        panorama_image_id: "Panorama Bild"
-        panorama_video_id: "Panorama Video"
-        hover_image_id: "Panorama Hover Image"
-        visited_image_id: "Panorama Visited Image"
+        panorama_image_id: "Hintergrund-Bild"
+        panorama_video_id: "Video"
+        hover_image_id: "Hover-Bild"
+        visited_image_id: "Visited-Bild"
         linkmap_areas: "Verweisbereiche"
         audio_areas: "Bereiche mit Audio"
         limit_scrolling: "Scrollbereich auf aktive Bereiche beschränken"
@@ -63,8 +82,9 @@ de:
     values:
       "pageflow/page":
         background_type:
-          image: "Bild"
-          video: "Video"
+          image: "Hintergrund-Bild/Hover-Bild"
+          video: "Hintergrund-Video/Hover-Bild"
+          hover_video: "Hintergrund-Bild/Hover-Video"
       "pageflow/linkmap_page/area":
         marker:
           no_marker: "Keine Markierung"

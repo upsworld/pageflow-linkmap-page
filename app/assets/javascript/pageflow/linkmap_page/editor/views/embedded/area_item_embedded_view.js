@@ -86,7 +86,7 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
       },
 
       drag: function(event, ui) {
-        that.ui.hoverImage.linkmapAreaImage(ui.position);
+        that.$el.linkmapAreaClip(ui.position);
       },
 
       stop: function(event, ui) {

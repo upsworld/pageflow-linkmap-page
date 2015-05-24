@@ -7,27 +7,60 @@ pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.
 
     this.tab('files', function() {
       this.input('background_type', pageflow.SelectInputView, {
-        values: ['image', 'video'],
+        values: ['image', 'video', 'hover_video'],
         ensureValueDefined: true
       });
 
       this.input('panorama_image_id', pageflow.FileInputView, {
+        label: I18n.t('pageflow.linkmap_page.page_attributes.panorama_image'),
         collection: pageflow.imageFiles,
         positioning: true,
         visibleBinding: 'background_type',
-        visibleBindingValue: 'image'
+        visible: function(backgroundType) {
+          return _(['image', 'hover_video']).contains(backgroundType);
+        }
       });
 
       this.input('panorama_video_id', pageflow.FileInputView, {
+        label: I18n.t('pageflow.linkmap_page.page_attributes.panorama_video'),
         collection: pageflow.videoFiles,
         positioning: true,
         visibleBinding: 'background_type',
         visibleBindingValue: 'video'
       });
 
-      this.input('hover_image_id', pageflow.FileInputView, {
+      this.input('panorama_image_id', pageflow.FileInputView, {
+        label: I18n.t('pageflow.linkmap_page.page_attributes.panorama_fallback_image'),
         collection: pageflow.imageFiles,
-        positioning: false
+        positioning: false,
+        visibleBinding: 'background_type',
+        visibleBindingValue: 'video'
+      });
+
+      this.input('hover_image_id', pageflow.FileInputView, {
+        label: I18n.t('pageflow.linkmap_page.page_attributes.hover_image'),
+        collection: pageflow.imageFiles,
+        positioning: false,
+        visibleBinding: 'background_type',
+        visible: function(backgroundType) {
+          return _(['image', 'video']).contains(backgroundType);
+        }
+      });
+
+      this.input('panorama_video_id', pageflow.FileInputView, {
+        label: I18n.t('pageflow.linkmap_page.page_attributes.hover_video'),
+        collection: pageflow.videoFiles,
+        positioning: false,
+        visibleBinding: 'background_type',
+        visibleBindingValue: 'hover_video'
+      });
+
+      this.input('hover_image_id', pageflow.FileInputView, {
+        label: I18n.t('pageflow.linkmap_page.page_attributes.hover_fallback_image'),
+        collection: pageflow.imageFiles,
+        positioning: false,
+        visibleBinding: 'background_type',
+        visibleBindingValue: 'hover_video'
       });
 
       this.input('visited_image_id', pageflow.FileInputView, {
@@ -41,7 +74,6 @@ pageflow.linkmapPage.ConfigurationEditorView = pageflow.ConfigurationEditorView.
       });
       this.input('background_image_id', pageflow.FileInputView, {collection: pageflow.imageFiles});
     });
-
 
     this.tab('areas', function() {
       this.view(pageflow.linkmapPage.AreasListView, {

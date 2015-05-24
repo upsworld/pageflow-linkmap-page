@@ -63,6 +63,10 @@
     }
   }
 
+  .hover_video {
+    display: none;
+  }
+
   .vjs-loading-spinner,
   .vjs-control-bar {
     display: none !important;
@@ -100,6 +104,11 @@
         opacity: 1;
         visibility: visible;
       }
+    }
+
+    .panorama_video {
+      position: absolute;
+      display: block;
     }
 
     &.dynamic_marker {

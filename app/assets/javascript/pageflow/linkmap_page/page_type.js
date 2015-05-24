@@ -34,7 +34,10 @@ pageflow.pageType.register('linkmap_page', _.extend({
     this.linkmapAreas.linkmap({
       baseImage: function() {
         return pageElement.find('.panorama.active');
-      }
+      },
+
+      hoverVideo: pageElement.find('.panorama_video'),
+      hoverVideoEnabled: configuration.background_type === 'hover_video'
     });
 
     this.setupPageLinkAreas(pageElement);
@@ -122,13 +125,13 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   prepare: function(pageElement, configuration) {
-    if (configuration.background_type === 'video') {
+    if (configuration.background_type === 'video' || configuration.background_type === 'hover_video') {
       return this.videoPlayer.ensureCreated();
     }
   },
 
   unprepare: function(pageElement, configuration) {
-    if (configuration.background_type === 'video') {
+    if (configuration.background_type === 'video' || configuration.background_type === 'hover_video') {
       return this.videoPlayer.scheduleDispose();
     }
   },
@@ -150,7 +153,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
   activating: function(pageElement, configuration) {
     var that = this;
 
-    if (configuration.background_type === 'video') {
+    if (configuration.background_type === 'video' || configuration.background_type === 'hover_video') {
       this.videoPlayer.ensureCreated();
 
       this.prebufferingPromise = this.videoPlayer.prebuffer().then(function() {
@@ -183,6 +186,8 @@ pageflow.pageType.register('linkmap_page', _.extend({
     this.setupDefaultAreaPositions(configuration);
     this.setupPanoramaBackground(pageElement, configuration.attributes);
     this.updateCommonPageCssClasses(pageElement, configuration);
+
+    this.linkmapAreas.linkmap('updateHoverVideoEnabled', configuration.get('background_type') === 'hover_video');
 
     this.afterEmbeddedViewsUpdate(function() {
       var minScaling = false;
