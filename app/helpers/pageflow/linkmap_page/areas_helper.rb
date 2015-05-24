@@ -33,6 +33,8 @@ module Pageflow
             site = ExternalLinks::Site.find_by_revision_id_and_perma_id(entry.try(:revision),
                                                                         attributes[:target_id])
             site ? site.url : '#'
+          elsif attributes[:target_type] == 'page'
+            "##{attributes[:target_id]}"
           else
             '#'
           end
