@@ -89,7 +89,14 @@
     &:hover,
     &.hover,
     &.playing, &:focus, &:active {
-      .background_image {
+      .hover_image {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    &.visited {
+      .visited_image {
         opacity: 1;
         visibility: visible;
       }

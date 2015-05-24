@@ -4,7 +4,8 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
   className: 'hover_area',
 
   ui: {
-    hoverImage: '.background_image'
+    hoverImage: '.hover_image',
+    visitedImage: '.visited_image'
   },
 
   events: {
@@ -20,11 +21,11 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
     },
 
     'click .toggle_marker': function() {
-      if(this.model.get('marker') === 'dynamic_marker') {
-        this.model.set('marker', 'no_marker')
+      if (this.model.get('marker') === 'dynamic_marker') {
+        this.model.set('marker', 'no_marker');
       }
       else {
-        this.model.set('marker', 'dynamic_marker')
+        this.model.set('marker', 'dynamic_marker');
       }
     }
   },
@@ -34,7 +35,7 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
   },
 
   onRender: function() {
-    this.setupHoverImageView();
+    this.setupImageViews();
     this.setupDraggableAndResizable();
     this.setupAudioPlayer();
     this.listenToEditable();
@@ -42,16 +43,18 @@ pageflow.linkmapPage.AreaItemEmbeddedView = Backbone.Marionette.ItemView.extend(
     this.update();
   },
 
-  setupHoverImageView: function() {
+  setupImageViews: function() {
     var hoverImageView = new pageflow.BackgroundImageEmbeddedView({
       el: this.ui.hoverImage,
       model: this.options.pageConfiguration,
       propertyName: 'hover_image_id'
     }).render();
 
-    this.listenTo(this.options.pageConfiguration, 'change:hover_image_id', function() {
-      hoverImageView.update();
-    });
+    var visitedImageView = new pageflow.BackgroundImageEmbeddedView({
+      el: this.ui.visitedImage,
+      model: this.options.pageConfiguration,
+      propertyName: 'visited_image_id'
+    }).render();
   },
 
   setupDraggableAndResizable: function() {

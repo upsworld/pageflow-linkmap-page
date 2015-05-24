@@ -19,6 +19,7 @@
       hoverImages.linkmapAreaImage();
 
       hoverAreas.linkmapAreaFormat();
+      hoverAreas.linkmapAreaVisited();
     },
   });
 
@@ -56,6 +57,17 @@
           'height': hoverArea.height() - markerMargin,
         });
       }
+    });
+  };
+
+  $.fn.linkmapAreaVisited = function() {
+    this.each(function() {
+      var hoverArea = $(this);
+      var visited =
+        hoverArea.data('targetType') === 'page' &&
+        pageflow.linkmapPage.visitedPages.indexOf(hoverArea.data('targetId')) >= 0;
+
+      hoverArea.toggleClass('visited', visited);
     });
   };
 }(jQuery));
