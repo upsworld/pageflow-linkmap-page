@@ -162,7 +162,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
     this.linkmapAreas.linkmap('refresh');
 
     this.content.linkmapLookaround('activate');
-    this.content.linkmapPanorama('centerToPoint');
+    this.content.linkmapPanorama('resetScrollPosition');
   },
 
   activated: function(pageElement, configuration) {

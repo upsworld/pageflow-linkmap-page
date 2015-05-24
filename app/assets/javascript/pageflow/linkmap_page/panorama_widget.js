@@ -275,6 +275,10 @@
       return result;
     },
 
+    resetScrollPosition: function() {
+      this.centerToPoint(this.panoramaToScroller(this.startScrollPosition), 0);
+    },
+
     centerToPoint: function(point, time) {
       point = point || this.currentScrollPosition;
 
