@@ -4,7 +4,7 @@ module Pageflow
       name 'linkmap_page'
 
       def view_helpers
-        [ImageTagHelper, AreasHelper]
+        [AreasHelper]
       end
 
       def thumbnail_candidates
