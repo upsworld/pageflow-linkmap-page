@@ -10,6 +10,8 @@
 .linkmap_page {
   @import "./linkmap_page/audio_player_controls";
 
+  @include user-select(none);
+
   .content {
 /*    pointer-events: none; */
   }
