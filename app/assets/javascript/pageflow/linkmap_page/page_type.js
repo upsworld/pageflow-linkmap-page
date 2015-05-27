@@ -157,7 +157,9 @@ pageflow.pageType.register('linkmap_page', _.extend({
       this.videoPlayer.ensureCreated();
 
       this.prebufferingPromise = this.videoPlayer.prebuffer().then(function() {
-        that.videoPlayer.play();
+        if (configuration.background_type === 'video') {
+          that.videoPlayer.play();
+        }
       });
     }
 
