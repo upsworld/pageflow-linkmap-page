@@ -111,6 +111,7 @@
     .panorama_video {
       position: absolute;
       display: block;
+      z-index: 1;
     }
 
     &.dynamic_marker {
@@ -127,6 +128,7 @@
         @include transition(0.15s);
         opacity: 0.1;
         box-shadow: 1px 2px 3px rgba(0,0,0,0.3);
+        z-index: 2;
       }
 
       &:hover,
