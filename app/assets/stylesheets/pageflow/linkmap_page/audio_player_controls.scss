@@ -77,7 +77,7 @@
       @include transform-origin(center left);
 
       &:before {
-        left: initial;
+        left: auto;
         right: 0;
       }
     }
@@ -87,7 +87,7 @@
     left: 50%;
 
     .circle_inner {
-      left: initial;
+      left: auto;
       right: 100%;
       @include transform-origin(center right);
     }
