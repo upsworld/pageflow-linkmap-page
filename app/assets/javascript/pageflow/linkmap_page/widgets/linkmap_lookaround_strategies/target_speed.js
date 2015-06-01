@@ -49,7 +49,7 @@ pageflow.linkmapPage.TargetSpeedStrategy = function(options, name) {
 
   function convergeSpeed() {
     if (Math.abs(speed - targetSpeed) > 0.01) {
-      var d = Math.abs(targetSpeed) > Math.abs(speed) ? 0.01 : 0.02;
+      var d = Math.abs(targetSpeed) > Math.abs(speed) ? 0.02 : 0.04;
       speed = limit(speed + d * sign(targetSpeed - speed), targetSpeed);
     }
     else {
