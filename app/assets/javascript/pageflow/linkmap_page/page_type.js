@@ -5,6 +5,8 @@ pageflow.pageType.register('linkmap_page', _.extend({
     noMouseWheelScrollX: true
   },
 
+  noHideTextOnSwipe: true,
+
   enhance: function(pageElement, configuration) {
     this.setupPanoramaBackground(pageElement, configuration);
     this.setupVideoPlayer(pageElement);
