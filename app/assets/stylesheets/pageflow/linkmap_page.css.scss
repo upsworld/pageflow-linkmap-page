@@ -1,5 +1,6 @@
 @include pageflow-page-type(linkmap_page);
 
+@import "./linkmap_page/animations/rotate";
 
 .js .page .scroller > div.linkmap {
   padding: 0 !important;

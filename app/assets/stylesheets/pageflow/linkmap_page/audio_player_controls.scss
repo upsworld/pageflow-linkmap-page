@@ -39,7 +39,7 @@
     @include transform(translate(-50%,-50%));
   }
 
-  .left_circle, .right_circle {
+  .left_circle, .right_circle, .audio_inline_loading_spinner {
     position: absolute;
     height: 100%;
     width: 50%;
@@ -91,6 +91,32 @@
       right: 100%;
       @include transform-origin(center right);
     }
+  }
+
+  .audio_inline_loading_spinner {
+    left: 50%;
+    @include transform-origin(center left);
+    @include animation(linkmap_page_rotate 0.5s linear infinite);
+    display: none;
+
+    .circle_inner {
+      left: auto;
+      right: 100%;
+      @include transform-origin(center right);
+      @include transform(rotate(-120deg));
+    }
+  }
+}
+
+.hover_area.loading {
+  .progress,
+  .audio_inline_loading_spinner {
+    display: block;
+  }
+
+  .left_circle,
+  .right_circle {
+    display: none;
   }
 }
 

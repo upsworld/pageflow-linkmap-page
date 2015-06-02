@@ -23,7 +23,7 @@
         .appendTo(this.wrapper)
       ;
 
-      this.progressElement.html('<div class="audio_inline_progress"><div class="progress_inner"><div class="left_circle"><div class="circle_inner"></div></div><div class="right_circle"><div class="circle_inner"></div></div><div class="loading_spinner_inner"><div></div></div></div></div>');
+      this.progressElement.html('<div class="audio_inline_progress"><div class="progress_inner"><div class="left_circle"><div class="circle_inner"></div></div><div class="right_circle"><div class="circle_inner"></div></div><div class="audio_inline_loading_spinner"><div class="circle_inner"></div></div></div></div>');
 
       this.currentTimeElement = $('<div />')
         .addClass('current_time')
@@ -36,6 +36,7 @@
       ;
 
       this.playButton.on('click', function(e) {
+        widget.element.addClass('loading');
         widget._trigger('play', null, {
           audioFileId: widget.element.data('audioFile')
         });
@@ -97,14 +98,17 @@
     },
 
     playing: function() {
-      this.element.addClass('playing');
+      this.element.addClass('loading');
     },
 
     notPlaying: function() {
-      this.element.removeClass('playing');
+      this.element.removeClass('playing loading');
     },
 
     updateProgress: function(player) {
+      this.element.removeClass('loading');
+      this.element.addClass('playing');
+
       this.currentTimeElement.text(player.formatTime(player.position()));
       this.durationElement.text(player.formatTime(player.duration()));
 
