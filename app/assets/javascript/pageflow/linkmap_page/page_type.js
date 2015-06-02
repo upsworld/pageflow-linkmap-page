@@ -160,7 +160,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
       this.prebufferingPromise = this.videoPlayer.prebuffer().then(function() {
         if (configuration.background_type === 'video') {
-          that.videoPlayer.play();
+          that.videoPlayer.playAndFadeIn(1000);
         }
       });
     }
@@ -182,7 +182,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   deactivated: function(pageElement, configuration) {
-    this.videoPlayer.pause();
+    this.videoPlayer.fadeOutAndPause(1000);
     this.videoPlayer.scheduleDispose();
   },
 
