@@ -72,10 +72,10 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
   setupPanoramaBackground: function(pageElement, configuration) {
     pageElement.find('.panorama_image')
-      .toggleClass('active', configuration.background_type !== 'video');
+      .toggleClass('active', !this.isBackgroundVideoEnabled(configuration));
 
     pageElement.find('.panorama_video')
-      .toggleClass('active', configuration.background_type === 'video');
+      .toggleClass('active', this.isBackgroundVideoEnabled(configuration));
   },
 
   setupVideoPlayer: function(pageElement) {
@@ -127,13 +127,13 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   prepare: function(pageElement, configuration) {
-    if (configuration.background_type === 'video' || configuration.background_type === 'hover_video') {
+    if (this.isVideoEnabled(configuration)) {
       return this.videoPlayer.ensureCreated();
     }
   },
 
   unprepare: function(pageElement, configuration) {
-    if (configuration.background_type === 'video' || configuration.background_type === 'hover_video') {
+    if (this.isVideoEnabled(configuration)) {
       return this.videoPlayer.scheduleDispose();
     }
   },
@@ -155,7 +155,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
   activating: function(pageElement, configuration) {
     var that = this;
 
-    if (configuration.background_type === 'video' || configuration.background_type === 'hover_video') {
+    if (this.isVideoEnabled(configuration)) {
       this.videoPlayer.ensureCreated();
 
       this.prebufferingPromise = this.videoPlayer.prebuffer().then(function() {
@@ -182,8 +182,10 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   deactivated: function(pageElement, configuration) {
-    this.videoPlayer.fadeOutAndPause(1000);
-    this.videoPlayer.scheduleDispose();
+    if (this.isVideoEnabled(configuration)) {
+      this.videoPlayer.fadeOutAndPause(1000);
+      this.videoPlayer.scheduleDispose();
+    }
   },
 
   update: function(pageElement, configuration) {
@@ -237,4 +239,14 @@ pageflow.pageType.register('linkmap_page', _.extend({
   afterEmbeddedViewsUpdate: function(fn) {
     setTimeout(_.bind(fn, this), 10);
   },
+
+  isVideoEnabled: function(configuration) {
+    return !pageflow.browser.has('mobile platform') &&
+      (configuration.background_type === 'video' || configuration.background_type === 'hover_video');
+  },
+
+  isBackgroundVideoEnabled: function(configuration) {
+    return !pageflow.browser.has('mobile platform') &&
+      configuration.background_type === 'video';
+  }
 }, pageflow.commonPageCssClasses));
