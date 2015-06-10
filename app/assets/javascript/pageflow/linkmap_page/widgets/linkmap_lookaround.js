@@ -30,14 +30,17 @@
         }
       }, 'y');
 
-      this.element.on('mousedown touchstart', function () {
-        that.drag = true;
-      });
+      this.element.on('mousedown touchstart', function (event) {
+        // prevent dragging
+        event.originalEvent.preventDefault();
 
-      this.element.on('mouseup touchend', function () {
-        that.drag = false;
-        that.initialBeta = null;
-        that.initialGamma = null;
+        that.drag = true;
+
+        $(window).one('mouseup touchend', function() {
+          that.drag = false;
+          that.initialBeta = null;
+          that.initialGamma = null;
+        });
       });
 
       this.element.on('mouseenter', function() {
