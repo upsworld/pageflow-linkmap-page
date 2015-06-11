@@ -105,6 +105,10 @@
       this.element.removeClass('playing loading');
     },
 
+    cancelLoading: function() {
+      this.element.removeClass('loading');
+    },
+
     updateProgress: function(player) {
       this.element.removeClass('loading');
       this.element.addClass('playing');

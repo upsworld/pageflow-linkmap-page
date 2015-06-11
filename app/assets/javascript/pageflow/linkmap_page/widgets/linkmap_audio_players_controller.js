@@ -2,10 +2,23 @@
   $.widget('pageflow.linkmapAudioPlayersController', {
     _create: function() {
       var player = this.options.player;
+      var element = this.element;
 
       this.delegatePlayerEvent('play', 'playing');
       this.delegatePlayerEvent('pause ended', 'notPlaying');
       this.delegatePlayerEvent('timeupdate', 'updateProgress');
+
+      player.on('play', function(options) {
+        var playerElements = element.find('[data-audio-file]');
+
+        playerElements.each(function() {
+          var playerElement = $(this);
+
+          if (playerElement.data('audioFile') !== options.audioFileId) {
+            playerElement.linkmapAudioPlayerControls('cancelLoading');
+          }
+        });
+      });
 
       this.element.on('linkmapaudioplayercontrolsplay', function(event, options) {
         player.play(options.audioFileId);
