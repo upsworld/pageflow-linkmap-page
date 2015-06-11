@@ -68,13 +68,24 @@
 
           that.overlayBox.addClass('active');
 
+
+
           if(that.panorama.width() - (area.position().left + area.outerWidth()) < that.overlayBox.outerWidth()) {
             var overlayAlignmentDirection = "left";
             that.overlayBox.addClass('left_aligned');
           }
           else {
-            var overlayAlignmentDirection = "right";
-            that.overlayBox.removeClass('left_aligned');
+            var spaceLeftOfArea = area.offset().left;
+            var spaceRightOfArea = $(window).width() - area.offset().left - area.outerWidth();
+
+            if(spaceLeftOfArea < spaceRightOfArea) {
+              var overlayAlignmentDirection = "right";
+              that.overlayBox.removeClass('left_aligned');
+            }
+            else {
+              var overlayAlignmentDirection = "left";
+              that.overlayBox.addClass('left_aligned');
+            }
           }
 
           if(overlayAlignmentDirection == "right") {
