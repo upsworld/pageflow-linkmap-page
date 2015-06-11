@@ -241,12 +241,12 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   isVideoEnabled: function(configuration) {
-    return !pageflow.browser.has('phone platform') &&
+    return !pageflow.browser.has('mobile platform') &&
       (configuration.background_type === 'video' || configuration.background_type === 'hover_video');
   },
 
   isBackgroundVideoEnabled: function(configuration) {
-    return !pageflow.browser.has('phone platform') &&
+    return !pageflow.browser.has('mobile platform') &&
       configuration.background_type === 'video';
   }
 }, pageflow.commonPageCssClasses));
