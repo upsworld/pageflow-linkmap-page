@@ -31,9 +31,6 @@
       }, 'y');
 
       this.element.on('mousedown touchstart', function (event) {
-        // prevent dragging
-        event.originalEvent.preventDefault();
-
         that.drag = true;
 
         $(window).one('mouseup touchend', function() {
@@ -41,6 +38,11 @@
           that.initialBeta = null;
           that.initialGamma = null;
         });
+      });
+
+      this.element.on('mousedown', function (event) {
+        // prevent dragging
+        event.originalEvent.preventDefault();
       });
 
       this.element.on('mouseenter', function() {
