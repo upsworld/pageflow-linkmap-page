@@ -172,9 +172,12 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
     this.content.linkmapLookaround('activate');
     this.content.linkmapPanorama('resetScrollPosition');
+
+    this.content.linkmapPanorama('resetAreaHighlighting');
   },
 
   activated: function(pageElement, configuration) {
+    this.content.linkmapPanorama('highlightAreas');
   },
 
   deactivating: function(pageElement, configuration) {

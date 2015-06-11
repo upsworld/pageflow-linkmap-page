@@ -131,6 +131,26 @@
       }
     },
 
+    highlightAreas: function() {
+      var element = this.element;
+      element.find('.linkmap_marker').addClass('teasing');
+
+      setTimeout(function() {
+        element.find('.linkmap_marker').removeClass('teasing');
+      }, 1000);
+
+      setTimeout(function() {
+        element.find('.linkmap_marker').addClass('no_transition');
+      }, 2000);
+    },
+
+    resetAreaHighlighting: function() {
+      var element = this.element;
+
+      element.find('.linkmap_marker').removeClass('no_transition teasing');
+      element.find('.linkmap_marker').css('opacity', '0.1');
+    },
+
     getScrollArea: function(activeAreas) {
       var panorama = this.panorama;
       var pageElement = this.options.page;
