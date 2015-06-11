@@ -9,6 +9,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
   enhance: function(pageElement, configuration) {
     this.setupPanoramaBackground(pageElement, configuration);
+    this.setupHoverImages(pageElement, configuration);
     this.setupVideoPlayer(pageElement);
 
     this.content = pageElement.find('.scroller');
@@ -32,13 +33,17 @@ pageflow.pageType.register('linkmap_page', _.extend({
       marginScrollingDisabled: configuration.margin_scrolling_disabled
     });
 
+    pageElement.find('.hover_video').linkmapHoverVideo({
+      video: pageElement.find('.panorama_video')
+    });
+
     this.linkmapAreas = pageElement.find('.linkmap_areas');
     this.linkmapAreas.linkmap({
       baseImage: function() {
         return pageElement.find('.panorama.active');
       },
 
-      hoverVideo: pageElement.find('.panorama_video'),
+      hoverVideo: pageElement.find('.hover_video').linkmapHoverVideo('instance'),
       hoverVideoEnabled: configuration.background_type === 'hover_video'
     });
 
@@ -76,6 +81,11 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
     pageElement.find('.panorama_video')
       .toggleClass('active', this.isBackgroundVideoEnabled(configuration));
+  },
+
+  setupHoverImages: function(pageElement, configuration) {
+    pageElement.find('.hover_image')
+      .toggle(!this.isHoverVideoEnabled(configuration));
   },
 
   setupVideoPlayer: function(pageElement) {
@@ -153,16 +163,8 @@ pageflow.pageType.register('linkmap_page', _.extend({
   },
 
   activating: function(pageElement, configuration) {
-    var that = this;
-
     if (this.isVideoEnabled(configuration)) {
-      this.videoPlayer.ensureCreated();
-
-      this.prebufferingPromise = this.videoPlayer.prebuffer().then(function() {
-        if (configuration.background_type === 'video') {
-          that.videoPlayer.playAndFadeIn(1000);
-        }
-      });
+      this.playVideo(configuration);
     }
 
     this.content.linkmapPanorama('refresh');
@@ -183,8 +185,7 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
   deactivated: function(pageElement, configuration) {
     if (this.isVideoEnabled(configuration)) {
-      this.videoPlayer.fadeOutAndPause(1000);
-      this.videoPlayer.scheduleDispose();
+      this.pauseVideo(configuration);
     }
   },
 
@@ -206,10 +207,23 @@ pageflow.pageType.register('linkmap_page', _.extend({
 
       this.content.linkmapLookaround('update',
                                      configuration.get('margin_scrolling_disabled'));
+      this.setupHoverImages(pageElement, configuration.attributes);
+      this.updateVideoPlayState(configuration);
 
       this.linkmapAreas.linkmap('refresh');
       this.scroller.refresh();
     });
+  },
+
+  updateVideoPlayState: function(configuration) {
+    if (configuration.hasChanged('background_type')) {
+      if (this.isVideoEnabled(configuration.attributes)) {
+        this.playVideo(configuration.attributes);
+      }
+      else {
+        this.pauseVideo(configuration.attributes);
+      }
+    }
   },
 
   setupDefaultAreaPositions: function(configuration) {
@@ -248,5 +262,27 @@ pageflow.pageType.register('linkmap_page', _.extend({
   isBackgroundVideoEnabled: function(configuration) {
     return !pageflow.browser.has('mobile platform') &&
       configuration.background_type === 'video';
+  },
+
+  isHoverVideoEnabled: function(configuration) {
+    return !pageflow.browser.has('mobile platform') &&
+      configuration.background_type === 'hover_video';
+  },
+
+  playVideo: function(configuration) {
+    var that = this;
+
+    this.videoPlayer.ensureCreated();
+
+    this.prebufferingPromise = this.videoPlayer.prebuffer().then(function() {
+      if (configuration.background_type === 'video') {
+        that.videoPlayer.playAndFadeIn(1000);
+      }
+    });
+  },
+
+  pauseVideo: function(configuration) {
+    this.videoPlayer.fadeOutAndPause(1000);
+    this.videoPlayer.scheduleDispose();
   }
 }, pageflow.commonPageCssClasses));

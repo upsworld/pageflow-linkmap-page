@@ -8,48 +8,34 @@
 
       this.refresh();
 
-      this.element.on('mouseenter', '.hover_area', function() {
+      if (widget.options.hoverVideoEnabled) {
+        widget.options.hoverVideo.activate();
+      }
+
+      this.element.on('mousemove', '.hover_area', function() {
         var hoverArea = $(this);
 
         if (widget.options.hoverVideoEnabled) {
-          widget.options.hoverVideo.hide();
-
-          if (!widget.hoverVideoParent) {
-            widget.hoverVideoParent = widget.options.hoverVideo.parent();
-          }
-
-          widget.options.hoverVideo.appendTo(hoverArea);
-          widget._resizeToBaseImage(widget.options.hoverVideo);
-          hoverArea.linkmapAreaClip();
-
-          var videoPlayer = widget.options.hoverVideo.data('videoPlayer');
-          videoPlayer.play();
-
-          widget.options.hoverVideo.show();
+          widget.options.hoverVideo.schedulePlay({
+            area: hoverArea,
+            baseImage: widget.options.baseImage()
+          });
         }
       });
 
       this.element.on('mouseleave', '.hover_area', function() {
         if (widget.options.hoverVideoEnabled) {
-          widget.options.hoverVideo.hide();
-
-          var videoPlayer = widget.options.hoverVideo.data('videoPlayer');
-          videoPlayer.currentTime(0);
-          videoPlayer.pause();
+          widget.options.hoverVideo.pause();
         }
       });
     },
 
     updateHoverVideoEnabled: function(value) {
-      if (!value && this.hoverVideoParent) {
-        this.options.hoverVideo.prependTo(this.hoverVideoParent);
-
-        this.options.hoverVideo.css({
-          left: 'auto',
-          top: 'auto',
-          width: 'auto',
-          height: 'auto'
-        }).show();
+      if (value) {
+        this.options.hoverVideo.activate();
+      }
+      else {
+        this.options.hoverVideo.deactivate();
       }
 
       this.options.hoverVideoEnabled = value;
