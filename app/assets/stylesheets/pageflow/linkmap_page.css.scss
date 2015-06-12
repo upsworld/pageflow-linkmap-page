@@ -2,6 +2,20 @@
 
 @import "./linkmap_page/animations/rotate";
 
+@mixin inline-loading-spinner {
+  left: 50%;
+  @include transform-origin(center left);
+  @include animation(linkmap_page_rotate 0.5s linear infinite);
+  display: none;
+
+  .circle_inner {
+    left: auto;
+    right: 100%;
+    @include transform-origin(center right);
+    @include transform(rotate(-120deg));
+  }
+}
+
 .js .page .scroller > div.linkmap {
   padding: 0 !important;
   width: auto;
@@ -197,6 +211,48 @@
       color: #999999;
       letter-spacing: 0.22px;
       line-height: 30px;
+    }
+  }
+
+  .external_site_area {
+
+    .inline_loading_spinner {
+      position: absolute;
+      height: 100%;
+      width: 50%;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+
+      .circle_inner {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        @include transform(rotate(0));
+
+        &:before {
+          content: "";
+          position: absolute;
+          height: 100%;
+          width: 200%;
+          top: 0;
+          left: 0;
+          border: 3px solid green;
+          box-sizing: border-box;
+          border-radius: 50%;
+        }
+      }
+
+      @include inline-loading-spinner;
+    }
+
+    &.active {
+      .inline_loading_spinner {
+        display: block;
+      }
     }
   }
 }

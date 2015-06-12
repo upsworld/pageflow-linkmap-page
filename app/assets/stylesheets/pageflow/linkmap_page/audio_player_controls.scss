@@ -94,17 +94,7 @@
   }
 
   .audio_inline_loading_spinner {
-    left: 50%;
-    @include transform-origin(center left);
-    @include animation(linkmap_page_rotate 0.5s linear infinite);
-    display: none;
-
-    .circle_inner {
-      left: auto;
-      right: 100%;
-      @include transform-origin(center right);
-      @include transform(rotate(-120deg));
-    }
+    @include inline-loading-spinner;
   }
 }
 

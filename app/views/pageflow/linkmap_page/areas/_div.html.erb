@@ -17,7 +17,11 @@
                                            style_group: :panorama) %>
       <% end %>
 
-      <div class="linkmap_marker <%= attributes['marker'] %>"></div>
+      <div class="linkmap_marker <%= attributes['marker'] %>">
+        <div class="inline_loading_spinner">
+          <div class="circle_inner"></div>
+        </div>
+      </div>
       <div class="linkmap_description">
         <div class="link_title"><%= attributes['link_title'] %></div>
         <div class="link_description"><%= raw(attributes['link_description']) %></div>
