@@ -102,7 +102,7 @@
             var spaceLeftOfArea = area.offset().left;
             var spaceRightOfArea = $(window).width() - area.offset().left - area.outerWidth();
 
-            if(spaceLeftOfArea < spaceRightOfArea) {
+            if(spaceLeftOfArea < spaceRightOfArea || spaceLeftOfArea < that.overlayBox.outerWidth()) {
               var overlayAlignmentDirection = "right";
               that.overlayBox.removeClass('left_aligned');
             }
@@ -130,10 +130,21 @@
           }
 
           var spaceToBottom = that.panorama.height() - area.position().top;
+          var spaceToViewportBottom = $(window).height() - area.offset().top - area.height() / 2;
+          var spaceToViewportTop = $(window).height() - 50;
           var minMargin = 40;
 
           if(that.overlayBox.outerHeight() > spaceToBottom) {
             that.overlayInnerBox.css('top', (spaceToBottom - that.overlayInnerBox.outerHeight() - minMargin - area.height() / 2) + 'px');
+          }
+          else {
+            that.overlayInnerBox.css('top', '0px');
+          }
+          var additionalMargin = 10;
+
+          if(spaceToViewportBottom < that.overlayBox.outerHeight() && that.overlayBox.outerHeight() + additionalMargin < spaceToViewportTop) {
+            additionalMargin = spaceToViewportBottom - that.overlayBox.outerHeight() - additionalMargin;
+            that.overlayInnerBox.css('top', additionalMargin + 'px');
           }
           else {
             that.overlayInnerBox.css('top', '0px');
