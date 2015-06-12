@@ -152,10 +152,10 @@
         var distance = calculateDistance($(this), mX, mY);
         if(distance <= distanceLimit) {
           var opacity = 1 + minOpacity - Math.sqrt(distance / distanceLimit);
-          $(this).find('.linkmap_marker').css('opacity', opacity);
+          $(this).find('.linkmap_marker.no_transition').css('opacity', opacity);
         }
         else {
-          $(this).find('.linkmap_marker').css('opacity', minOpacity);
+          $(this).find('.linkmap_marker.no_transition').css('opacity', minOpacity);
         }
 
 
