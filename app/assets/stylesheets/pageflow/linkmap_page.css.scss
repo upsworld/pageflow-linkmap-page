@@ -233,8 +233,7 @@
         overflow: hidden;
         @include transform(rotate(0));
 
-        &:before {
-          content: "";
+        .circle_innerst {
           position: absolute;
           height: 100%;
           width: 200%;

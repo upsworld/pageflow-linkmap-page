@@ -23,7 +23,7 @@
         .appendTo(this.wrapper)
       ;
 
-      this.progressElement.html('<div class="audio_inline_progress"><div class="progress_inner"><div class="left_circle"><div class="circle_inner"></div></div><div class="right_circle"><div class="circle_inner"></div></div><div class="audio_inline_loading_spinner"><div class="circle_inner"></div></div></div></div>');
+      this.progressElement.html('<div class="audio_inline_progress"><div class="progress_inner"><div class="left_circle"><div class="circle_inner"><div class="circle_innerst"></div></div></div><div class="right_circle"><div class="circle_inner"><div class="circle_innerst"></div></div></div><div class="audio_inline_loading_spinner"><div class="circle_inner"><div class="circle_innerst"></div></div></div></div></div>');
 
       this.currentTimeElement = $('<div />')
         .addClass('current_time')
@@ -85,6 +85,10 @@
     drawCircle: function(percentage) {
       var rightCircle = this.element.find('.right_circle .circle_inner');
       var leftCircle = this.element.find('.left_circle .circle_inner');
+      var rightCircleInner = this.element.find('.right_circle .circle_innerst');
+      var leftCircleInner = this.element.find('.left_circle .circle_innerst');
+
+
 
       var rotationRight = Math.min(percentage/100 * 360, 180);
       var rotationLeft = Math.max(percentage/100 * 360 - 180, 0);
@@ -92,9 +96,11 @@
 
       rotation = rotationRight;
       rightCircle.attr("style", "-webkit-transform: rotate(" + rotation + "deg); -moz-transform: rotate(" + rotation + "deg); -ms-transform: rotate(" + rotation + "deg); -o-transform: rotate(" + rotation + "deg); transform: rotate(" + rotation + "deg)");
+      rightCircleInner.attr("style", "-webkit-transform: rotate(" + -rotation + "deg); -moz-transform: rotate(" + -rotation + "deg); -ms-transform: rotate(" + -rotation + "deg); -o-transform: rotate(" + -rotation + "deg); transform: rotate(" + -rotation + "deg)");
 
       rotation = rotationLeft;
       leftCircle.attr("style", "-webkit-transform: rotate(" + rotation + "deg); -moz-transform: rotate(" + rotation + "deg); -ms-transform: rotate(" + rotation + "deg); -o-transform: rotate(" + rotation + "deg); transform: rotate(" + rotation + "deg)");
+      leftCircleInner.attr("style", "-webkit-transform: rotate(" + -rotation + "deg); -moz-transform: rotate(" + -rotation + "deg); -ms-transform: rotate(" + -rotation + "deg); -o-transform: rotate(" + -rotation + "deg); transform: rotate(" + -rotation + "deg)");
     },
 
     playing: function() {

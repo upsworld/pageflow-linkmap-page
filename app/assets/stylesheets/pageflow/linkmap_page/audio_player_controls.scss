@@ -57,8 +57,7 @@
       overflow: hidden;
       @include transform(rotate(0));
 
-      &:before {
-        content: "";
+      .circle_innerst {
         position: absolute;
         height: 100%;
         width: 200%;
@@ -76,7 +75,7 @@
       left: 100%;
       @include transform-origin(center left);
 
-      &:before {
+      .circle_innerst {
         left: auto;
         right: 0;
       }
