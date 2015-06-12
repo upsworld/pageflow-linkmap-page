@@ -37,7 +37,7 @@
         that.centerToPoint(null, 0);
       });
 
-      this.element.on('mousemove', function(e) {
+      this.element.on('mousemove touchstart touchmove', function(e) {
         that.lastMouseMoveEvent = e;
         that.calcAreaOpacity(that.activeAreas, e.pageX, e.pageY);
       });
@@ -46,12 +46,36 @@
         positionOverlay($(this));
       });
 
+      pageElement.on('touchstart', function() {
+        that.overlayBox.removeClass('active');
+      });
+
       $('body').on('mouseleave', '.hover_area', function() {
         that.overlayBox.removeClass('active');
       });
 
       pageElement.on('dragstart resizestart', '.hover_area', function() {
         that.overlayBox.removeClass('active');
+      });
+
+      that.activeAreas.each(function() {
+        $(this).on('click touchstart', function(e) {
+          if (pageflow.browser.has('mobile platform')) {
+            if($(this).hasClass('hover')) {
+              that.activeAreas.removeClass('active');
+              $(this).addClass('active');
+              return;
+            }
+            that.activeAreas.removeClass('hover');
+            $(this).addClass('hover');
+            positionOverlay($(this));
+            return false;
+          }
+          else {
+            that.activeAreas.removeClass('active');
+            $(this).addClass('active');
+          }
+        })
       });
 
       var positionOverlay = function(area) {
