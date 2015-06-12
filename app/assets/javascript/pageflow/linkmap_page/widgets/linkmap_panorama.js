@@ -37,7 +37,7 @@
         that.centerToPoint(null, 0);
       });
 
-      this.element.on('mousemove touchstart touchmove', function(e) {
+      this.element.on('mousemove', function(e) {
         that.lastMouseMoveEvent = e;
         that.calcAreaOpacity(that.activeAreas, e.pageX, e.pageY);
       });
@@ -46,8 +46,9 @@
         positionOverlay($(this));
       });
 
-      pageElement.on('touchstart', function() {
+      pageElement.on('click', function() {
         that.overlayBox.removeClass('active');
+        that.activeAreas.removeClass('hover');
       });
 
       $('body').on('mouseleave', '.hover_area', function() {
@@ -161,6 +162,7 @@
       var minOpacity = 0.1;
       activeAreas.each(function() {
         var distance = calculateDistance($(this), mX, mY);
+
         if(distance <= distanceLimit) {
           var opacity = 1 + minOpacity - Math.sqrt(distance / distanceLimit);
           $(this).find('.linkmap_marker.no_transition').css('opacity', opacity);
