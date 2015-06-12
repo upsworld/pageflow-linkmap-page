@@ -3,7 +3,7 @@
     scrollHoverMargin : 0.2,
     environmentMargin : 0.2,
     minScaling: true,
-    minScalingSize: 50,
+    minScalingSize: 80,
     lastMouseMoveEvent: null,
 
     _create: function() {
